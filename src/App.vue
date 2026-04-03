@@ -1,11 +1,13 @@
-<script setup></script>
+<script setup lang="ts">
+import BrainAwareness from './components/custom-components/brainAwareness.vue';
+import NavBar from './components/custom-components/NavBar.vue';
 
+
+
+</script>
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+ <NavBar/> 
+ <BrainAwareness/>
 </template>
 
 <style scoped></style>
