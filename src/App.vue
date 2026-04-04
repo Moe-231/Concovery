@@ -7,7 +7,7 @@ import NavBar from './components/custom-components/NavBar.vue';
 </script>
 <template>
  <NavBar/> 
- <BrainAwareness/>
+ <router-view/>
 </template>
 
 <style scoped></style>

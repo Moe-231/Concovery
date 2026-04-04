@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 import { Icon } from "@iconify/vue";
-import AnimatedBeam from '../ui/animated-beam/AnimatedBeam.vue';
+import { AnimatedBeam } from '../ui/animated-beam';
 
 interface Props {
   curvature?: number;
@@ -71,7 +71,7 @@ const div7Ref = useTemplateRef("div7Ref");
           ref="div4Ref"
           class="z-10 flex size-48 lg:size-68 items-center justify-center rounded-full bg-transparent p-2 text-black shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)]"
         >
-        <img src="/public/brainMain.png" class="w-40 lg:w-62.5" width="250px" height="150px"/>
+        <img src="/brainMain.png" class="w-40 lg:w-62.5" width="250px" height="150px"/>
           <!-- <Icon
             icon="simple-icons:openai"
             width="190px important"
