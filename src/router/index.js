@@ -1,4 +1,5 @@
 import BrainAwareness from "@/components/custom-components/brainAwareness.vue";
+import ConcussionVisulization from "@/components/custom-components/ConcussionVisulization.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
