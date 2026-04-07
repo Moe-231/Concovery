@@ -7,14 +7,19 @@ import InteractiveFocusContent from "./InteractiveFocusContent.vue";
 import CustomGrid from "./CustomGrid.vue";
 import TopLevelStatistics from "./TopLevelStatistics.vue";
 import InformativeStatSection from "./InformativeStatSection.vue";
+import VisualisedBrainRegions from "./VisualisedBrainRegions.vue";
+import SmoothCursor from "../ui/smooth-cursor/SmoothCursor.vue";
 
 
 </script>
 
 <template>
-  <ClientOnly>
+  <!-- <ClientOnly>
     <SleekLineCursor />
-  </ClientOnly>
+  </ClientOnly> -->
+  <div class="flex items-center justify-center text-xl">
+    <SmoothCursor/>
+  </div>
   <div class="flex flex-col lg:flex-row items-center w-full h-full! border-black border-b-2">
     <div class="flex w-full items-center h-[50%] lg:h-auto lg:w-[50%]!">
       <div class="w-full">
@@ -37,13 +42,10 @@ import InformativeStatSection from "./InformativeStatSection.vue";
       </div>
     </div>
     <div class="w-full lg:w-[50%]! h-[50%]! lg:h-auto! p-2">
+      <!-- <VisualisedBrainRegions/> -->
       <BrainMockup />
     </div>
   </div>
-  <!-- <div class="flex flex-col lg:flex-row space-y-5 items-center justify-around p-15">
-    <InteractiveFocusContent />
-    <CustomGrid textGlowStartColor="#fff" textGlowEndColor="#000" :perspective="1000" :rotateX="0" :rotateY="0" />
-  </div> -->
   <div class="pt-28 pb-28">
     <TopLevelStatistics/>
   </div>
