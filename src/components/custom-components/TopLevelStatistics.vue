@@ -1,5 +1,6 @@
 <script setup>
 import Focus from '../ui/focus/Focus.vue';
+import NumberTicker from '../ui/number-ticker/NumberTicker.vue';
 
 </script>
 
@@ -22,7 +23,7 @@ import Focus from '../ui/focus/Focus.vue';
                             </div>
                             <div class="text-center">
                                 <div class="text-7xl lg:text-8xl font-bold mb-3 tabular-nums"
-                                    style="color: rgb(0, 122, 255);">21</div>
+                                    style="color: rgb(0, 122, 255);"><NumberTicker :value="21" decimal-places="0" class="text-blue-500"/></div>
                                 <div class="text-[#86868b] text-lg font-medium leading-snug">Days minimum brain recovery
                                     - not symptoms, actual healing</div>
                             </div>
@@ -38,7 +39,7 @@ import Focus from '../ui/focus/Focus.vue';
                             </div>
                             <div class="text-center">
                                 <div class="text-7xl lg:text-8xl font-bold mb-3 tabular-nums"
-                                    style="color: rgb(255, 149, 0);">80%</div>
+                                    style="color: rgb(255, 149, 0);"><NumberTicker :value="80" decimal-places="0" style="color: rgb(255, 149, 0);"/>%</div>
                                 <div class="text-[#86868b] text-lg font-medium leading-snug">Of community sport players
                                     return before their brain has healed</div>
                             </div>
@@ -54,7 +55,7 @@ import Focus from '../ui/focus/Focus.vue';
                             </div>
                             <div class="text-center">
                                 <div class="text-7xl lg:text-8xl font-bold mb-3 tabular-nums"
-                                    style="color: rgb(255, 59, 48);">5×</div>
+                                    style="color: rgb(255, 59, 48);"><NumberTicker :value="5" decimal-places="0" style="color: rgb(255, 59, 48)"/>×</div>
                                 <div class="text-[#86868b] text-lg font-medium leading-snug">Higher re-injury risk when
                                     returning during the recovery window</div>
                             </div>

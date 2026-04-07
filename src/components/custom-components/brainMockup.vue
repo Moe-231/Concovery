@@ -238,7 +238,7 @@ const div7Ref = useTemplateRef("div7Ref");
 
     <!-- Bottom informative information -->
     <div class="absolute bottom-7 left-1/2 -translate-x-1/2 pointer-events-none" style="opacity: 1;">
-      <div class="text-[11px] text-[#86868b] font-medium tracking-wide">Hover over a region to see concussion symptoms</div>
+      <div class="text-[11px] text-[#86868b] font-medium tracking-wide">Hover over a <span class="font-bold! text-black">-</span> coloured globe <span class="font-bold! text-black">-</span> to see concussion symptoms</div>
     </div>
     <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-3 flex-wrap pointer-events-none">
       <div class="flex items-center gap-1.5">
