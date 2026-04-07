@@ -1,10 +1,23 @@
 import BrainAwareness from "@/components/custom-components/brainAwareness.vue";
 import ConcussionVisulization from "@/components/custom-components/ConcussionVisulization.vue";
+import ConcussionDataExplorer from "@/pages/ConcussionDataExplorer.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [{ path: "/", name: "Home", component: BrainAwareness, meta: { title: "Home" } }],
+  routes: [
+    { path: "/", name: "Home", component: BrainAwareness, meta: { title: "Concovery" } },
+    {
+      path: "/exploredata",
+      name: "Explore Data",
+      component: ConcussionDataExplorer,
+      meta: { title: "Explore Data" },
+    },
+  ],
+});
+
+router.beforeEach((to, from) => {
+  document.title = to.meta.title;
 });
 
 export default router;

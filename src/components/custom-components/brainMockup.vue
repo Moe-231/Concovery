@@ -242,28 +242,28 @@ const div7Ref = useTemplateRef("div7Ref");
     </div>
     <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-3 flex-wrap pointer-events-none">
       <div class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full" style="background: rgb(0, 122, 255);"></div>
+        <div class="w-2 h-2 rounded-full bg-blue-500"></div>
         <span class="text-[10px] text-[#86868b] font-medium">Frontal Lobe</span>
       </div>
       <div class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full" style="background: rgb(255, 59, 48);"></div>
+        <div class="w-2 h-2 rounded-full bg-red-500"></div>
         <span
           class="text-[10px] text-[#86868b] font-medium">Parietal Lobe</span>
       </div>
       <div class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full" style="background: rgb(255, 149, 0);"></div><span
+        <div class="w-2 h-2 rounded-full bg-yellow-500"></div><span
           class="text-[10px] text-[#86868b] font-medium">Temporal Lobe</span>
       </div>
       <div class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full" style="background: rgb(52, 199, 89);"></div><span
+        <div class="w-2 h-2 rounded-full bg-green-500"></div><span
           class="text-[10px] text-[#86868b] font-medium">Occipital Lobe</span>
       </div>
       <div class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full" style="background: rgb(88, 86, 214);"></div><span
+        <div class="w-2 h-2 rounded-full bg-purple-500"></div><span
           class="text-[10px] text-[#86868b] font-medium">Cerebellum</span>
       </div>
       <div class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full" style="background: rgb(255, 45, 85);"></div><span
+        <div class="w-2 h-2 rounded-full bg-pink-500"></div><span
           class="text-[10px] text-[#86868b] font-medium">Brainstem</span>
       </div>
     </div>

@@ -1,25 +1,13 @@
 <script setup lang="ts">
-
-import SleekLineCursor from "../ui/sleek-line-cursor/SleekLineCursor.vue";
 import BrainMockup from "./brainMockup.vue";
 import BlurReveal from "../ui/blur-reveal/BlurReveal.vue";
-import InteractiveFocusContent from "./InteractiveFocusContent.vue";
-import CustomGrid from "./CustomGrid.vue";
 import TopLevelStatistics from "./TopLevelStatistics.vue";
 import InformativeStatSection from "./InformativeStatSection.vue";
-import VisualisedBrainRegions from "./VisualisedBrainRegions.vue";
-import SmoothCursor from "../ui/smooth-cursor/SmoothCursor.vue";
 
 
 </script>
 
 <template>
-  <!-- <ClientOnly>
-    <SleekLineCursor />
-  </ClientOnly> -->
-  <div class="flex items-center justify-center text-xl">
-    <SmoothCursor/>
-  </div>
   <div class="flex flex-col lg:flex-row items-center w-full h-full! border-black border-b-2">
     <div class="flex w-full items-center h-[50%] lg:h-auto lg:w-[50%]!">
       <div class="w-full">

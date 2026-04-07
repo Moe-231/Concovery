@@ -16,7 +16,7 @@ const isMenuOpen = ref(false)
                     <router-link class="transition-colors text-[#007aff] font-semibold" to="/">Home</router-link>
                     <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">The
                         Science</router-link>
-                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">The
+                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/exploredata">The
                         Data</router-link>
                     <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">Recovery
                         Journey</router-link>
