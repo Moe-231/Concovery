@@ -37,7 +37,9 @@
                                 <path d="M6 18a4 4 0 0 1-1.967-.516"></path>
                                 <path d="M19.967 17.484A4 4 0 0 1 18 18"></path>
                             </svg>Start with the Science
-                        </button></a><a href="/data" data-discover="true"><button
+                        </button></a>
+                        <router-link to="/exploredata">
+                            <button
                             class="border-2 border-white/20 text-white hover:border-white/40 hover:bg-white/5 px-12 py-5 text-lg rounded-full font-semibold flex items-center gap-2 transition-all duration-300"
                             tabindex="0" style="transform: none;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
                                 height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -46,7 +48,10 @@
                                 <path d="M18 17V9"></path>
                                 <path d="M13 17V5"></path>
                                 <path d="M8 17v-3"></path>
-                            </svg>Explore the Data</button></a></div>
+                            </svg>Explore the Data
+                            </button>
+                        </router-link>
+                    </div>
             </div>
         </div>
     </section>

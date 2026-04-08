@@ -1,20 +1,21 @@
 <script setup>
+import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
+
 </script>
 
 <template>
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-20"
         data-fg-dqrj1="33.110:33.18481:/src/app/pages/Data.tsx:109:7:3530:14934:e:div:xtetxtetxtetxtetxte"
         data-fgid-dqrj1=":r17r:">
-        <div class="text-center mb-16"
-            data-fg-dqrj3="33.110:33.18481:/src/app/pages/Data.tsx:111:9:3629:559:e:motion.div:ete"
-            data-fgid-dqrj3=":r17s:" style="opacity: 1; transform: none;">
-            <h1 class="text-5xl sm:text-7xl font-semibold text-[#1d1d1f] mb-6 tracking-tight"
-                data-fg-dqrj4="33.110:33.18481:/src/app/pages/Data.tsx:116:11:3785:139:e:h1:t" data-fgid-dqrj4=":r17t:">
+        <div class="text-center mb-16" style="opacity: 1; transform: none;">
+            <BlurReveal :delay="0.2" :duration="0.75">
+            <h1 class="text-5xl sm:text-7xl font-semibold text-[#1d1d1f] mb-6 tracking-tight">
                 Concussion Data Explorer</h1>
-            <p class="text-xl sm:text-2xl text-[#86868b] max-w-3xl mx-auto"
-                data-fg-dqrj6="33.110:33.18481:/src/app/pages/Data.tsx:119:11:3935:231:e:p:t" data-fgid-dqrj6=":r17u:">
+            <p class="text-xl sm:text-2xl text-[#86868b] max-w-3xl mx-auto">
                 Real injury data from Australian community sport. Understand the scale and trends of concussion across
-                different sports and age groups.</p>
+                different sports and age groups.
+            </p>
+            </BlurReveal>
         </div>
         <!-- Dropdown Menus -->
         <div class="bg-[#f5f5f7] rounded-3xl p-8 mb-12 shadow-lg" style="opacity: 1; transform: none;">

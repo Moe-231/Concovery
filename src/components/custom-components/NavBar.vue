@@ -14,18 +14,18 @@ const isMenuOpen = ref(false)
                             class="text-[#007aff]">covery</span></span></router-link>
                 <div class="hidden md:flex items-center space-x-8">
                     <router-link class="transition-colors text-[#007aff] font-semibold" to="/">Home</router-link>
-                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">The
+                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/">The
                         Science</router-link>
                     <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/exploredata">The
                         Data</router-link>
-                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">Recovery
+                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/">Recovery
                         Journey</router-link>
-                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">Find
+                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/locatesupport">Find
                         Support</router-link>
                     <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]"
-                        to="/science">Resources</router-link>
+                        to="/">Resources</router-link>
                     <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]"
-                        to="/science">About</router-link>
+                        to="/">About</router-link>
                 </div>
                 <button v-if="!isMenuOpen" class="md:hidden text-[#1d1d1f] p-2" aria-label="Toggle menu" @click="() => isMenuOpen = true">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -51,20 +51,18 @@ const isMenuOpen = ref(false)
             <!-- Mobile Navigation Menu -->
             <div v-if="isMenuOpen" class="md:hidden py-4 px-4 space-y-2 border-t border-[#d2d2d7]/50 fadeInAnim">
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#007aff] font-semibold" to="/">Home</router-link>
-                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">The
-                    Science</router-link>
-                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">The
+                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/exploredata">The
                     Data</router-link>
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]"
-                    to="/science">Recovery Journey</router-link>
-                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">Find
+                    to="/">Recovery Journey</router-link>
+                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/locatesupport">Find
                     Support</router-link>
-                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/science">The
+                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/">The
                     Science</router-link>
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]"
-                    to="/science">Resources</router-link>
+                    to="/">Resources</router-link>
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]"
-                    to="/science">About</router-link>
+                    to="/">About</router-link>
             </div>
         </div>
 

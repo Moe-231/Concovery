@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BrainAwareness from './components/custom-components/brainAwareness.vue';
+import Footer from './components/custom-components/Footer.vue';
 import NavBar from './components/custom-components/NavBar.vue';
 import SmoothCursor from './components/ui/smooth-cursor/SmoothCursor.vue';
 
@@ -12,6 +13,7 @@ import SmoothCursor from './components/ui/smooth-cursor/SmoothCursor.vue';
     <SmoothCursor/>
  </div>
  <router-view/>
+ <Footer/>
 </template>
 
 <style scoped></style>

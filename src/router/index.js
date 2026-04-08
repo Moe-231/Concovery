@@ -1,6 +1,7 @@
 import BrainAwareness from "@/components/custom-components/brainAwareness.vue";
 import ConcussionVisulization from "@/components/custom-components/ConcussionVisulization.vue";
 import ConcussionDataExplorer from "@/pages/ConcussionDataExplorer.vue";
+import LocateSupportPage from "@/pages/LocateSupportPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -12,6 +13,14 @@ const router = createRouter({
       name: "Explore Data",
       component: ConcussionDataExplorer,
       meta: { title: "Explore Data" },
+    },
+    {
+      path: "/locatesupport",
+      name: "Locate Support",
+      component: LocateSupportPage,
+      meta: {
+        title: "Nearby Support",
+      },
     },
   ],
 });
