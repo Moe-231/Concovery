@@ -98,6 +98,7 @@ const getGeoLocation = async () => {
 }
 
 const fetchLiveSuggestions = async (userLocation) => {  
+    suggestionsLoading.value = true
     try {
         const response = await axios.get(`https://site--concovery-backend--gvxxw7q2vn57.code.run/google/nearbyplaces?lat=${userLocation.lat}&lng=${userLocation.lng}`)
         if(response?.status == 200) {
@@ -117,15 +118,18 @@ const fetchLiveSuggestions = async (userLocation) => {
 }
 
 const getUserCurrentLocation = async () => {
-    suggestionsLoading.value = true
+    console.log("This 1 line of code was executed")
     buttonsDisabled.value.useMyLocation = true
-    originLocation.value = await getGeoLocation()
-    
-    if (originLocation.value) {
-        await fetchLiveSuggestions(originLocation.value)
-        suggestionsLoading.value = false
-        buttonsDisabled.value.useMyLocation = false
-    }
+    try {
+        originLocation.value = await getGeoLocation()
+        if (originLocation.value) {
+            await fetchLiveSuggestions(originLocation.value)
+            suggestionsLoading.value = false
+            buttonsDisabled.value.useMyLocation = false
+        }      
+    } catch (error) {
+        console.log("Error in proper getUCL function execution", error)
+    }     
     suggestionsLoading.value = false
     buttonsDisabled.value.useMyLocation = false
 
@@ -273,10 +277,10 @@ const handleRoute = async (suggestionObject) => {
                          <SuggestionCard v-for="suggestion in liveSuggestions"
                      :location-type="suggestion.locationType" :is-open="suggestion.isOpen" :name="suggestion.name" :address="suggestion.address" :contact="suggestion.phoneNo" :distance="suggestion.distance" @get-directions="() => handleRoute(suggestion)"/>
                     </div>
-                    <div v-else class="h-full">
+                    <div v-if="!liveSuggestions & !suggestionsLoading" class="h-full">
                         <span class="text-xl font-bold">Live Suggestions</span>
-                        <div class="flex items-center justify-center h-full" v-if="errorsChest?.error">
-                            <span>
+                        <div class="flex flex-col items-center justify-center h-full" v-if="errorsChest?.error">
+                            <div class="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round"
@@ -286,9 +290,13 @@ const handleRoute = async (suggestionObject) => {
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="12" x2="12" y1="8" y2="12"></line>
                             <line x1="12" x2="12.01" y1="16" y2="16"></line>
-                        </svg>
-                            </span>
-                            <span>&nbsp; {{ errorsChest.error }}</span>
+                                </svg>
+                                <span>&nbsp; {{ errorsChest.error }}</span>
+                            </div>
+                            <div>
+                                <span>Location permission required, pls try again</span>
+                            </div>
+                            
                         </div>
                     </div>
                     <div class="flex flex-col space-y-2" v-if="suggestionsLoading">
