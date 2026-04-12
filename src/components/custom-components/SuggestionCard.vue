@@ -1,12 +1,24 @@
 <script setup>
 const props = defineProps({
     locationType: String,
-    distance: String,
+    isOpen: String,
     name: String,
     address: String,
     contact: String,
-    timing: String
+    distance: String
 })
+
+const isOpenFormatter = (input) => {
+    console.log("The input was", input)
+    if(input == false) {
+        return 'Closed'
+    }
+    else if(input == true) {
+        return 'Open'
+    }
+    else return "Call to verify timings"
+}
+
 </script>
 
 <template>
@@ -19,7 +31,7 @@ const props = defineProps({
                         {{ locationType }}
                     </span>
                     <span class="text-[#86868b] text-sm font-medium">
-                        {{ distance }}
+                        {{ `${distance} km away` }}
                     </span>
                 </div>
                 <h4 class="text-xl font-semibold text-[#1d1d1f] mb-2">
@@ -59,11 +71,11 @@ const props = defineProps({
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
                 <span class="text-[#1d1d1f]">
-                    {{ timing }}
+                    {{ isOpenFormatter(isOpen) }}
                 </span>
             </div>
         </div>
-        <button data-slot="button"
+        <button data-slot="button" @click="$emit('get-directions')"
             class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 px-4 has-[&gt;svg]:px-3 w-full bg-[#007aff] hover:bg-[#0051d5] text-white py-3 rounded-xl font-semibold">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

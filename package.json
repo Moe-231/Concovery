@@ -12,6 +12,7 @@
     "lint:eslint": "eslint . --fix --cache"
   },
   "dependencies": {
+    "@fawmi/vue-google-maps": "^0.9.79",
     "@inspira-ui/plugins": "^0.0.2",
     "@lucide/vue": "^1.7.0",
     "@tailwindcss/vite": "^4.2.2",
