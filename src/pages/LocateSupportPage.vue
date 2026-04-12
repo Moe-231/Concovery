@@ -15,7 +15,6 @@ const selectedLocation = ref(null)
 const liveSuggestions = ref(null)
 const suggestionsLoading = ref(false)
 const errorsChest = ref({
-    error: "e"
 })
 const buttonsDisabled = ref({
     useMyLocation: false
