@@ -1,5 +1,87 @@
 <script setup>
 import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
+// Char js Imports & Defaults
+import { Bar, Line } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  BarElement,
+  PointElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+import { ref } from 'vue';
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, LineElement, PointElement, CategoryScale, LinearScale)
+
+const chartData = ref({
+  labels: ['X-Axis Label', 'X-Axis Label 2'],
+
+  datasets: [
+    {
+      label: '2025',
+      data: [15, 21],
+      backgroundColor: ['pink', 'orange'],
+      borderRadius: 5
+    }
+  ]
+})
+
+const chartDataTwo = ref({
+  labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+  datasets: [
+    {
+      label: 'Male',
+      data: [10, 20, 15, 30],
+      borderColor: '#007aff',
+      backgroundColor: 'black',
+      tension: 0.8, // smooth curve
+      fill: true,
+      pointRadius: 4
+    },
+    {
+      label: 'Female',
+      data: [5, 25, 10, 20],
+      borderColor: '#ff2d55',
+      backgroundColor: 'black',
+      tension: 0.8, // smooth curve
+      fill: true,
+      pointRadius: 4
+    }
+  ]
+})
+
+const chartOptions = {
+  responsive: true,
+  plugins: {
+    legend: { position: 'left', labels: { color: 'black', pointStyle: 'rectangle', usePointStyle: false} },
+    tooltip: { enabled: true }
+  },
+  scales: {
+    x: {
+        ticks: {color: 'black'}
+    },
+    y: { beginAtZero: true, ticks: { stepSize: 1, color: 'black' } }
+  }
+}
+
+const chartOptionsTwo = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'left',
+      labels: { color: 'black' }
+    },
+    tooltip: { enabled: true }
+  },
+  scales: {
+    x: { ticks: { color: 'black' } },
+    y: { beginAtZero: true, ticks: { color: 'black' } }
+  }
+}
 
 </script>
 
@@ -73,7 +155,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
             </div>
             <!-- Bar Chart Section -->
             <div class="h-80 mb-8 flex items-center justify-center font-bold">
-                <h2>Bar Chart Will Be Displayed Here</h2>
+                <Bar :data="chartData" :options="chartOptions"/>
             </div>
             <div class="bg-gradient-to-br from-[#007aff]/10 to-[#5ac8fa]/10 rounded-2xl p-6 border border-[#007aff]/30">
                 <p class="text-[#1d1d1f] text-lg leading-relaxed"><strong>Key Insight: </strong>Insight from database will be displayed here</p>
@@ -109,7 +191,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                 </div>
             </div>
             <div class="h-96 mb-8 flex items-center justify-center font-bold">
-                <h2>Line Chart will be displayed here</h2>
+                <Line :data="chartDataTwo" :options="chartOptionsTwo" />
             </div>
             <div class="space-y-4">
                 <div class="bg-[#ff9500]/10 rounded-2xl p-6 border border-[#ff9500]/30">
