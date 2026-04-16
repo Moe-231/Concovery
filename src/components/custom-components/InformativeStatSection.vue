@@ -1,7 +1,33 @@
 <script setup></script>
 
 <template>
-    <section class="relative py-28 lg:py-40 overflow-hidden bg-[#1d1d1f]">
+    <section class="relative py-28 lg:py-36 overflow-hidden" style="background: rgb(10, 10, 15);">
+    <div class="absolute inset-0 pointer-events-none"
+      style="background: radial-gradient(50% 60%, rgba(0, 122, 255, 0.1) 0%, transparent 70%);"></div>
+    <div class="relative max-w-[1200px] mx-auto px-6 sm:px-10 lg:px-16 text-center">
+      <div style="opacity: 1; transform: none;">
+        <h2 class="font-black tracking-tight leading-none mb-6 text-white"
+          style="font-size: clamp(40px, 7vw, 100px); letter-spacing: -0.03em;">THE COMEBACK<br><span
+            style="color: rgb(0, 122, 255);">STARTS HERE.</span></h2>
+        <p class="text-lg mb-12 max-w-md mx-auto leading-relaxed" style="color: rgba(255, 255, 255, 0.4);">Free. No sign
+          up. Built for Australian community sport players.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center"><router-link to="/exploredata" data-discover="true"><button
+              class="relative bg-[#007aff] text-white px-10 py-5 text-lg rounded-full font-semibold flex items-center gap-2 shadow-2xl shadow-[#007aff]/35 overflow-hidden">
+              <div class="absolute inset-0 -skew-x-12"
+                style="background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent); transform: translateX(77.197%);">
+              </div>Check My Sport
+            </button></router-link><router-link to="/" ><button
+              class="border border-white/20 text-white/70 hover:border-white/40 hover:text-white px-10 py-5 text-lg rounded-full font-semibold flex items-center gap-2 transition-all duration-300">Start
+              Recovery Plan<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-arrow-right">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg></button></router-link></div>
+      </div>
+    </div>
+  </section>
+    <!-- <section class="relative py-28 lg:py-40 overflow-hidden bg-[#1d1d1f]">
         <div class="absolute top-0 left-1/4 w-[600px] h-[400px] rounded-full pointer-events-none blur-3xl"
             style="background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, transparent 70%); transform: translateX(19.5846px) scale(1.09792);">
         </div>
@@ -54,7 +80,7 @@
                     </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
 </template>
 
