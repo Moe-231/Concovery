@@ -114,7 +114,7 @@ const chartOptionsTwo = {
 const applySportsFilter = async () => {
     fetchingSportsData.value = true
     try {
-        const response = await axios.get(`http://localhost:8080/postgres/sportsFilter?sportsType=${sportsType.value} `)
+        const response = await axios.get(`https://site--concovery-backend--gvxxw7q2vn57.code.run/postgres/sportsFilter?sportsType=${sportsType.value} `)
         if(response.status == 200) {
             fetchingSportsData.value = false
             sportsChartData.value = {
