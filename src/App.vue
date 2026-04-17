@@ -9,9 +9,9 @@ import SmoothCursor from './components/ui/smooth-cursor/SmoothCursor.vue';
 </script>
 <template>
  <NavBar/> 
- <div class="flex items-center justify-center text-xl">
+ <!-- <div class="flex items-center justify-center text-xl">
     <SmoothCursor/>
- </div>
+ </div> -->
  <router-view/>
  <Footer/>
 </template>

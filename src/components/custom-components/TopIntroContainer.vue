@@ -42,7 +42,7 @@ import BlurReveal from '../ui/blur-reveal/BlurReveal.vue';
                     </button></router-link>
                 <router-link to="/locatesupport"><button
                         class="border border-white/20 text-white/70 hover:border-white/40 hover:text-white px-9 py-4 text-base rounded-full font-semibold flex items-center gap-2 transition-all duration-300">
-                    Find Immediate Sport</button></router-link>
+                    Find Immediate Support</button></router-link>
             </div>
         </div>
         <div class="absolute bottom-8 flex flex-col items-center gap-1.5"

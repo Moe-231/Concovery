@@ -26,8 +26,10 @@ const fetchingDropdowns = ref(false)
 const fetchingSportsData = ref(false)
 const fetchingAgeData = ref(false)
 const fetchingTrendData = ref(false)
+const fetchingSportsComparisonData = ref(null)
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, LineElement, PointElement, CategoryScale, LinearScale)
+const topThreeSports = ref([])
 
 const sportsChartData = ref({
     labels: ['Male', 'Female'],
@@ -35,7 +37,7 @@ const sportsChartData = ref({
     datasets: [
         {
             label: 'Year 2023-24',
-            data: [0, 0],
+            data: [],
             backgroundColor: ['blue', 'pink'],
             borderRadius: 5
         }
@@ -48,7 +50,7 @@ const ageChartData = ref({
     datasets: [
         {
             label: 'Year 2023-24',
-            data: [0, 0],
+            data: [],
             backgroundColor: ['black', 'gray'],
             borderRadius: 5
         }
@@ -82,6 +84,19 @@ const trendAnalysisChartData = ref({
     ]
 })
 
+const sportsComparisonData = ref({
+    labels: ['Male', 'Female'],
+
+    datasets: [
+        {
+            label: 'Year 2023-24',
+            data: [],
+            backgroundColor: ['#007aff', '#5ac8fa', '#34c759', '#ff9500', '#ff2d55', '#af52de', '#ffcc00', '#ff3b30', 'black', 'gray', '#ff3b30', '#af52de', '#5ac8fa', '#007aff' ],
+            borderRadius: 5
+        }
+    ]
+})
+
 const chartOptions = {
     responsive: true,
     plugins: {
@@ -97,6 +112,23 @@ const chartOptions = {
 }
 
 const chartOptionsTwo = {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'left',
+            labels: { color: 'black' }
+        },
+        tooltip: { enabled: true }
+    },
+    scales: {
+        x: { ticks: { color: 'black' } },
+        y: { beginAtZero: true, ticks: { color: 'black' } }
+    }
+}
+
+
+const compChartOptions = {
+    indexAxis: 'y',
     responsive: true,
     plugins: {
         legend: {
@@ -194,7 +226,7 @@ const processAnalysisData = (maleData, femaleData) => {
     for(const prop of femaleData) {
         data2.push(prop.hospitalisation_count)
     }
-    percentageChangeFemale.value = ((data2[data2.length - 1] - data2[0]) / data2[0]) * 100 
+    percentageChangeFemale.value = (((data2[data2.length - 1] - data2[0]) / data2[0]) * 100).toFixed(1) 
     trendAnalysisChartData.value = {
         ...trendAnalysisChartData.value,
         labels: labels,
@@ -227,6 +259,41 @@ const fetchChartTrendAnalysisData = async () => {
 
 }
 
+const processSportsComparisonData = (inputData) => {
+    let labels = []
+    let data = []
+    for(const sportData of inputData){
+        labels.push(sportData?.sport_name)
+        data.push(sportData?.rate_per_100000)
+    }
+    sportsComparisonData.value = {
+        ...sportsComparisonData.value,
+        labels: labels,
+        datasets: [{
+            ...sportsComparisonData.value.datasets[0],
+            data: data
+        }]
+    }
+    topThreeSports.value = [labels[0], labels[1], labels[2]]
+    console.log("Top Three Sports are: ", topThreeSports)
+}
+
+const fetchSportsComparisonData = async () => {
+     fetchingSportsComparisonData.value = true
+    try {
+        const response = await axios.get(`https://site--concovery-backend--gvxxw7q2vn57.code.run/postgres/sportComparison`)
+        if(response.status == 200) {
+           processSportsComparisonData(response?.data)
+        }     
+    } catch (error) {
+        fetchingSportsComparisonData.value = false
+        console.log("================================ ")
+        console.log("Error caught in fetchingSportsComparisonData function: ", error)
+    } finally {
+        fetchingSportsComparisonData.value = false
+    }
+}
+
 onMounted(async() => {
     // Fetching live categories from the database
     await fetchDropdownOptions()
@@ -235,6 +302,7 @@ onMounted(async() => {
     await applySportsFilter()
     await applyAgeFilter()
     await fetchChartTrendAnalysisData()
+    await fetchSportsComparisonData()
 }
 )
 </script>
@@ -271,8 +339,9 @@ onMounted(async() => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Sports Dropdown -->
                 <div>
-                    <label class="block text-[#1d1d1f] font-semibold mb-3 text-sm uppercase tracking-wide">Select
-                        Sport</label>
+                    <label class="block text-[#1d1d1f] font-semibold mb-3 text-sm uppercase tracking-wide">
+                        What kind of sport do you like ?
+                    </label>
                     <select v-if="sportsDropdown" v-model="sportsType"
                         class="w-full bg-white border-2 border-[#d2d2d7] rounded-2xl px-6 py-4 text-[#1d1d1f] text-lg font-medium focus:outline-none focus:border-[#007aff] transition-colors">
                         <option v-for="sportItr in sportsDropdown" :value="sportItr.sport_name">{{ sportItr.sport_name }}</option>
@@ -293,8 +362,9 @@ onMounted(async() => {
                 </div>
                 <!-- Agegroup Dropdown -->
                 <div>
-                    <label class="block text-[#1d1d1f] font-semibold mb-3 text-sm uppercase tracking-wide">Select Age
-                        Group</label>
+                    <label class="block text-[#1d1d1f] font-semibold mb-3 text-sm uppercase tracking-wide">
+                        Which age group would you like to explore ?
+                    </label>
                     <select v-if="ageGroupDropdown" v-model="ageGroup"
                         class="w-full bg-white border-2 border-[#d2d2d7] rounded-2xl px-6 py-4 text-[#1d1d1f] text-lg font-medium focus:outline-none focus:border-[#007aff] transition-colors">
                         <option v-for="ageGroupItr in ageGroupDropdown" :value="ageGroupItr.age_group_label">{{ ageGroupItr.age_group_label }}</option>
@@ -338,8 +408,28 @@ onMounted(async() => {
                 <Bar :data="ageChartData" :options="chartOptions" />
             </div>
             <div class="bg-gradient-to-br from-[#007aff]/10 to-[#5ac8fa]/10 rounded-2xl p-6 border border-[#007aff]/30">
-                <p class="text-[#1d1d1f] text-lg leading-relaxed"><strong>Key Insight: </strong>
-                From 2023-24, {{ Number(sportsChartData.datasets[0].data[0])+Number(sportsChartData.datasets[0].data[1])}} concussion hospitalisations were recorded for {{ sportsType }}.</p>
+                <div class="text-[#1d1d1f] text-lg leading-relaxed"><strong>Key Insights: </strong>
+                    <p v-if="sportsChartData.datasets[0].data.length > 0">
+                        - From 2023-24, {{ Number(sportsChartData.datasets[0].data[0])+Number(sportsChartData.datasets[0].data[1])}} concussion hospitalisations were recorded for {{ sportsType }}.
+                    </p>
+                    <p v-else class="animate-pulse">
+                        Loading ...
+                    </p>
+                    <p v-if="sportsChartData.datasets[0].data.length > 0">
+                        {{ parseFloat(sportsChartData.datasets[0].data[0]) > parseFloat(sportsChartData.datasets[0].data[1]) ?
+                        `- Male sustained more hospitalizations overall for ${sportsType}` : `- Female sustained more hospitalizations overall for ${sportsType}`}}
+                    </p>
+                    <p v-else class="animate-pulse">
+                        Loading ...
+                    </p>
+                    <p v-if="ageChartData.datasets[0].data.length > 0">
+                        {{ parseFloat(ageChartData.datasets[0].data[0]) > parseFloat(ageChartData.datasets[0].data[1]) ?
+                        `- For the age-group ${ageGroup} Males sustained more hospitalizations count`  : `- For the age-group ${ageGroup} Females sustained more hospitalizations count`}}
+                    </p>
+                    <p v-else class="animate-pulse">
+                        Loading ...
+                    </p>
+                </div>
             </div>
             <p class="text-[#86868b] text-sm mt-4"
                 data-fg-dqrj67="33.110:33.18481:/src/app/pages/Data.tsx:233:11:9016:164:e:p:t"
@@ -376,6 +466,7 @@ onMounted(async() => {
                         <div>
                             <p class="text-[#1d1d1f] font-semibold mb-1">Key Insight: Male</p>
                             <p v-if="percentageChangeMale" class="text-[#1d1d1f]">{{ percentageChangeMale }}% {{ percentageChangeMale > 0 ? 'increase' : 'decrease' }}</p>
+                            <p v-else class="animate-pulse">Loading ...</p>
                         </div>
                     </div>
                 </div>
@@ -386,6 +477,7 @@ onMounted(async() => {
                         <div>
                             <p class="text-[#1d1d1f] font-semibold mb-1">Key Insight: Female</p>
                             <p v-if="percentageChangeFemale" class="text-[#1d1d1f]">{{ percentageChangeFemale }}% {{ percentageChangeFemale > 0 ? 'increase' : 'decrease' }}</p>
+                            <p v-else class="animate-pulse">Loading ...</p>
                         </div>
                     </div>
                 </div>
@@ -417,7 +509,7 @@ onMounted(async() => {
             <div class="h-96 mb-8">
                 <div class="recharts-responsive-container" style="width: 100%; height: 100%; min-width: 0px;">
                     <div class="flex items-center justify-center font-bold w-full h-full">
-                        <h3>Comparison graph goes here</h3>
+                        <Bar :data="sportsComparisonData" :options="compChartOptions" />
                     </div>
                 </div>
             </div>
@@ -426,18 +518,18 @@ onMounted(async() => {
                     class="bg-gradient-to-br from-[#007aff]/10 to-[#5ac8fa]/10 rounded-2xl p-6 border border-[#007aff]/30">
                     <p class="text-[#1d1d1f] text-lg leading-relaxed"><strong class="text-[#007aff]"
                             data-fg-dqrj151="33.110:33.18481:/src/app/pages/Data.tsx:432:17:17460:73:e:strong:t"
-                            data-fgid-dqrj151=":r1af:">Why this?</strong> because</p>
-                </div>
-                <div class="bg-[#f5f5f7] rounded-2xl p-6">
-                    <p class="text-[#1d1d1f] text-lg leading-relaxed"><strong>Contact sports dominate:</strong> AFL,
-                        Rugby Union, and Rugby
-                        League have the highest concussion rates per participant. However, all sports carry some
-                        concussion risk - from cycling falls to collisions in basketball.</p>
+                            data-fgid-dqrj151=":r1af:">Contact sports dominate:&nbsp;</strong>
+                        <span v-if="topThreeSports.length > 0" class="text-[#1d1d1f] text-lg leading-relaxed">
+                        {{ topThreeSports.join(', ')}} have the highest concussion rates per participant. However, all sports carry some
+                        concussion risk - from cycling falls to collisions in basketball.
+                    </span>
+                    <span v-else>
+                        <span class="animate-pulse">Loading ...</span>
+                    </span>
+                    </p>
                 </div>
             </div>
-            <p class="text-[#86868b] text-sm mt-4"
-                data-fg-dqrj159="33.110:33.18481:/src/app/pages/Data.tsx:443:11:18274:155:e:p:t"
-                data-fgid-dqrj159=":r1aj:">Source: AIHW Sports Injury in Australia 2023-24 AusPlay Participation Data
+            <p class="text-[#86868b] text-sm mt-4">Source: AIHW Sports Injury in Australia 2023-24 AusPlay Participation Data
                 2024-25</p>
         </div>
     </div>
