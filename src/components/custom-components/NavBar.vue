@@ -27,9 +27,9 @@ const isMenuOpen = ref(false)
                         Journey</router-link> -->
                     <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/locatesupport" :class="router.currentRoute.value.path == '/locatesupport' ? 'text-blue-500': 'text-black'">Find
                         Support</router-link>
+                    <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/crtresources" :class="router.currentRoute.value.path == '/crtresources' ? 'text-blue-500': 'text-black'">CRT Resources</router-link>    
+                 
                     <!-- <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]"
-                        to="/">Resources</router-link>
-                    <router-link class="transition-colors text-[#1d1d1f] hover:text-[#007aff]"
                         to="/">About</router-link> -->
                 </div>
                 <button v-if="!isMenuOpen" class="md:hidden text-[#1d1d1f] p-2" aria-label="Toggle menu" @click="() => isMenuOpen = true">
@@ -53,21 +53,20 @@ const isMenuOpen = ref(false)
                 </button>
 
             </div>
+
             <!-- Mobile Navigation Menu -->
             <div v-if="isMenuOpen" class="md:hidden py-4 px-4 space-y-2 border-t border-[#d2d2d7]/50 fadeInAnim">
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/" :class="router.currentRoute.value.path == '/' ? 'text-blue-500': 'text-black'">Home</router-link>
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/exploredata" :class="router.currentRoute.value.path == '/exploredata' ? 'text-blue-500': 'text-black'">
                     Data Insights
                 </router-link>
+                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/locatesupport" :class="router.currentRoute.value.path == '/locatesupport' ? 'text-blue-500': 'text-black'">
+                    Find Support
+                </router-link>
+                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/crtresources" :class="router.currentRoute.value.path == '/crtresources' ? 'text-blue-500': 'text-black'">
+                    CRT Resources
+                </router-link>     
                 <!-- <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]"
-                    to="/">Recovery Journey</router-link> -->
-                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/locatesupport" :class="router.currentRoute.value.path == '/locatesupport' ? 'text-blue-500': 'text-black'">Find
-                    Support</router-link>
-                <!-- <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]" to="/">The
-                    Science</router-link>
-                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]"
-                    to="/">Resources</router-link>
-                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors text-[#1d1d1f] hover:text-[#007aff]"
                     to="/">About</router-link> -->
             </div>
         </div>
