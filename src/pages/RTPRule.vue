@@ -3,6 +3,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
 import { ref } from 'vue';
 
 const scienceHidden = ref(true)
+const selectedTimeline = ref("2")
 </script>
 
 <template>
@@ -211,6 +212,319 @@ const scienceHidden = ref(true)
                         </div>
                     </div>
                 </div>
+                <!-- Day by Day Recovery Guide Section -->
+                <div>
+                    <div class="text-center mb-16" style="opacity: 1; transform: none;">
+                        <h2 class="text-4xl sm:text-5xl font-bold text-[#1d1d1f] tracking-tight mb-4">
+                            Day-by-Day Recovery Guide
+                        </h2>
+                        <p class="text-xl text-[#86868b]">
+                            Click any day to see what's happening inside your brain
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-3 justify-center mb-10">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" style="background: rgb(255, 59, 48);"></div>
+                            <span class="text-sm text-[#86868b] font-medium">Acute</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" style="background: rgb(255, 107, 48);"></div>
+                            <span class="text-sm text-[#86868b] font-medium">Early Recovery</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" style="background: rgb(255, 149, 0);"></div>
+                            <span class="text-sm text-[#86868b] font-medium">
+                                <svg style="display: inline;" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 36 36">
+                                <path fill="#ffcc4d" d="M2.653 35C.811 35-.001 33.662.847 32.027L16.456 1.972c.849-1.635 2.238-1.635 3.087 0l15.609 30.056c.85 1.634.037 2.972-1.805 2.972z" />
+                                <path fill="#231f20" d="M15.583 28.953a2.42 2.42 0 0 1 2.419-2.418a2.42 2.42 0 0 1 2.418 2.418a2.42 2.42 0 0 1-2.418 2.419a2.42 2.42 0 0 1-2.419-2.419m.186-18.293c0-1.302.961-2.108 2.232-2.108c1.241 0 2.233.837 2.233 2.108v11.938c0 1.271-.992 2.108-2.233 2.108c-1.271 0-2.232-.807-2.232-2.108z" />
+                                </svg> Day 7
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" style="background: rgb(200, 230, 0);"></div>
+                            <span class="text-sm text-[#86868b] font-medium">Mid Recovery</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" style="background: rgb(52, 199, 89);"></div>
+                            <span class="text-sm text-[#86868b] font-medium">Late Recovery</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" style="background: rgb(0, 122, 255);"></div>
+                            <span class="text-sm text-[#86868b] font-medium">Recovered</span>
+                        </div>
+                    </div>
+                    <!-- The Timeline Dots Section -->
+                    <div class="mb-10 w-fit">
+                        <!-- Original full timeline view -->
+                        <div class="relative flex gap-2 overflow-x-auto pb-10 pt-0 scroll-smooth" style="scrollbar-width: none;">
+                            <div class="absolute z-11 top-5 left-0 right-0 h-1 rounded-full bg-gradient-to-r from-[#ff3b30] via-[#ff9500] lg:via-[#c8e600] to-[rgb(255,149,0)] lg:to-[#34c759]"></div>
+                            <!-- Day 1 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 1">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 1 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,59,48)]' : ''" style="background: rgb(255, 59, 48);">
+                                </div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200  bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 1 ? 'bg-[rgb(255,59,48)]! text-white!' : ''">
+                                    1
+                                </div>
+                            </button>
+                             <!-- Day 2 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 2">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 2 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,59,48)]' : ''" style="background: rgb(255, 59, 48);"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 2 ? 'bg-[rgb(255,59,48)]! text-white!' : ''">
+                                    2
+                                </div>
+                            </button>
+                            <!-- Day 3 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 3">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 3 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,59,48)]' : ''" style="background: rgb(255, 59, 48)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 3 ? 'bg-[rgb(255,59,48)]! text-white!' : ''">
+                                    3
+                                </div>
+                            </button>
+                            <!-- Day 4 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 4">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 4 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,107,48)]' : ''" style="background: rgb(255, 107, 48);"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 4 ? 'bg-[rgb(255,107,48)]! text-white!' : ''">
+                                    4
+                                </div>
+                            </button>
+                            <!-- Day 5 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 5">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 5 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,107,48)]' : ''" style="background: rgb(255, 107, 48);"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 5 ? 'bg-[rgb(255,107,48)]! text-white!' : ''">
+                                    5
+                                </div>
+                            </button>
+                            <!-- Day 6 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 6">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 6 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,149,0)]' : ''" style="background: rgb(255, 149, 0);"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 6 ? 'bg-[rgb(255,149,0)]! text-white!' : ''">
+                                    6
+                                </div>
+                            </button>
+                            <!-- Day 7 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 7">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 7 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,149,0)]' : ''"  style="background: rgb(255, 149, 0)">
+                                </div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#ff9500]/10 text-[#ff9500] border border-[#ff9500]/30" :class="selectedTimeline == 7 ? 'bg-[rgb(255,149,0)]! text-white!' : ''">
+                                    <svg style="display: inline;" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 36 36">
+                                        <path fill="#ffcc4d" d="M2.653 35C.811 35-.001 33.662.847 32.027L16.456 1.972c.849-1.635 2.238-1.635 3.087 0l15.609 30.056c.85 1.634.037 2.972-1.805 2.972z" />
+                                        <path fill="#231f20" d="M15.583 28.953a2.42 2.42 0 0 1 2.419-2.418a2.42 2.42 0 0 1 2.418 2.418a2.42 2.42 0 0 1-2.418 2.419a2.42 2.42 0 0 1-2.419-2.419m.186-18.293c0-1.302.961-2.108 2.232-2.108c1.241 0 2.233.837 2.233 2.108v11.938c0 1.271-.992 2.108-2.233 2.108c-1.271 0-2.232-.807-2.232-2.108z" />
+                                    </svg> 7
+                                </div>
+                            </button>
+                            <!-- Day 8 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 8">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 8 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,204,0)]' : ''" style="background: rgb(255, 204, 0);"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 8 ? 'bg-[rgb(255,204,0)]! text-white!' : ''">
+                                    8
+                                </div>
+                            </button>
+                            <!-- Day 9 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 9">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 9 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,204,0)]' : ''" style="background: rgb(255, 204, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 9 ? 'bg-[rgb(255,204,0)]! text-white!' : ''">
+                                    9
+                                </div>
+                            </button>
+                            <!-- Day 10 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 10">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 10 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(200,230,0)]' : ''"  style="background: rgb(200, 230, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 10 ? 'bg-[rgb(200,230,0)]! text-white!' : ''">
+                                    10
+                                </div>
+                            </button>
+                            <!-- Day 11 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 11">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 11 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(200,230,0)]' : ''"  style="background: rgb(200, 230, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 11 ? 'bg-[rgb(200,230,0)]! text-white!' : ''">
+                                    11
+                                </div>
+                            </button>
+                            <!-- Day 12 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 12">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 12 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(200,230,0)]' : ''"  style="background: rgb(160, 216, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 12 ? 'bg-[rgb(160,216,0)]! text-white!' : ''">
+                                    12
+                                </div>
+                            </button>
+                            <!-- Day 13 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 13">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 13 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(120,200,0)]' : ''"  style="background: rgb(120, 200, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 13 ? 'bg-[rgb(120,200,0)]! text-white!' : ''">
+                                    13
+                                </div>
+                            </button>
+                             <!-- Day 14 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 14">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 14 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(80,184,0)]' : ''"  style="background: rgb(80, 184, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 14 ? 'bg-[rgb(80,184,0)]! text-white!' : ''">
+                                    14
+                                </div>
+                            </button>
+                            <!-- Day 15 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 15">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 15 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(120,200,0)]' : ''"  style="background: rgb(80, 184, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 15 ? 'bg-[rgb(80,184,0)]! text-white!' : ''">
+                                    15
+                                </div>
+                            </button>
+                            <!-- Day 16 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 16">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 16 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 16 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    16
+                                </div>
+                            </button>
+                            <!-- Day 17 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 17">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 17 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 17 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    17
+                                </div>
+                            </button>
+                            <!-- Day 18 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 18">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 18 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 18 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    18
+                                </div>
+                            </button>
+                            <!-- Day 19 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 19">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 19 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 19 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    19
+                                </div>
+                            </button>
+                            <!-- Day 20 -->
+                            <button class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 20">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 20 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 20 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    20
+                                </div>
+                            </button>
+                            <!-- Day 21 -->
+                            <button class="hidden sflex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 21">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 21 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#34c759]/10 text-[#34c759] border border-[#34c759]/30" :class="selectedTimeline == 21 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    <svg style="display: inline;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 13l4 4L19 7" />
+                                    </svg> 21
+                                </div>
+                            </button>
+                        </div>
+                        <!-- Mobile View Days 8-14 -->
+                        <div class="relative flex lg:hidden gap-2 overflow-x-auto pb-10 pt-0 scroll-smooth" style="scrollbar-width: none;">
+                            <div class="absolute z-11 top-5 left-0 right-0 h-1 rounded-full bg-gradient-to-r from-[rgb(255,204,0)] via-[rgb(200,230,0)] to-[rgb(80,184,0)]"></div>
+                            <!-- Day 8 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 8">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 8 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,204,0)]' : ''" style="background: rgb(255, 204, 0);"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 8 ? 'bg-[rgb(255,204,0)]! text-white!' : ''">
+                                    8
+                                </div>
+                            </button>
+                            <!-- Day 9 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 9">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 9 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(255,204,0)]' : ''" style="background: rgb(255, 204, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 9 ? 'bg-[rgb(255,204,0)]! text-white!' : ''">
+                                    9
+                                </div>
+                            </button>
+                            <!-- Day 10 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 10">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 10 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(200,230,0)]' : ''"  style="background: rgb(200, 230, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 10 ? 'bg-[rgb(200,230,0)]! text-white!' : ''">
+                                    10
+                                </div>
+                            </button>
+                            <!-- Day 11 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 11">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 11 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(200,230,0)]' : ''"  style="background: rgb(200, 230, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 11 ? 'bg-[rgb(200,230,0)]! text-white!' : ''">
+                                    11
+                                </div>
+                            </button>
+                            <!-- Day 12 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 12">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 12 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(200,230,0)]' : ''"  style="background: rgb(160, 216, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 12 ? 'bg-[rgb(160,216,0)]! text-white!' : ''">
+                                    12
+                                </div>
+                            </button>
+                            <!-- Day 13 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 13">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 13 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(120,200,0)]' : ''"  style="background: rgb(120, 200, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 13 ? 'bg-[rgb(120,200,0)]! text-white!' : ''">
+                                    13
+                                </div>
+                            </button>
+                             <!-- Day 14 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 14">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 14 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(80,184,0)]' : ''"  style="background: rgb(80, 184, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 14 ? 'bg-[rgb(80,184,0)]! text-white!' : ''">
+                                    14
+                                </div>
+                            </button>
+                        </div>
+                        <!-- Mobile View Days 15-21 -->
+                        <div class="relative flex lg:hidden gap-2 overflow-x-auto pb-10 pt-0 scroll-smooth" style="scrollbar-width: none;">
+                            <div class="absolute z-11 top-5 left-0 right-0 h-1 rounded-full bg-gradient-to-r from-[rgb(80,184,0)] to-[rgb(52,199,89)]"></div>
+                            <!-- Day 15 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 15">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 15 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(120,200,0)]' : ''"  style="background: rgb(80, 184, 0)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 15 ? 'bg-[rgb(80,184,0)]! text-white!' : ''">
+                                    15
+                                </div>
+                            </button>
+                            <!-- Day 16 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 16">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 16 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 16 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    16
+                                </div>
+                            </button>
+                            <!-- Day 17 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 17">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 17 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 17 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    17
+                                </div>
+                            </button>
+                            <!-- Day 18 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 18">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 18 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 18 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    18
+                                </div>
+                            </button>
+                            <!-- Day 19 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 19">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 19 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 19 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    19
+                                </div>
+                            </button>
+                            <!-- Day 20 -->
+                            <button class="flex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 20">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 20 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#f5f5f7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]" :class="selectedTimeline == 20 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    20
+                                </div>
+                            </button>
+                            <!-- Day 21 -->
+                            <button class="sflex-shrink-0 flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 21">
+                                <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 21 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
+                                <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#34c759]/10 text-[#34c759] border border-[#34c759]/30" :class="selectedTimeline == 21 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
+                                    <svg style="display: inline;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 13l4 4L19 7" />
+                                    </svg> 21
+                                </div>
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+                <!-- Helpful disclaimer -->
                 <div class="text-center border-t border-[#f0f0f0] pt-12">
                     <p class="text-[#86868b] text-base">
                         All recovery protocols based on the
