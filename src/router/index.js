@@ -3,6 +3,7 @@ import ConcussionVisulization from "@/components/custom-components/ConcussionVis
 import ConcussionDataExplorer from "@/pages/ConcussionDataExplorer.vue";
 import CRTResources from "@/pages/CRTResources.vue";
 import LocateSupportPage from "@/pages/LocateSupportPage.vue";
+import RTPRule from "@/pages/RTPRule.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -29,6 +30,14 @@ const router = createRouter({
       component: CRTResources,
       meta: {
         title: "CRT Resources",
+      },
+    },
+    {
+      path: "/rtprule",
+      name: "21-Day Rule",
+      component: RTPRule,
+      meta: {
+        title: "21-Day Rule",
       },
     },
   ],

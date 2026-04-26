@@ -1,0 +1,254 @@
+<script setup>
+import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
+import { ref } from 'vue';
+
+const scienceHidden = ref(true)
+</script>
+
+<template>
+    <main class="flex-1">
+        <div class="bg-white min-h-screen">
+            <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden" style="background: linear-gradient(rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);">
+                <div class="relative text-center max-w-4xl mx-auto px-6 py-20">
+                    <BlurReveal :delay="0.2" :duration="0.75">
+                    <div class="inline-flex items-center gap-2 bg-[#ff9500]/8 border border-[#ff9500]/20 text-[#ff9500] text-sm font-semibold px-5 py-2 rounded-full mb-8 tracking-wide uppercase"
+                        style="opacity: 1; transform: none;">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#ff9500] animate-pulse">
+                        </span>
+                        The Science Behind the Rule
+                    </div>
+                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#1d1d1f] mb-8 leading-tight tracking-tight"
+                        style="opacity: 1; transform: none;">
+                        Why your brain needs <span class="text-[#ff9500]">21 days</span>
+                        <br>not 7
+                    </h1>
+                    <p class="text-xl text-[#86868b] mb-12 leading-relaxed max-w-2xl mx-auto"
+                        style="opacity: 1; transform: none;">Symptoms clear on day 7. Your
+                        brain doesn't finish healing until day 21. That gap is where most players get seriously
+                        re-injured.
+                    </p>
+                    </BlurReveal>
+                    <div v-if="scienceHidden" style="opacity: 1; transform: none;">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-2xl mx-auto mb-10">
+                            <div class="bg-white border border-[#ff3b30]/20 rounded-2xl px-4 py-3 text-sm text-[#1d1d1f] italic shadow-sm text-left"
+                                style="opacity: 1; transform: none;">
+                                "I'll be fine."
+                            </div>
+                            <div class="bg-white border border-[#ff3b30]/20 rounded-2xl px-4 py-3 text-sm text-[#1d1d1f] italic shadow-sm text-left"
+                                style="opacity: 1; transform: none;">
+                                "It's just a headache."
+                            </div>
+                            <div class="bg-white border border-[#ff3b30]/20 rounded-2xl px-4 py-3 text-sm text-[#1d1d1f] italic shadow-sm text-left"
+                                style="opacity: 1; transform: none;">
+                                "I feel completely
+                                normal."
+                            </div>
+                            <div class="bg-white border border-[#ff3b30]/20 rounded-2xl px-4 py-3 text-sm text-[#1d1d1f] italic shadow-sm text-left"
+                                style="opacity: 1; transform: none;">
+                                "I can't let my team
+                                down."
+                            </div>
+                            <div class="bg-white border border-[#ff3b30]/20 rounded-2xl px-4 py-3 text-sm text-[#1d1d1f] italic shadow-sm text-left"
+                                style="opacity: 1; transform: none;">
+                                "It wasn't even that bad."
+                            </div>
+                            <div class="bg-white border border-[#ff3b30]/20 rounded-2xl px-4 py-3 text-sm text-[#1d1d1f] italic shadow-sm text-left"
+                                style="opacity: 1; transform: none;">
+                                "I don't need three weeks
+                                off."
+                            </div>
+                        </div>
+                        <button @click="() => scienceHidden = !scienceHidden"
+                            class="bg-[#ff9500] text-white px-10 py-5 text-lg rounded-full font-semibold flex items-center gap-2 mx-auto shadow-xl shadow-[#ff9500]/25 hover:shadow-2xl hover:shadow-[#ff9500]/35 hover:scale-105 transition-all duration-150 cursor-pointer">
+                            Show me the science
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-arrow-right">
+                                <path d="M5 12h14"></path>
+                                <path d="m12 5 7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div v-else style="opacity: 1; transform: none;">
+                        <div class="flex flex-col items-center gap-2 text-[#86868b]" style="opacity: 1;">
+                            <span class="text-xs tracking-widest uppercase font-medium">
+                                Scroll to explore
+                            </span>
+                            <div class="animateUpandDown">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-arrow-right rotate-90"
+                                    data-fg-cnbi86="33.116:33.38486:/src/app/pages/TwentyOneDayRule.tsx:767:17:24731:46:e:ArrowRight::::::s5N"
+                                    data-fgid-cnbi86=":r10c:">
+                                    <path d="M5 12h14"></path>
+                                    <path d="m12 5 7 7-7 7"></path>
+                                </svg>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            <div v-if="!scienceHidden" class="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 py-20 space-y-24">
+                <div class="relative">
+                    <div class="rounded-3xl overflow-hidden shadow-2xl" style="background: linear-gradient(135deg, rgb(29, 29, 31) 0%, rgb(45, 26, 26) 100%);">
+                        <div class="bg-[#ff9500] px-8 py-4 flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-white animate-pulse">
+                            </div>
+                            <span class="text-white font-bold text-lg tracking-wide uppercase">
+                                The Day 7 Trap - Why Players Get It Wrong
+                            </span>
+                        </div>
+                        <div class="p-10 lg:p-14">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                                <!-- What you feel on day 7 Section -->
+                                <div class="text-center">
+                                    <div class="text-[#86868b] text-sm font-semibold uppercase tracking-widest mb-6">
+                                        What you feel on Day 7
+                                    </div>
+                                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8 mb-6">
+                                        <div class="flex justify-center text-6xl mb-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+                                                <ellipse cx="32" cy="31.964" fill="#fbbf67" rx="32" ry="31.961" />
+                                                <path fill="#633d19" d="M52.1 39.35c0 10.996-8.932 19.921-19.947 19.921c-11.01 0-19.941-8.925-19.941-19.921m17.181-14.2c-1.371-3.738-4.481-7.317-8.775-7.232c-4 .076-6.419 4.308-7.725 7.512c-.814 2 2.428 2.861 3.234.89c.838-2.057 2.073-4.329 4.339-5.02c2.594-.794 4.968 2.764 5.692 4.739c.737 2.01 3.978 1.144 3.235-.891m5.827-.028c1.371-3.739 4.479-7.316 8.774-7.234c4.01.078 6.417 4.309 7.723 7.512c.817 2-2.428 2.863-3.232.892c-.838-2.059-2.075-4.329-4.338-5.02c-2.597-.792-4.971 2.767-5.693 4.741c-.738 2.01-3.979 1.138-3.234-.892" />
+                                                <path fill="#fff" d="M48.688 41.35c0 4.392-7.553 7.958-16.863 7.958c-9.303 0-16.858-3.566-16.858-7.958" />
+                                            </svg>
+                                        </div>
+                                        <div class="text-white text-2xl font-bold mb-3">
+                                            I feel fine
+                                        </div>
+                                        <div class="space-y-2 text-left">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-[#34c759]"></div>
+                                                <span class="text-white/70 text-sm">No headache</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-[#34c759]"></div>
+                                                <span class="text-white/70 text-sm">
+                                                    No dizziness
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-[#34c759]"></div>
+                                                <span class="text-white/70 text-sm">
+                                                    Normal energy
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-[#34c759]"></div>
+                                                <span class="text-white/70 text-sm">
+                                                    Ready to play
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-[#34c759] font-semibold">Symptoms: CLEAR</div>
+                                </div>
+                                <!-- VS -->
+                                <div class="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 pointer-events-none z-10">
+                                    <div class="w-px h-20 bg-white/20"></div>
+                                    <div class="bg-[#ff9500] rounded-full px-3 py-1 text-white text-xs font-bold">VS</div>
+                                    <div class="w-px h-20 bg-white/20"></div>
+                                </div>
+                                <!-- What your brain is doing on Day 7 Section -->
+                                <div class="text-center">
+                                    <div class="text-[#86868b] text-sm font-semibold uppercase tracking-widest mb-6">
+                                        What your brain is doing on Day 7
+                                    </div>
+                                    <div class="bg-[#ff9500]/10 border border-[#ff9500]/30 rounded-2xl p-8 mb-6">
+                                        <div class="flex justify-center text-6xl mb-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 36 36">
+                                                <path fill="#ea596e" d="M29.896 26.667c.003.283-.07.653-.146.958c-.531 2.145-2.889 4.552-6.208 4.333c-3.008-.198-5.458-1.642-5.458-3.667s2.444-3.667 5.458-3.667s6.335.018 6.354 2.043" />
+                                                <path fill="#dd2e44" d="M23.542 24.964c-1.619 0-5.314.448-6.162.448c-1.498 0-2.713.94-2.713 2.1c0 .558.286 1.062.744 1.438c0 0 1.006 1.009 2.818.525c.793-.212 2.083-1.786 4.354-2.036c1.131-.125 3.25.75 6.974.771c.16-.344.193-.583.193-.583c0-2.027-3.194-2.663-6.208-2.663" />
+                                                <path fill="#f4abba" d="M29.75 27.625s2.184-.443 3.542-2.229c1.583-2.083 1.375-4.312 1.375-4.312c1.604-3-.5-5.813-.5-5.813C33.958 12.104 32 10.792 32 10.792c-1.271-3.021-4.083-3.833-4.083-3.833c-2.208-2.583-6.125-2.5-6.125-2.5s-3.67-1.345-8.708.167c-.833.25-3.625.833-5.667 2.083C.981 10.649.494 16.793.584 17.792C1.083 23.375 5 24.375 7.5 24.958c.583 1.583 2.729 4.5 6.583 3.417c4.75-.833 6.75-2.25 7.917-2.25s4.417 1.25 7.75 1.5" />
+                                                <g fill="#ea596e">
+                                                    <path d="M17.737 18.648c2.328-1.255 3.59-1.138 4.704-1.037c.354.032.689.057 1.028.055c1.984-.045 3.591-.881 4.302-1.69a.501.501 0 0 0-.752-.661c-.548.624-1.899 1.313-3.573 1.351c-.3.009-.601-.021-.913-.05c-1.195-.111-2.679-.247-5.271 1.152c-.665.359-1.577.492-2.565.592c-2.197-3.171-.875-5.933-.497-6.591c.037.002.073.014.111.014c.4 0 .802-.098 1.166-.304a.5.5 0 0 0-.492-.87a1.426 1.426 0 0 1-1.88-.467a.5.5 0 0 0-.841.539c.237.371.571.65.948.837c-.521 1.058-1.51 3.84.372 6.951c-1.324.13-2.65.317-3.688.986a7.2 7.2 0 0 0-1.878 1.791c-.629-.108-2.932-.675-3.334-3.231c.25-.194.452-.45.577-.766a.5.5 0 1 0-.93-.368a.77.77 0 0 1-.454.461a.78.78 0 0 1-.643-.07a.5.5 0 0 0-.486.874c.284.158.588.238.89.238c.037 0 .072-.017.109-.019c.476 2.413 2.383 3.473 3.732 3.794a3.7 3.7 0 0 0-.331 1.192a.5.5 0 0 0 .454.542l.045.002a.5.5 0 0 0 .498-.456c.108-1.213 1.265-2.48 2.293-3.145c.964-.621 2.375-.752 3.741-.879c1.325-.121 2.577-.237 3.558-.767m12.866-1.504a.5.5 0 0 0 .878.48c.019-.034 1.842-3.449-1.571-5.744a.5.5 0 0 0-.558.83c2.644 1.778 1.309 4.326 1.251 4.434M9.876 9.07a.5.5 0 0 0 .406-.208c1.45-2.017 3.458-1.327 3.543-1.295a.5.5 0 0 0 .345-.938c-.96-.356-3.177-.468-4.7 1.65a.5.5 0 0 0 .406.791m13.072-1.888c2.225-.181 3.237 1.432 3.283 1.508a.5.5 0 0 0 .863-.507c-.054-.091-1.34-2.218-4.224-1.998a.5.5 0 0 0 .078.997m9.15 14.611c-.246-.014-.517.181-.539.457c-.002.018-.161 1.719-1.91 2.294a.499.499 0 0 0 .157.975a.5.5 0 0 0 .156-.025c2.372-.778 2.586-3.064 2.594-3.161a.5.5 0 0 0-.458-.54" />
+                                                    <path d="M7.347 16.934a.5.5 0 1 0 .965.26a1.423 1.423 0 0 1 1.652-1.014a.5.5 0 0 0 .205-.979a2.35 2.35 0 0 0-1.248.086c-1.166-1.994-.939-3.96-.936-3.981a.5.5 0 0 0-.429-.562a.503.503 0 0 0-.562.427c-.013.097-.28 2.316 1.063 4.614a2.4 2.4 0 0 0-.71 1.149m11.179-2.47a1.07 1.07 0 0 1 1.455.015a.5.5 0 0 0 .707-.011a.5.5 0 0 0-.01-.707a2 2 0 0 0-.797-.465c.296-1.016.179-1.467-.096-2.312a21 21 0 0 1-.157-.498l-.03-.1c-.364-1.208-.605-2.005.087-3.13a.5.5 0 0 0-.852-.524c-.928 1.508-.587 2.637-.192 3.944l.03.1q.088.29.163.517c.247.761.322 1.016.02 1.936a2 2 0 0 0-1.01.504a.5.5 0 0 0 .682.731m6.365-2.985a2 2 0 0 0 .859-.191a.5.5 0 0 0-.426-.905a1.07 1.07 0 0 1-1.384-.457a.5.5 0 1 0-.881.472c.18.336.448.601.76.785c-.537 1.305-.232 2.691.017 3.426a.5.5 0 1 0 .947-.319c-.168-.498-.494-1.756-.002-2.826c.038.002.073.015.11.015m4.797 9.429a.497.497 0 0 0-.531-.467a1.825 1.825 0 0 1-1.947-1.703a.51.51 0 0 0-.533-.465a.5.5 0 0 0-.465.533c.041.59.266 1.122.608 1.555c-.804.946-1.857 1.215-2.444 1.284c-.519.062-.973.009-1.498-.053c-.481-.055-1.025-.118-1.698-.098l-.005.001c-.02-.286-.088-.703-.305-1.05a.501.501 0 0 0-.847.531c.134.215.159.558.159.725c-.504.181-.94.447-1.334.704c-.704.458-1.259.82-2.094.632c-.756-.173-1.513-.208-2.155-.118c-.1-.251-.258-.551-.502-.782a.5.5 0 0 0-.687.727c.086.081.154.199.209.317c-1.103.454-1.656 1.213-1.682 1.25a.499.499 0 0 0 .407.788a.5.5 0 0 0 .406-.205c.005-.008.554-.743 1.637-1.04c.56-.154 1.363-.141 2.146.037c.219.05.422.067.619.07c.093.218.129.477.134.573a.5.5 0 0 0 .499.472l.027-.001a.5.5 0 0 0 .473-.523a3 3 0 0 0-.13-.686c.461-.167.862-.428 1.239-.673c.572-.373 1.113-.726 1.82-.749c.592-.021 1.08.036 1.551.091c.474.055.94.091 1.454.061c.091.253.084.591.07.704a.503.503 0 0 0 .497.563a.5.5 0 0 0 .495-.435a2.9 2.9 0 0 0-.059-.981a4.67 4.67 0 0 0 2.345-1.471a2.8 2.8 0 0 0 1.656.413a.5.5 0 0 0 .465-.531" />
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="text-[#ff9500] text-2xl font-bold mb-3">30 - 40% healed</div>
+                                        <div class="space-y-2 text-left">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-[#ff9500]"></div>
+                                                <span class="text-white/70 text-sm">
+                                                    Axons still regenerating
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-[#ff9500]"></div>
+                                                <span class="text-white/70 text-sm">
+                                                    Energy metabolism compromised
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-[#ff9500]"></div>
+                                                <span class="text-white/70 text-sm">
+                                                    Blood flow not normalized
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2 h-2 rounded-full bg-[#ff9500]"></div>
+                                                <span class="text-white/70 text-sm">
+                                                    Cell membranes repairing
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-[#ff9500] font-semibold">Brain: STILL HEALING</div>
+                                </div>
+                            </div>
+                            <div class="mt-10 bg-[#ff3b30]/15 border border-[#ff3b30]/30 rounded-2xl p-6 text-center">
+                                <div class="text-[#ff3b30] text-4xl font-bold mb-2">3-5x</div>
+                                <div class="text-white text-lg font-semibold">
+                                    More likely to be re-injured if you return on Day 7
+                                </div>
+                                <div class="text-white/50 text-sm mt-2">
+                                    Source: AIS Concussion and Brain Health Position Statement
+                                    2024
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center border-t border-[#f0f0f0] pt-12">
+                    <p class="text-[#86868b] text-base">
+                        All recovery protocols based on the
+                        <span class="font-semibold text-[#1d1d1f]">
+                            Australian Institute of Sport (AIS) Concussion and Brain Health
+                            Position Statement 2024
+                        </span>
+                        <br>Neuroscience grounded in Giza &amp; Hovda (2014) neurometabolic
+                        cascade research
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</template>
+
+<style scoped>
+.animateUpandDown {
+    animation-name: itemUpandDown;
+    animation-iteration-count: infinite;
+    animation-duration: 1500ms;
+    animation-timing-function: ease-out;
+}
+
+
+@keyframes itemUpandDown {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(5.76755px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+
+}
+</style>
