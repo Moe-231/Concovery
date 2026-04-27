@@ -1,9 +1,173 @@
 <script setup>
 import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const scienceHidden = ref(true)
-const selectedTimeline = ref("2")
+const selectedTimeline = ref(1)
+const selectedNeuroButton = ref(1)
+
+const controlNsPagination = (direction) => {
+    if(direction == "forwards"){
+        if(selectedNeuroButton.value < 6){
+            selectedNeuroButton.value += 1
+        }
+    } else {
+        if(selectedNeuroButton.value > 1){
+            selectedNeuroButton.value -= 1
+        }
+    }
+}
+
+const neuroScienceData = [
+    {
+        heading: "The Impact",
+        subheading: "What happends in milliseconds",
+        description: "A rotational force hits the brain. The skull stops but the brain keeps moving — twisting inside. This shearing force stretches axons (the long fibres connecting neurons) beyond their elastic limit.",
+        citation: "Diffuse Axonal Injury - Giza & Hovda, 2014"
+    },
+    {
+        heading: "Axonal Shearing",
+        subheading: "The invisible damage",
+        description: "Stretched axons lose their ability to transmit signals. Some snap completely. This disrupts communication across the entire brain - even though you cannot see or feel it happening.",
+        citation: "Axonal Stretch Injury - Queensland Brain Institute"
+    },
+    {
+        heading: "Neurometabolic Crisis",
+        subheading: "Days 1 through 7",
+        description: "Damaged axons flood the brain with glutamate. Potassium leaks out of cells. The brain burns through ATP (energy) trying to restore balance. This energy crisis is why you feel foggy, slow, and exhausted.",
+        citation: "Neurometabolic Cascade - Giza & Hovda, 2014"
+    },
+    {
+        heading: "The Symptom Gap",
+        subheading: "Day 7 - the danger zone",
+        description: "Your symptoms clear because the acute energy crisis stabilises. But axonal repair has barely begun. Your brain is only 30-40% recovered. This is why feeling fine is not the same as being healed.",
+        citation: "AIS Position Statement 2024 - concussioninsport.gov.au"
+    },
+    {
+        heading: "Axonal Repair",
+        subheading: "Days 7 through 21",
+        description: "Microtubules slowly rebuild inside damaged axons. New myelin sheaths form. Neural pathways reconnect. This structural repair takes the full 21 days - it cannot be rushed.",
+        citation: "Structural Recovery Timeline - AIS 2024"
+    },
+    {
+        heading: "Day 21 - Fully Recovered",
+        subheading: "Safe to return",
+        description: "Axons are repaired. Energy metabolism is restored. Myelin sheaths are rebuilt. Neural pathways are reconnected. Only now is the brain ready to handle the forces of contact sport.",
+        citation: "AIS Concussion and Brain Health Position Statement 2024"
+    }
+]
+
+const helpfulTrackingInfo = [
+    {
+        recoveryPercentage: 5, 
+        brainState: "Brain in crisis"
+    },
+    {
+        recoveryPercentage: 8, 
+        brainState: "Brain in crisis"
+    },
+    {
+        recoveryPercentage: 12, 
+        brainState: "Brain in crisis"
+    },
+    {
+        recoveryPercentage: 18, 
+        brainState: "Brain in crisis"
+    },
+    {
+        recoveryPercentage: 22, 
+        brainState: "Brain in crisis"
+    },
+    {
+        recoveryPercentage: 27, 
+        brainState: "Still healing"
+    },
+    {
+        recoveryPercentage: 30, 
+        brainState: "Still healing"
+    },
+    {
+        recoveryPercentage: 38, 
+        brainState: "Still healing"
+    },
+    {
+        recoveryPercentage: 45, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 52, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 58, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 64, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 70, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 76, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 82, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 86, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 89, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 92, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 94, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 97, 
+        brainState: "Repairing"
+    },
+    {
+        recoveryPercentage: 100, 
+        brainState: "Fully Recovered"
+    }
+]
+
+const subHeadingColor  = computed(() => {
+    switch(selectedNeuroButton.value){
+        case 1:
+            return "text-[rgb(255,49,48)]"
+        case 2:
+            return "text-[rgb(255,107,48)]"
+        case 3:
+            return "text-[rgb(255,149,0)]"
+        case 4:
+            return "text-[rgb(255,204,0)]"
+        case 5:
+            return "text-[rgb(52,199,89)]"
+        case 6:
+            return "text-[rgb(0,122,255)]"
+    }
+})
+
+const handleTimelinePagination = (direction) => {
+    if (direction === 'forwards' && selectedTimeline.value < 21) {
+        selectedTimeline.value++;
+    } else if (direction === 'backwards' && selectedTimeline.value > 1) {
+        selectedTimeline.value--;
+    }
+}
 </script>
 
 <template>
@@ -404,7 +568,7 @@ const selectedTimeline = ref("2")
                                 </div>
                             </button>
                             <!-- Day 21 -->
-                            <button class="hidden sflex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer" @click="() => selectedTimeline = 21">
+                            <button @click="() => selectedTimeline = 21" class="hidden flex-shrink-0 lg:flex flex-col items-center gap-2 pt-0 cursor-pointer">
                                 <div class="w-3 h-3 rounded-full relative z-10 transition-all duration-200" :class="selectedTimeline == 21 ? 'scale-[1.4] shadow-[0_0_0_4px_white,_0_0_0_6px_rgb(52,199,89)]' : ''"  style="background: rgb(52, 199, 89)"></div>
                                 <div class="px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#34c759]/10 text-[#34c759] border border-[#34c759]/30" :class="selectedTimeline == 21 ? 'bg-[rgb(52,199,89)]! text-white!' : ''">
                                     <svg style="display: inline;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -523,6 +687,140 @@ const selectedTimeline = ref("2")
                         </div>
                         
                     </div>
+                </div>
+                <!-- Day Description Display Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8" style="opacity: 1; transform: none;">
+                        <div class="lg:col-span-2 flex flex-col items-stretch justify-start">
+                            <div class="bg-white rounded-3xl border border-[#f0f0f0] shadow-xl overflow-hidden">
+                                <div class="px-6 py-4 flex items-center justify-between" style="background: rgba(0, 122, 255, 0.03); border-bottom: 1px solid rgba(0, 122, 255, 0.125);">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-2.5 h-2.5 rounded-full animate-pulse" style="background: rgb(0, 122, 255);"></div>
+                                        <span class="text-xs font-bold uppercase tracking-widest" style="color: rgb(0, 122, 255);">Neuroscience
+                                            Animation
+                                        </span>
+                                    </div>
+                                    <button class="w-8 h-8 rounded-full flex items-center justify-center border transition-all hover:scale-105" style="border-color: rgba(0, 122, 255, 0.25); color: rgb(0, 122, 255);">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause"
+                                            data-fg-oc613="33.53:37.77791:/src/app/components/BrainNeuroscienceAnimation.tsx:1105:22:34692:19:e:Pause::::::Cv7I"
+                                            data-fgid-oc613=":r157:">
+                                            <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+                                            <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="p-6 pb-4">
+                                    <div style="opacity: 1; transform: none;">
+                                        <div class="relative flex items-center justify-center">
+                                            <div class="absolute inset-0 rounded-2xl" style="background: radial-gradient(rgba(0, 122, 255, 0.03) 0%, transparent 70%); transform: scale(1.02599);">
+                                            </div>
+                                            <!-- Section to display neuroscience animation -->
+                                            <canvas width="380" height="300" class="relative z-10 rounded-xl"
+                                                style="max-width: 100%; background: rgba(250, 250, 252, 0.5); border: 1px solid red">
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="px-6 pb-4">
+                                    <div>
+                                        <BlurReveal :delay="0.2" :duration="0.75" :key="selectedNeuroButton">
+                                        <div class="font-bold text-xl text-[#1d1d1f] mb-1">{{ neuroScienceData[selectedNeuroButton - 1].heading }}</div>
+                                        <div class="text-sm font-semibold mb-3" :class="subHeadingColor">
+                                            {{ neuroScienceData[selectedNeuroButton - 1].subheading }}
+                                        </div>
+                                        <p class="text-[#86868b] text-sm leading-relaxed mb-3">
+                                            {{ neuroScienceData[selectedNeuroButton - 1].description }}
+                                        </p>
+                                        <div class="text-[10px] text-[#c0c0c0] font-medium">
+                                            {{ neuroScienceData[selectedNeuroButton - 1].citation }}
+                                        </div>
+                                        </BlurReveal>
+                                    </div>
+                                    
+                                </div>
+                                <div class="px-6 pb-6">
+                                    <div class="flex items-center justify-between">
+                                        <!-- Backwards Button -->
+                                        <button @click="() => controlNsPagination('backwards')" class="w-8 h-8 rounded-full border border-[#e0e0e0] flex items-center justify-center disabled:opacity-30 cursor-pointer disabled:cursor-default transition-all text-[#86868b]" :class="selectedNeuroButton == 1 ? '' : 'hover:text-[#007aff] hover:border-[#007aff]'" :disabled="selectedNeuroButton == 1 ? true : false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-chevron-left">
+                                                <path d="m15 18-6-6 6-6"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="flex gap-2">
+                                            <button @click="() => selectedNeuroButton = 1" class="transition-all duration-300 rounded-full cursor-pointer" :class="selectedNeuroButton == 1 ? 'w-[24px] bg-[rgb(255,49,48)]' : 'w-[8px] bg-[rgb(210,210,215)]'" style="height: 8px;"></button>
+                                            <button @click="() => selectedNeuroButton = 2" class="transition-all duration-300 rounded-full cursor-pointer" :class="selectedNeuroButton == 2 ? 'w-[24px] bg-[rgb(255,107,48)]': 'w-[8px] bg-[rgb(210,210,215)]'" style="height: 8px;"></button>
+                                            <button @click="() => selectedNeuroButton = 3" class="transition-all duration-300 rounded-full cursor-pointer" :class="selectedNeuroButton == 3 ? 'w-[24px] bg-[rgb(255,149,0)]' : 'w-[8px] bg-[rgb(210,210,215)]'" style="height: 8px;"></button>
+                                            <button @click="() => selectedNeuroButton = 4" class="transition-all duration-300 rounded-full cursor-pointer" :class="selectedNeuroButton == 4 ? 'w-[24px] bg-[rgb(255,204,0)]' : 'w-[8px] bg-[rgb(210,210,215)]'" style="height: 8px;"></button>
+                                            <button @click="() => selectedNeuroButton = 5" class="transition-all duration-300 rounded-full cursor-pointer" :class="selectedNeuroButton == 5 ? 'w-[24px] bg-[rgb(52,199,89)]' : 'w-[8px] bg-[rgb(210,210,215)]'" style="height: 8px;"></button>
+                                            <button @click="() => selectedNeuroButton = 6" class="transition-all duration-300 rounded-full cursor-pointer" :class="selectedNeuroButton == 6 ? 'w-[24px] bg-[rgb(0,122,255)]' : 'w-[8px] bg-[rgb(210,210,215)]'" style="height: 8px;"></button>
+                                        </div>
+                                        <!-- Forwards Button -->
+                                        <button @click="() => controlNsPagination('forwards')" class="w-8 h-8 rounded-full border border-[#e0e0e0] flex items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-default transition-all text-[#86868b]" :class="selectedNeuroButton == 6 ? '' : 'hover:text-[#007aff] hover:border-[#007aff]'" :disabled="selectedNeuroButton == 6 ? true : false">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" class="lucide lucide-chevron-right">
+                                                <path d="m9 18 6-6-6-6"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <BlurReveal :delay="0.2" :duration="0.75" :key="selectedTimeline">
+                            <div class="mt-4 flex items-center justify-between px-2">
+                    
+                                <div class="text-sm font-semibold px-3 py-1.5 rounded-full" style="background: rgba(255, 59, 48, 0.082); color: rgb(255, 59, 48);">
+                                    {{ helpfulTrackingInfo[selectedTimeline - 1].recoveryPercentage }}% recovered
+                                </div>
+                                <div class="text-xs text-[#86868b]">
+                                    <svg v-if="selectedTimeline <= 8" style="display: inline;" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 36 36">
+                                        <path fill="#ffcc4d" d="M2.653 35C.811 35-.001 33.662.847 32.027L16.456 1.972c.849-1.635 2.238-1.635 3.087 0l15.609 30.056c.85 1.634.037 2.972-1.805 2.972z" />
+                                        <path fill="#231f20" d="M15.583 28.953a2.42 2.42 0 0 1 2.419-2.418a2.42 2.42 0 0 1 2.418 2.418a2.42 2.42 0 0 1-2.418 2.419a2.42 2.42 0 0 1-2.419-2.419m.186-18.293c0-1.302.961-2.108 2.232-2.108c1.241 0 2.233.837 2.233 2.108v11.938c0 1.271-.992 2.108-2.233 2.108c-1.271 0-2.232-.807-2.232-2.108z" />
+                                    </svg>
+                                    <svg v-if="selectedTimeline > 8 && selectedTimeline <= 20" style="display: inline;" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 64 64">
+                                        <path fill="#1b75bb" d="M63.918 57.025a6.89 6.89 0 0 1-6.891 6.895H6.888A6.89 6.89 0 0 1 0 57.025V6.891A6.89 6.89 0 0 1 6.888 0h50.139a6.89 6.89 0 0 1 6.891 6.891z" />
+                                        <g fill="#fff">
+                                            <path d="M8.885 35.11c2.835-.656 5.733-.901 8.748-.968c.205-5.423 1.842-9.312 4.959-11.619q1.11-.852 2.622-1.323c1-.312 1.979-.51 2.917-.589c.943-.079 2.24-.12 3.9-.12h7.553v.035h9.97v-.827q-.002-2.093-.42-3.4q-.417-1.31-1.795-2.032c-.915-.479-2.285-.721-4.095-.721h-13c-2.253 0-4.292.13-6.085.383a21.8 21.8 0 0 0-5.058 1.325a17.3 17.3 0 0 0-4.331 2.503a18.6 18.6 0 0 0-4.131 4.605q-1.61 2.569-2.382 5.782c-.456 1.895-.68 3.999-.732 6.251a5.4 5.4 0 0 1 1.36.715" />
+                                            <path d="M41.749 27.731c.601.899 1.724 1.545 3.051 1.651l14.183-12.328L44.812 4.812c-1.339.106-2.462.75-3.062 1.653z" />
+                                            <circle cx="12.607" cy="33.9" r="5.125" />
+                                            <path d="M58.39 29.938c-2.833.656-5.729.901-8.744.968c-.205 5.422-1.842 9.312-4.96 11.619q-1.108.852-2.623 1.323c-1 .312-1.979.511-2.917.589c-.944.078-2.239.12-3.902.12h-7.552v-.036H17.72v.827q.001 2.093.421 3.4q.417 1.308 1.793 2.032c.916.479 2.286.72 4.096.72h13c2.254 0 4.292-.129 6.086-.383a22 22 0 0 0 5.058-1.325a17.3 17.3 0 0 0 4.329-2.503a18.6 18.6 0 0 0 4.132-4.605q1.608-2.57 2.384-5.782c.453-1.895.68-3.999.73-6.251a5.4 5.4 0 0 1-1.361-.713" />
+                                            <path d="M25.529 37.31c-.604-.898-1.726-1.545-3.053-1.65L8.294 47.987L22.465 60.23c1.339-.106 2.461-.75 3.064-1.653zm29.142-11.29a5.125 5.125 0 1 1-5.128 5.124a5.126 5.126 0 0 1 5.128-5.124" />
+                                        </g>
+                                    </svg>
+                                    <svg v-if="selectedTimeline == 21" style="display: inline; color: rgb(52,199,89);" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+	                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 13l4 4L19 7" />
+                                    </svg>
+                                     {{ helpfulTrackingInfo[selectedTimeline - 1].brainState}}
+                                </div>
+                            </div>
+                            </BlurReveal>
+                            <div class="flex items-center gap-4 mt-6 justify-center">
+                                <button @click="() => handleTimelinePagination('backwards')" class="w-12 h-12 rounded-full border-2 border-[#d2d2d7] flex items-center justify-center disabled:opacity-30 transition-all cursor-pointer disabled:cursor-default" tabindex="0" :class="selectedTimeline == 1 ? '' : 'hover:border-[#007aff] hover:text-[#007aff] '" :disabled="selectedTimeline == 1 ? true : false">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-chevron-left">
+                                        <path d="m15 18-6-6 6-6"></path>
+                                    </svg>
+                                </button>
+                                <span class="text-[#86868b] text-sm font-medium">Day {{ selectedTimeline }} of 21</span>
+                                <button @click="() => handleTimelinePagination('forwards')" class="w-12 h-12 rounded-full border-2 border-[#d2d2d7] flex items-center justify-center disabled:opacity-30 transition-all cursor-pointer disabled:cursor-default" :class="selectedTimeline == 21 ? '' : 'hover:border-[#007aff] hover:text-[#007aff]'" :disabled="selectedTimeline == 21 ? true : false">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-chevron-right">
+                                        <path d="m9 18 6-6-6-6"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Day Description Component to be displayed here -->
+                        
                 </div>
                 <!-- Helpful disclaimer -->
                 <div class="text-center border-t border-[#f0f0f0] pt-12">
