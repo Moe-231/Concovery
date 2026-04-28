@@ -25,7 +25,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/crtresources",
+      path: "/iteration2/crtresources",
       name: "CRT Resources",
       component: CRTResources,
       meta: {
@@ -33,7 +33,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/rtprule",
+      path: "/iteration2/rtprule",
       name: "21-Day Rule",
       component: RTPRule,
       meta: {

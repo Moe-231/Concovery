@@ -161,6 +161,28 @@ const subHeadingColor  = computed(() => {
     }
 })
 
+const percentageRecoveryBgColor = computed(() => {
+    if(selectedTimeline.value <= 3){
+        return "bg-[rgba(255,59,48,0.082)] text-[rgb(255,59,48)]"
+    } else if (selectedTimeline.value > 3 && selectedTimeline.value <= 5){
+        return "bg-[rgba(255,107,48,0.082)] text-[rgb(255,107,48)]"
+    } else if (selectedTimeline.value > 5 && selectedTimeline.value <= 7){
+        return "bg-[rgba(255,149,0,0.082)] text-[rgb(255,149,0)]"
+    } else if (selectedTimeline.value > 7 && selectedTimeline.value <= 9){
+        return "bg-[rgba(255,204,0,0.082)] text-[rgb(255,204,0)]"
+    } else if (selectedTimeline.value > 9 && selectedTimeline.value <= 11){
+        return "bg-[rgba(200,230,0,0.082)] text-[rgb(200,230,0)]"
+    } else if (selectedTimeline.value == 12){
+        return "bg-[rgba(160,216,0,0.082)] text-[rgb(160,216,0)]"
+    } else if (selectedTimeline.value == 13){
+        return "bg-[rgba(120,200,0,0.082)] text-[rgb(120,200,0)]"
+    } else if (selectedTimeline.value > 13 && selectedTimeline.value <= 15){
+        return "bg-[rgba(80,184,0,0.082)] text-[rgb(80,184,0)]"
+    }  else {
+        return "bg-[rgba(52,199,89,0.082)] text-[rgb(52,199,89)]"
+    }
+})
+
 const handleTimelinePagination = (direction) => {
     if (direction === 'forwards' && selectedTimeline.value < 21) {
         selectedTimeline.value++;
@@ -793,7 +815,7 @@ const handleTimelinePagination = (direction) => {
                             <BlurReveal :delay="0.2" :duration="0.75" :key="selectedTimeline">
                             <div class="mt-4 flex items-center justify-between px-2">
                     
-                                <div class="text-sm font-semibold px-3 py-1.5 rounded-full" style="background: rgba(255, 59, 48, 0.082); color: rgb(255, 59, 48);">
+                                <div class="text-sm font-semibold px-3 py-1.5 rounded-full" :class="percentageRecoveryBgColor">
                                     {{ helpfulTrackingInfo[selectedTimeline - 1].recoveryPercentage }}% recovered
                                 </div>
                                 <div class="text-xs text-[#86868b]">
