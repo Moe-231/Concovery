@@ -465,7 +465,11 @@ onMounted(async() => {
                         <div class="bg-[#34c759] rounded-lg p-2 flex-shrink-0"></div>
                         <div>
                             <p class="text-[#1d1d1f] font-semibold mb-1">Key Insight: Male</p>
-                            <p v-if="percentageChangeMale" class="text-[#1d1d1f]">{{ percentageChangeMale }}% {{ percentageChangeMale > 0 ? 'increase' : 'decrease' }}</p>
+                            <p v-if="percentageChangeMale" class="text-[#1d1d1f]"><strong>-></strong> {{ percentageChangeMale }}% {{ percentageChangeMale > 0 ? 'increase' : 'decrease' }}
+                                <p>
+                                    <strong>-></strong> Still the highest risk. Concussions are going down, but boys are still far more likely to get injured - especially in contact sports.
+                                </p>
+                            </p>
                             <p v-else class="animate-pulse">Loading ...</p>
                         </div>
                     </div>
@@ -476,7 +480,9 @@ onMounted(async() => {
                         <div class="bg-[#34c759] rounded-lg p-2 flex-shrink-0"></div>
                         <div>
                             <p class="text-[#1d1d1f] font-semibold mb-1">Key Insight: Female</p>
-                            <p v-if="percentageChangeFemale" class="text-[#1d1d1f]">{{ percentageChangeFemale }}% {{ percentageChangeFemale > 0 ? 'increase' : 'decrease' }}</p>
+                            <p v-if="percentageChangeFemale" class="text-[#1d1d1f]"><strong>-></strong> {{ percentageChangeFemale }}% {{ percentageChangeFemale > 0 ? 'increase' : 'decrease' }}
+                                <p><strong>-></strong> Risk is rising. Concussions are increasing for girls, and the gap is closing — it’s not just a “boys’ problem” anymore.</p>
+                            </p>   
                             <p v-else class="animate-pulse">Loading ...</p>
                         </div>
                     </div>
