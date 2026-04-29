@@ -90,6 +90,14 @@ const descriptionContainerContrast = computed(() => {
                 <div class="text-6xl font-bold" :class="severityColor">
                     Day {{ props.day }}
                 </div>
+                <div v-if="props.day == 7" class="bg-[#ff9500] text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse">
+                    DANGER ZONE
+                </div>
+                <div v-if="props.day == 21" class="flex items-center bg-[#34c759] text-white text-xs font-bold px-3 py-1 rounded-full">
+                    RECOVERED <svg style="display: inline;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 13l4 4L19 7" />
+                                    </svg> 
+                </div>
             </div>
             <div class="text-lg font-semibold mb-1" :class="severityColor">
                 {{ phase }}

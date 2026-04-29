@@ -213,362 +213,353 @@ const daysDescription = [
     },
     {
         day: 2,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Your brain is still in crisis mode. Chemical imbalances continue. You likely feel worse today than yesterday - that's normal.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Continue complete rest",
+            "Stay in a calm environment",
+            "Drink water regularly",
+            "Track your symptoms",
+            "Keep emergency numbers handy"
         ],
         notToDo: [
             "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Any physical exertion",
+            "Stress or emotional situations",
+            "Trying to 'test' if you're better",
+            "Alcohol and recreational drugs"
         ]
     },
     {
         day: 3,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Inflammation is still high. Your brain is working hard to stabilize, even if you're lying still.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Rest remains the priority",
+            "Very short walks around the house if tolerated",
+            "Keep room dark and quiet",
+            "Eat nutritious meals",
+            "Journal symptoms if possible"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Screens (small amounts only if necessary)",
+            "Leaving the house unnecessarily",
+            "Physical activity",
+            "Stressful conversations",
+            "Rushing recovery"
         ]
     },
     {
         day: 4,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Acute symptoms may start to ease slightly, but cellular recovery is just beginning. Don't be fooled by feeling 'a bit better'.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Very light activities if symptoms allow",
+            "Short walks (5-10 minutes)",
+            "Light stretching",
+            "Gradual return to screens (15-20 min max)",
+            "Continue tracking symptoms"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Cardio or elevated heart rate",
+            "Contact sports or collision risk",
+            "Long screen time",
+            "Returning to study or work",
+            "Anything that brings symptoms back"
         ]
     },
     {
         day: 5,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "You might feel almost normal for periods. Remember: your brain cells are still repairing connections and restoring energy balance.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Light cognitive tasks if no symptom increase",
+            "Gentle movement (walking, yoga)",
+            "Return to screens gradually",
+            "Social interaction in calm settings",
+            "Listen to your body"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Any activity that causes symptoms",
+            "Sports or high-intensity exercise",
+            "Loud environments",
+            "Driving if symptoms return",
+            "Full work or school days"
         ]
     },
     {
         day: 6,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Symptom-free periods are getting longer. This is progress, but cellular healing continues beneath the surface.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Increase activity gradually",
+            "Light exercise if cleared by doctor",
+            "Return to school/work part-time",
+            "Continue good sleep habits",
+            "Stay patient"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Returning to sport",
+            "High-risk activities",
+            "All-nighters or poor sleep",
+            "Alcohol",
+            "Rushing back to full intensity"
         ]
     },
     {
         day: 7,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "THIS IS THE DANGER ZONE. You likely feel completely fine. Your symptoms have resolved. But your brain is only 30-40% recovered at the cellular level.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Continue gradual increase in activity",
+            "Maintain good sleep and nutrition",
+            "Light exercise if symptom-free",
+            "Remember: no symptoms - not equal to - fully healed",
+            "Resist pressure to return to sport"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "RETURNING TO SPORT - 3-5x re-injury risk",
+            "Contact drills or collision risk",
+            "High-intensity training",
+            "Believing you're fully healed",
+            "Letting others pressure you"
         ]
     },
     {
         day: 8,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "You feel normal but axons (brain cell connections) are still regenerating. Energy metabolism is still compromised.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Increase cognitive load gradually",
+            "Moderate exercise if cleared",
+            "Full school/work if tolerated",
+            "Stay consistent with recovery plan",
+            "Keep doctor appointments"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Contact sports",
+            "Activities with collision risk",
+            "Overconfidence",
+            "Skipping follow-up appointments",
+            "Training at game intensity"
         ]
     },
     {
         day: 9,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Mitochondria (cell power plants) are recovering function. Blood flow is normalizing but still not baseline.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Continue structured return-to-sport protocol if cleared",
+            "Non-contact drills only",
+            "Cardiovascular exercise",
+            "Strength training (light)",
+            "Monitor for any symptom return"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Contact practice",
+            "Heading the ball (soccer)",
+            "Tackling drills",
+            "Full-intensity sprints",
+            "Game situations"
         ]
     },
     {
         day: 10,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Your brain is rebuilding its capacity to handle stress and impact, but it's still vulnerable to re-injury.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Progress to moderate-intensity exercise",
+            "Sport-specific skills without contact",
+            "Continue monitoring symptoms",
+            "Gradual return to normal routine",
+            "Stay hydrated and well-nourished"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Contact training",
+            "Match play",
+            "Competitive intensity",
+            "Ignoring minor symptoms"
         ]
     },
     {
         day: 11,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Neuroplasticity is active. New pathways are forming to replace damaged ones.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Continue graded return-to-sport protocol",
+            "Increase training intensity slightly",
+            "Non-contact skills work",
+            "Team training (no contact)",
+            "Maintain sleep schedule"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Full contact",
+            "Match simulation",
+            "High-collision drills",
+            "Rushing progression",
+            "Late nights"
         ]
     },
     {
         day: 12,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Roughly halfway through cellular recovery. Your brain is more resilient than Day 7 but still not ready for full contact.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Progress to higher-intensity training",
+            "Controlled contact drills if cleared by doctor",
+            "Continue symptom monitoring",
+            "Full return to school/work",
+            "Maintain healthy habits"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Game play",
+            "Full-speed contact",
+            "High-risk situations",
+            "Assuming you're fully healed",
+            "Alcohol and drugs"
         ]
     },
     {
         day: 13,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "The finish line is in sight but not here yet. Axonal regeneration is ongoing. Energy stores are replenishing.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Continue return-to-sport progression",
+            "Near-normal training if symptom-free",
+            "Light contact drills if cleared",
+            "Prepare mentally for return",
+            "Stay patient"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Match play",
+            "Full-intensity contact",
+            "Complacency",
+            "Peer pressure to play early"
         ]
     },
     {
         day: 14,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Two weeks in. Your brain has made significant progress but is still finishing critical repairs at the microscopic level.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Full training if symptom-free and cleared",
+            "Controlled full-contact practice",
+            "Continue monitoring",
+            "Stay committed to final week",
+            "Prepare for medical clearance"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Game play without medical clearance",
+            "Shortcuts in protocol",
+            "Returning if any doubt",
+            "Pressure from coaches"
         ]
     },
     {
         day: 15,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Cell membranes are stabilizing. Neurotransmitter levels are approaching normal. Blood flow is nearly restored.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Full training load",
+            "Match-simulation drills",
+            "Complete return-to-sport protocol",
+            "Medical assessment for clearance",
+            "Trust the process"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Playing without clearance",
+            "Skipping medical check",
+            "High-risk behavior off the field",
+            "Alcohol",
+            "All-nighters"
         ]
     },
     {
         day: 16,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Your brain is rebuilding reserves that will protect you from future injury. Each additional day matters.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Full participation in training",
+            "Maintain all healthy habits",
+            "Stay focused on recovery",
+            "Complete any required testing",
+            "Prepare for return"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Rushing back without clearance",
+            "Risky activities outside sport",
+            "Poor sleep or nutrition",
+            "Complacency"
         ]
     },
     {
         day: 17,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Metabolic recovery is nearly complete but structural repair continues. Your brain is almost ready.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+           "Continue full training",
+            "Maintain symptom-free status",
+            "Stay consistent",
+            "Follow medical advice",
+            "Plan for safe return"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Playing without medical clearance",
+            "Assuming you're invincible",
+            "Risky decisions",
+            "Alcohol or drugs"
         ]
     },
     {
         day: 18,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Your brain's resilience is returning. The cellular architecture is stabilizing. Nearly there.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Full training participation",
+            "Prepare mentally for return",
+            "Stay focused",
+            "Complete medical clearance process",
+            "Reflect on recovery journey"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Playing without approval",
+            "Overconfidence",
+            "High-risk activities",
+            "Substance use"
         ]
     },
     {
         day: 19,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Final stages of cellular recovery. Your brain is rebuilding the reserves that were depleted on Day 1.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Full training",
+            "Medical clearance appointment",
+            "Stay symptom-free",
+            "Prepare equipment and mindset",
+            "Trust you've done the work"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Returning without clearance",
+            "Complacency in final days",
+            "Risky behavior",
+            "Alcohol"
         ]
     },
     {
         day: 20,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "One day away. Your brain has nearly completed the complex process of healing from cellular injury",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Final medical clearance",
+            "Full training if approved",
+            "Prepare for return to play",
+            "Stay healthy and rested",
+            "Be proud of your patience"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Playing without final clearance",
+            "Celebrating too early with alcohol",
+            "Risky behavior",
+            "Overexertion"
         ]
     },
     {
         day: 21,
-        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        description: "Congratulations. Your brain has completed neurometabolic and structural recovery. Energy metabolism is restored. Axons are regenerated. You're cleared to return - WITH medical clearance.",
         toDo: [
-            "Stay home in a quiet, dark room",
-            "Sleep as much as possible",
-            "Light meals if you can stomach them",
-            "Tell someone about all symptoms",
-            "See a doctor as soon as possible"
+            "Get final medical clearance",
+            "Return to full competition",
+            "Continue monitoring for symptoms",
+            "Protect yourself from future injury",
+            "Remember what you learned"
         ],
         notToDo: [
-            "All screens (phone, TV, computer)",
-            "Physical activity of any kind",
-            "Loud noises or bright lights",
-            "Loud noises or bright lights",
-            "Being alone  have someone check on you"
+            "Playing without medical sign-off",
+            "Immediately playing at maximum intensity",
+            "Ignoring any returning symptoms",
+            "Taking unnecessary risks"
         ]
     }
 ]
