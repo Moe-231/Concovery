@@ -1,4 +1,5 @@
 <script setup>
+import DayRecoveryDescription from '@/components/custom-components/DayRecoveryDescription.vue';
 import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
 import { computed, ref } from 'vue';
 
@@ -190,6 +191,387 @@ const handleTimelinePagination = (direction) => {
         selectedTimeline.value--;
     }
 }
+
+const daysDescription = [
+    {
+        day: 1,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 2,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 3,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 4,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 5,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 6,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 7,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 8,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 9,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 10,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 11,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 12,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 13,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 14,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 15,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 16,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 17,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 18,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 19,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 20,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    },
+    {
+        day: 21,
+        description: "Your brain has just been injured. Energy metabolism is disrupted and cells are vulnerable. Complete rest is critical.",
+        toDo: [
+            "Stay home in a quiet, dark room",
+            "Sleep as much as possible",
+            "Light meals if you can stomach them",
+            "Tell someone about all symptoms",
+            "See a doctor as soon as possible"
+        ],
+        notToDo: [
+            "All screens (phone, TV, computer)",
+            "Physical activity of any kind",
+            "Loud noises or bright lights",
+            "Loud noises or bright lights",
+            "Being alone  have someone check on you"
+        ]
+    }
+]
 </script>
 
 <template>
@@ -289,6 +671,7 @@ const handleTimelinePagination = (direction) => {
                         <div class="p-10 lg:p-14">
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
                                 <!-- What you feel on day 7 Section -->
+                                <BlurReveal :delay="0.2" :duration="1.25"> 
                                 <div class="text-center">
                                     <div class="text-[#86868b] text-sm font-semibold uppercase tracking-widest mb-6">
                                         What you feel on Day 7
@@ -331,6 +714,7 @@ const handleTimelinePagination = (direction) => {
                                     </div>
                                     <div class="text-[#34c759] font-semibold">Symptoms: CLEAR</div>
                                 </div>
+                                </BlurReveal>
                                 <!-- VS -->
                                 <div class="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 pointer-events-none z-10">
                                     <div class="w-px h-20 bg-white/20"></div>
@@ -338,6 +722,7 @@ const handleTimelinePagination = (direction) => {
                                     <div class="w-px h-20 bg-white/20"></div>
                                 </div>
                                 <!-- What your brain is doing on Day 7 Section -->
+                                <BlurReveal :delay="0.2" :duration="1.25">
                                 <div class="text-center">
                                     <div class="text-[#86868b] text-sm font-semibold uppercase tracking-widest mb-6">
                                         What your brain is doing on Day 7
@@ -384,6 +769,7 @@ const handleTimelinePagination = (direction) => {
                                     </div>
                                     <div class="text-[#ff9500] font-semibold">Brain: STILL HEALING</div>
                                 </div>
+                                </BlurReveal>
                             </div>
                             <div class="mt-10 bg-[#ff3b30]/15 border border-[#ff3b30]/30 rounded-2xl p-6 text-center">
                                 <div class="text-[#ff3b30] text-4xl font-bold mb-2">3-5x</div>
@@ -860,8 +1246,8 @@ const handleTimelinePagination = (direction) => {
                                 </button>
                             </div>
                         </div>
-                        <!-- Day Description Component to be displayed here -->
-                        
+                        <!-- Day Description Component to be displayed here --> 
+                            <DayRecoveryDescription :day="daysDescription[selectedTimeline - 1].day" :description="daysDescription[selectedTimeline - 1].description" :toDo="daysDescription[selectedTimeline - 1].toDo" :notToDo="daysDescription[selectedTimeline - 1].notToDo"/>
                 </div>
                 <!-- Helpful disclaimer -->
                 <div class="text-center border-t border-[#f0f0f0] pt-12">
