@@ -1,11 +1,24 @@
 <script setup>
 import DayRecoveryDescription from '@/components/custom-components/DayRecoveryDescription.vue';
 import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 
 const scienceHidden = ref(true)
 const selectedTimeline = ref(1)
 const selectedNeuroButton = ref(1)
+
+const sceneMap = {
+    1: 'impact',
+    2: 'shearing',
+    3: 'cascade',
+    4: 'symptom-gap',
+    5: 'repair',
+    6: 'recovered',
+}
+
+const currentScene = computed(() => {
+    return sceneMap[selectedNeuroButton.value]
+})
 
 const controlNsPagination = (direction) => {
     if(direction == "forwards"){
@@ -563,6 +576,1153 @@ const daysDescription = [
         ]
     }
 ]
+
+// Global Animation Variables
+const brainCanvas = ref(null)
+
+let animationFrame = null
+let time = 0
+
+const axons = []
+const glutamateParticles = []
+const potassiumParticles = []
+const atpParticles = []
+const leftNeurons = []
+const rightNeurons = []
+const recoveredNeurons = []
+
+watch(currentScene, () => {
+
+    time = 0
+
+    const canvas = brainCanvas.value
+
+    if (!canvas) return
+
+    createScene(canvas.width, canvas.height)
+})
+
+function createScene(width, height) {
+
+    axons.length = 0
+
+    const scene = currentScene.value
+
+    // IMPACT + SHEARING
+    if (scene === 'impact' || scene === 'shearing') {
+
+        const AXON_COUNT = 40
+
+        for (let i = 0; i < AXON_COUNT; i++) {
+
+            const angle = (i / AXON_COUNT) * Math.PI * 2
+            const r = 60 + Math.random() * 80
+
+            axons.push({
+                x: width / 2 + Math.cos(angle) * r * 0.7,
+                y: height / 2 + Math.sin(angle) * r * 0.5,
+                length: 30 + Math.random() * 40,
+                angle: Math.random() * Math.PI * 2,
+                opacity: 0.7 + Math.random() * 0.3,
+                broken: false,
+            })
+        }
+    }
+    // Cascade
+    if (scene === 'cascade') {
+
+    glutamateParticles.length = 0
+    potassiumParticles.length = 0
+    atpParticles.length = 0
+
+    // GLUTAMATE FLOOD
+    for (let i = 0; i < 60; i++) {
+
+        glutamateParticles.push({
+            x: width / 2 + (Math.random() - 0.5) * 80,
+            y: height / 2 + (Math.random() - 0.5) * 80,
+
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+
+            r: 4 + Math.random() * 3,
+
+            opacity: 0
+        })
+    }
+
+    // POTASSIUM LEAK
+    for (let i = 0; i < 40; i++) {
+
+        potassiumParticles.push({
+            x: width / 2 + (Math.random() - 0.5) * 120,
+            y: height / 2 + (Math.random() - 0.5) * 100,
+
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: (Math.random() - 0.5) * 1.5,
+
+            r: 3 + Math.random() * 2,
+
+            opacity: 0
+        })
+    }
+
+    // ATP ENERGY
+    for (let i = 0; i < 50; i++) {
+
+        atpParticles.push({
+            x: 30 + Math.random() * (width - 60),
+            y: 30 + Math.random() * (height - 60),
+
+            r: 5 + Math.random() * 3,
+
+            depleted: false,
+
+            depleteTime: 1 + Math.random() * 5
+        })
+    }
+    }
+
+    // Symptom Gap
+    if (scene === 'symptom-gap') {
+        leftNeurons.length = 0
+        rightNeurons.length = 0
+        //
+        // LEFT SIDE
+        //
+        for (let i = 0; i < 25; i++) {
+
+            leftNeurons.push({
+
+                x: width * 0.08 + Math.random() * (width * 0.38),
+
+                y: height * 0.15 + Math.random() * (height * 0.7),
+
+                r: 5 + Math.random() * 4,
+
+                pulse: Math.random() * Math.PI * 2,
+
+                active: true
+            })
+        }
+
+        //
+        // RIGHT SIDE
+        //
+        for (let i = 0; i < 25; i++) {
+
+            rightNeurons.push({
+
+                x: width * 0.54 + Math.random() * (width * 0.38),
+
+                y: height * 0.15 + Math.random() * (height * 0.7),
+
+                r: 5 + Math.random() * 4,
+
+                pulse: Math.random() * Math.PI * 2,
+
+                active: Math.random() > 0.45,
+
+                broken: Math.random() > 0.5
+            })
+        }
+
+    }
+
+    // Repair
+    if (scene === "repair") {
+
+    axons.length = 0
+
+    for (let i = 0; i < 35; i++) {
+
+        const angle = Math.random() * Math.PI * 2
+        const r = 40 + Math.random() * 90
+
+        axons.push({
+            x: width / 2 + Math.cos(angle) * r * 0.75,
+
+            y: height / 2 + Math.sin(angle) * r * 0.55,
+
+            length: 25 + Math.random() * 40,
+
+            angle: Math.random() * Math.PI * 2,
+
+            repairProgress: 0,
+
+            repairDelay: Math.random() * 3,
+
+            repairSpeed: 0.08 + Math.random() * 0.15
+        })
+    }
+    }   
+    // recovered neurons
+    if (scene === "recovered") {
+
+    recoveredNeurons.length = 0
+
+    for (let i = 0; i < 40; i++) {
+
+        const angle = Math.random() * Math.PI * 2
+        const r = 20 + Math.random() * 110
+
+        recoveredNeurons.push({
+
+            x: width / 2 + Math.cos(angle) * r * 0.8,
+
+            y: height / 2 + Math.sin(angle) * r * 0.65,
+
+            r: 4 + Math.random() * 4,
+
+            pulse: Math.random() * Math.PI * 2,
+
+            signalPhase: Math.random()
+        })
+    }
+    }
+}
+
+function drawBrainSilhouette(ctx, width, height) {
+    ctx.beginPath()
+
+    ctx.ellipse(
+        width / 2,
+        height / 2,
+        width * 0.42,
+        height * 0.4,
+        0,
+        0,
+        Math.PI * 2
+    )
+
+    ctx.fillStyle = 'rgba(255,59,48,0.06)'
+    ctx.fill()
+
+    ctx.strokeStyle = 'rgba(255,59,48,0.2)'
+    ctx.lineWidth = 1.5
+    ctx.stroke()
+}
+
+function animate() {
+
+    const canvas = brainCanvas.value
+
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+
+    const W = canvas.width
+    const H = canvas.height
+
+    const scene = currentScene.value
+
+    time += 0.016
+
+    ctx.clearRect(0, 0, W, H)
+
+    // IMPACT
+    if (scene === "impact") {
+
+        const shakeX =
+            Math.sin(time * 8) * Math.max(0, 1 - time * 0.5) * 8
+
+        const shakeY =
+            Math.cos(time * 6) * Math.max(0, 1 - time * 0.5) * 4
+
+        ctx.save()
+
+        ctx.translate(shakeX, shakeY)
+
+        drawBrainSilhouette(ctx, W, H)
+
+        const stretchAmount = Math.min(time * 0.5, 0.8)
+
+        axons.forEach((axon) => {
+
+            const stretch =
+                1 + stretchAmount * (0.3 + Math.random() * 0.2)
+
+            const len = axon.length * stretch
+
+            const x1 =
+                axon.x - (Math.cos(axon.angle) * len) / 2
+
+            const y1 =
+                axon.y - (Math.sin(axon.angle) * len) / 2
+
+            const x2 =
+                axon.x + (Math.cos(axon.angle) * len) / 2
+
+            const y2 =
+                axon.y + (Math.sin(axon.angle) * len) / 2
+
+            ctx.beginPath()
+            ctx.moveTo(x1, y1)
+            ctx.lineTo(x2, y2)
+
+            ctx.strokeStyle = `rgba(100,180,255,${axon.opacity})`
+            ctx.lineWidth = 2
+            ctx.stroke()
+
+            ctx.beginPath()
+            ctx.arc(x1, y1, 3, 0, Math.PI * 2)
+            ctx.fillStyle = 'rgba(100,180,255,0.8)'
+            ctx.fill()
+
+            ctx.beginPath()
+            ctx.arc(x2, y2, 3, 0, Math.PI * 2)
+            ctx.fill()
+        })
+
+        ctx.restore()
+    }
+
+    // SHEARING
+    if (scene === "shearing") {
+
+        drawBrainSilhouette(ctx, W, H)
+
+        axons.forEach((axon) => {
+
+            if (!axon.broken && Math.random() < 0.01) {
+                axon.broken = true
+            }
+
+            if (!axon.broken) {
+
+                const x1 =
+                    axon.x - (Math.cos(axon.angle) * axon.length) / 2
+
+                const y1 =
+                    axon.y - (Math.sin(axon.angle) * axon.length) / 2
+
+                const x2 =
+                    axon.x + (Math.cos(axon.angle) * axon.length) / 2
+
+                const y2 =
+                    axon.y + (Math.sin(axon.angle) * axon.length) / 2
+
+                ctx.beginPath()
+                ctx.moveTo(x1, y1)
+                ctx.lineTo(x2, y2)
+
+                ctx.strokeStyle = 'rgba(100,180,255,0.8)'
+                ctx.lineWidth = 2
+                ctx.stroke()
+
+            } else {
+
+                ctx.beginPath()
+
+                ctx.moveTo(axon.x - 15, axon.y)
+                ctx.lineTo(axon.x - 2, axon.y)
+
+                ctx.strokeStyle = 'rgba(255,80,80,0.9)'
+                ctx.lineWidth = 2
+                ctx.stroke()
+
+                ctx.beginPath()
+
+                ctx.moveTo(axon.x + 2, axon.y)
+                ctx.lineTo(axon.x + 15, axon.y)
+
+                ctx.stroke()
+            }
+        })
+    }
+
+    // Cascade
+    if (scene === 'cascade') {
+
+Add:
+
+drawBrainSilhouette(ctx, W, H)
+
+//
+// ATP ENERGY
+//
+atpParticles.forEach((a) => {
+
+    if (!a.depleted && time > a.depleteTime) {
+        a.depleted = true
+    }
+
+    if (!a.depleted) {
+
+        const g = ctx.createRadialGradient(
+            a.x,
+            a.y,
+            0,
+            a.x,
+            a.y,
+            a.r * 2.5
+        )
+
+        g.addColorStop(0, 'rgba(0,122,255,0.6)')
+        g.addColorStop(1, 'rgba(0,122,255,0)')
+
+        ctx.beginPath()
+        ctx.arc(a.x, a.y, a.r * 2.5, 0, Math.PI * 2)
+        ctx.fillStyle = g
+        ctx.fill()
+
+        ctx.beginPath()
+        ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(0,122,255,0.8)'
+        ctx.fill()
+
+    } else {
+
+        ctx.beginPath()
+        ctx.arc(a.x, a.y, a.r * 0.6, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(150,150,150,0.2)'
+        ctx.fill()
+    }
+})
+
+//
+// GLUTAMATE FLOOD
+//
+glutamateParticles.forEach((g) => {
+
+    g.x += g.vx
+    g.y += g.vy
+
+    const dx = g.x - W / 2
+    const dy = g.y - H / 2
+
+    const dist =
+        (dx * dx) / ((W * 0.42) ** 2) +
+        (dy * dy) / ((H * 0.4) ** 2)
+
+    if (dist > 1) {
+        g.vx *= -1
+        g.vy *= -1
+    }
+
+    g.opacity = Math.min(g.opacity + 0.03, 0.9)
+
+    const gradient = ctx.createRadialGradient(
+        g.x,
+        g.y,
+        0,
+        g.x,
+        g.y,
+        g.r * 2.5
+    )
+
+    gradient.addColorStop(0, `rgba(255,59,48,${g.opacity})`)
+    gradient.addColorStop(1, 'rgba(255,59,48,0)')
+
+    ctx.beginPath()
+    ctx.arc(g.x, g.y, g.r * 2.5, 0, Math.PI * 2)
+
+    ctx.fillStyle = gradient
+    ctx.fill()
+
+    ctx.beginPath()
+    ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2)
+
+    ctx.fillStyle = `rgba(255,59,48,${g.opacity})`
+    ctx.fill()
+})
+
+//
+// POTASSIUM LEAK
+//
+potassiumParticles.forEach((k) => {
+
+    k.x += k.vx
+    k.y += k.vy
+
+    const dx = k.x - W / 2
+    const dy = k.y - H / 2
+
+    const dist =
+        (dx * dx) / ((W * 0.42) ** 2) +
+        (dy * dy) / ((H * 0.4) ** 2)
+
+    if (dist > 1) {
+        k.vx *= -1
+        k.vy *= -1
+    }
+
+    k.opacity = Math.min(k.opacity + 0.03, 0.8)
+
+    ctx.beginPath()
+
+    ctx.arc(
+        k.x,
+        k.y,
+        k.r,
+        0,
+        Math.PI * 2
+    )
+
+    ctx.fillStyle = `rgba(255,149,0,${k.opacity})`
+    ctx.fill()
+})
+
+//
+// LABELS
+//
+ctx.fillStyle = 'rgba(255,59,48,0.85)'
+ctx.font = '12px sans-serif'
+ctx.fillText('Glutamate flood', 45, H - 50)
+
+ctx.fillStyle = 'rgba(255,149,0,0.85)'
+ctx.fillText('K+ ion leak', 45, H - 34)
+
+ctx.fillStyle = 'rgba(0,122,255,0.85)'
+ctx.fillText('ATP depletion', 45, H - 16)
+
+    }
+
+    // Symptom Gap
+    if (scene === 'symptom-gap') {
+        //
+// LEFT BRAIN
+//
+ctx.beginPath()
+
+ctx.ellipse(
+    W * 0.27,
+    H / 2,
+    W * 0.22,
+    H * 0.4,
+    0,
+    0,
+    Math.PI * 2
+)
+
+ctx.fillStyle = 'rgba(52,199,89,0.05)'
+ctx.fill()
+
+ctx.strokeStyle = 'rgba(52,199,89,0.25)'
+ctx.lineWidth = 1.5
+ctx.stroke()
+
+//
+// LEFT CONNECTIONS
+//
+for (let i = 0; i < leftNeurons.length; i++) {
+
+    for (let j = i + 1; j < leftNeurons.length; j++) {
+
+        const dx = leftNeurons[i].x - leftNeurons[j].x
+        const dy = leftNeurons[i].y - leftNeurons[j].y
+
+        const d = Math.sqrt(dx * dx + dy * dy)
+
+        if (d < 65) {
+
+            ctx.beginPath()
+
+            ctx.moveTo(
+                leftNeurons[i].x,
+                leftNeurons[i].y
+            )
+
+            ctx.lineTo(
+                leftNeurons[j].x,
+                leftNeurons[j].y
+            )
+
+            ctx.strokeStyle =
+                `rgba(52,199,89,${(1 - d / 65) * 0.35})`
+
+            ctx.lineWidth = 0.8
+            ctx.stroke()
+        }
+    }
+}
+
+//
+// LEFT NEURONS
+//
+leftNeurons.forEach((n) => {
+
+    const pulse =
+        Math.sin(time * 1.5 + n.pulse) * 0.2
+
+    const g = ctx.createRadialGradient(
+        n.x,
+        n.y,
+        0,
+        n.x,
+        n.y,
+        n.r * 3
+    )
+
+    g.addColorStop(0, `rgba(52,199,89,${0.4 + pulse})`)
+    g.addColorStop(1, 'rgba(52,199,89,0)')
+
+    ctx.beginPath()
+    ctx.arc(n.x, n.y, n.r * 3, 0, Math.PI * 2)
+
+    ctx.fillStyle = g
+    ctx.fill()
+
+    ctx.beginPath()
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
+
+    ctx.fillStyle = `rgba(52,199,89,${0.7 + pulse})`
+    ctx.fill()
+})
+
+//
+// CENTER DIVIDER
+//
+ctx.beginPath()
+
+ctx.moveTo(W / 2, H * 0.1)
+ctx.lineTo(W / 2, H * 0.9)
+
+ctx.strokeStyle = 'rgba(0,0,0,0.08)'
+ctx.lineWidth = 1
+
+ctx.setLineDash([6, 4])
+
+ctx.stroke()
+
+ctx.setLineDash([])
+
+//
+// RIGHT BRAIN
+//
+ctx.beginPath()
+
+ctx.ellipse(
+    W * 0.73,
+    H / 2,
+    W * 0.22,
+    H * 0.4,
+    0,
+    0,
+    Math.PI * 2
+)
+
+ctx.fillStyle = 'rgba(255,149,0,0.05)'
+ctx.fill()
+
+ctx.strokeStyle = 'rgba(255,149,0,0.25)'
+ctx.lineWidth = 1.5
+ctx.stroke()
+
+//
+// RIGHT CONNECTIONS
+//
+for (let i = 0; i < rightNeurons.length; i++) {
+
+    for (let j = i + 1; j < rightNeurons.length; j++) {
+
+        if (
+            !rightNeurons[i].active ||
+            !rightNeurons[j].active
+        ) continue
+
+        const dx = rightNeurons[i].x - rightNeurons[j].x
+        const dy = rightNeurons[i].y - rightNeurons[j].y
+
+        const d = Math.sqrt(dx * dx + dy * dy)
+
+        if (d < 60) {
+
+            ctx.beginPath()
+
+            ctx.moveTo(
+                rightNeurons[i].x,
+                rightNeurons[i].y
+            )
+
+            if (
+                rightNeurons[i].broken ||
+                rightNeurons[j].broken
+            ) {
+
+                ctx.setLineDash([4, 6])
+
+                ctx.strokeStyle =
+                    `rgba(255,149,0,${(1 - d / 60) * 0.2})`
+
+            } else {
+
+                ctx.strokeStyle =
+                    `rgba(255,149,0,${(1 - d / 60) * 0.3})`
+            }
+
+            ctx.lineTo(
+                rightNeurons[j].x,
+                rightNeurons[j].y
+            )
+
+            ctx.lineWidth = 0.7
+            ctx.stroke()
+
+            ctx.setLineDash([])
+        }
+    }
+}
+
+//
+// RIGHT NEURONS
+//
+rightNeurons.forEach((n) => {
+
+    if (!n.active) {
+
+        ctx.beginPath()
+
+        ctx.arc(
+            n.x,
+            n.y,
+            n.r * 0.7,
+            0,
+            Math.PI * 2
+        )
+
+        ctx.fillStyle = 'rgba(180,180,180,0.3)'
+        ctx.fill()
+
+        return
+    }
+
+    const flicker =
+        n.broken
+            ? Math.sin(time * 8 + n.pulse) * 0.4
+            : Math.sin(time * 1.2 + n.pulse) * 0.15
+
+    const color =
+        n.broken
+            ? '255,100,50'
+            : '255,149,0'
+
+    const g = ctx.createRadialGradient(
+        n.x,
+        n.y,
+        0,
+        n.x,
+        n.y,
+        n.r * 2.5
+    )
+
+    g.addColorStop(
+        0,
+        `rgba(${color},${0.35 + Math.abs(flicker)})`
+    )
+
+    g.addColorStop(1, `rgba(${color},0)`)
+
+    ctx.beginPath()
+
+    ctx.arc(
+        n.x,
+        n.y,
+        n.r * 2.5,
+        0,
+        Math.PI * 2
+    )
+
+    ctx.fillStyle = g
+    ctx.fill()
+
+    ctx.beginPath()
+
+    ctx.arc(
+        n.x,
+        n.y,
+        n.r,
+        0,
+        Math.PI * 2
+    )
+
+    ctx.fillStyle =
+        `rgba(${color},${0.6 + flicker})`
+
+    ctx.fill()
+})
+
+//
+// LABELS
+//
+ctx.fillStyle = 'rgba(52,199,89,0.9)'
+ctx.font = 'bold 13px sans-serif'
+ctx.textAlign = 'center'
+
+ctx.fillText(
+    'How you feel',
+    W * 0.27,
+    H * 0.1
+)
+
+ctx.fillStyle = 'rgba(52,199,89,0.7)'
+ctx.font = '11px sans-serif'
+
+ctx.fillText(
+    'Symptom-free',
+    W * 0.27,
+    H * 0.87
+)
+
+ctx.fillStyle = 'rgba(255,149,0,0.9)'
+ctx.font = 'bold 13px sans-serif'
+
+ctx.fillText(
+    "What's in your brain",
+    W * 0.73,
+    H * 0.1
+)
+
+ctx.fillStyle = 'rgba(255,149,0,0.7)'
+ctx.font = '11px sans-serif'
+
+ctx.fillText(
+    '30-40% recovered',
+    W * 0.73,
+    H * 0.87
+)
+
+//
+// CENTER WARNING
+//
+ctx.fillStyle = 'rgba(255,59,48,0.85)'
+ctx.font = 'bold 12px sans-serif'
+
+ctx.fillText(
+    'THE GAP',
+    W / 2,
+    H / 2 - 8
+)
+
+ctx.fillStyle = 'rgba(255,59,48,0.6)'
+ctx.font = '10px sans-serif'
+
+ctx.fillText(
+    'Day 7–21',
+    W / 2,
+    H / 2 + 8
+)
+    }
+
+    // Repair
+    if (scene === "repair") {
+
+    drawBrainSilhouette(ctx, W, H)
+
+    axons.forEach((axon) => {
+
+        // begin repairing after delay
+        if (time > axon.repairDelay) {
+
+            axon.repairProgress = Math.min(
+                axon.repairProgress + axon.repairSpeed * 0.016,
+                1
+            )
+        }
+
+        const p = axon.repairProgress
+
+        const x1 =
+            axon.x - (Math.cos(axon.angle) * axon.length) / 2
+
+        const y1 =
+            axon.y - (Math.sin(axon.angle) * axon.length) / 2
+
+        const x2 =
+            axon.x + (Math.cos(axon.angle) * axon.length) / 2
+
+        const y2 =
+            axon.y + (Math.sin(axon.angle) * axon.length) / 2
+
+        // damaged pathway
+        ctx.beginPath()
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(x2, y2)
+
+        ctx.strokeStyle = 'rgba(255,100,50,0.15)'
+        ctx.lineWidth = 2
+        ctx.stroke()
+
+        // repaired section
+        const repairX =
+            x1 + (x2 - x1) * p
+
+        const repairY =
+            y1 + (y2 - y1) * p
+
+        ctx.beginPath()
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(repairX, repairY)
+
+        ctx.strokeStyle =
+            `rgba(52,199,89,${0.4 + p * 0.5})`
+
+        ctx.lineWidth = 3
+        ctx.lineCap = "round"
+        ctx.stroke()
+
+        ctx.lineCap = "butt"
+
+        // glowing repair point
+        if (p < 1) {
+
+            const glow = ctx.createRadialGradient(
+                repairX,
+                repairY,
+                0,
+                repairX,
+                repairY,
+                10
+            )
+
+            glow.addColorStop(0, "rgba(52,199,89,0.8)")
+            glow.addColorStop(1, "rgba(52,199,89,0)")
+
+            ctx.beginPath()
+            ctx.arc(repairX, repairY, 10, 0, Math.PI * 2)
+
+            ctx.fillStyle = glow
+            ctx.fill()
+        }
+
+        // endpoints
+        ctx.beginPath()
+        ctx.arc(x1, y1, 3.5, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(52,199,89,0.9)'
+        ctx.fill()
+
+        if (p >= 1) {
+
+            ctx.beginPath()
+            ctx.arc(x2, y2, 3.5, 0, Math.PI * 2)
+
+            ctx.fillStyle = 'rgba(52,199,89,0.9)'
+            ctx.fill()
+        }
+    })
+
+    // total repair %
+    const totalRepair =
+        axons.reduce((sum, a) =>
+            sum + a.repairProgress, 0
+        ) / axons.length
+
+    ctx.fillStyle = 'rgba(52,199,89,0.9)'
+    ctx.font = 'bold 14px sans-serif'
+    ctx.textAlign = 'center'
+
+    ctx.fillText(
+        `Axonal repair: ${Math.round(totalRepair * 100)}%`,
+        W / 2,
+        H - 20
+    )
+    }
+
+    // Recovered
+    if (scene === "recovered") {
+
+    // soft healthy glow background
+    const outerGlow = ctx.createRadialGradient(
+        W / 2,
+        H / 2,
+        0,
+        W / 2,
+        H / 2,
+        W * 0.45
+    )
+
+    outerGlow.addColorStop(0, "rgba(0,122,255,0.08)")
+    outerGlow.addColorStop(0.7, "rgba(52,199,89,0.04)")
+    outerGlow.addColorStop(1, "rgba(0,0,0,0)")
+
+    ctx.fillStyle = outerGlow
+    ctx.fillRect(0, 0, W, H)
+
+    // healthy brain silhouette
+    ctx.beginPath()
+
+    ctx.ellipse(
+        W / 2,
+        H / 2,
+        W * 0.42,
+        H * 0.4,
+        0,
+        0,
+        Math.PI * 2
+    )
+
+    ctx.fillStyle = "rgba(0,122,255,0.05)"
+    ctx.fill()
+
+    ctx.strokeStyle = "rgba(0,122,255,0.25)"
+    ctx.lineWidth = 1.5
+    ctx.stroke()
+
+    // neural connections
+    for (let i = 0; i < recoveredNeurons.length; i++) {
+
+        for (let j = i + 1; j < recoveredNeurons.length; j++) {
+
+            const n1 = recoveredNeurons[i]
+            const n2 = recoveredNeurons[j]
+
+            const dx = n1.x - n2.x
+            const dy = n1.y - n2.y
+
+            const d = Math.sqrt(dx * dx + dy * dy)
+
+            if (d < 75) {
+
+                const opacity = (1 - d / 75) * 0.25
+
+                ctx.beginPath()
+
+                ctx.moveTo(n1.x, n1.y)
+                ctx.lineTo(n2.x, n2.y)
+
+                ctx.strokeStyle =
+                    `rgba(0,122,255,${opacity})`
+
+                ctx.lineWidth = 0.8
+                ctx.stroke()
+
+                // travelling signal
+                const phase =
+                    (time * 0.8 + n1.signalPhase) % 1
+
+                if (phase < 0.3 && d < 60) {
+
+                    const px =
+                        n1.x + (n2.x - n1.x) * (phase / 0.3)
+
+                    const py =
+                        n1.y + (n2.y - n1.y) * (phase / 0.3)
+
+                    const pulseGlow =
+                        ctx.createRadialGradient(
+                            px,
+                            py,
+                            0,
+                            px,
+                            py,
+                            6
+                        )
+
+                    pulseGlow.addColorStop(
+                        0,
+                        "rgba(0,122,255,0.8)"
+                    )
+
+                    pulseGlow.addColorStop(
+                        1,
+                        "rgba(0,122,255,0)"
+                    )
+
+                    ctx.beginPath()
+
+                    ctx.arc(
+                        px,
+                        py,
+                        6,
+                        0,
+                        Math.PI * 2
+                    )
+
+                    ctx.fillStyle = pulseGlow
+                    ctx.fill()
+                }
+            }
+        }
+    }
+
+    // neurons
+    recoveredNeurons.forEach((n) => {
+
+        const pulse =
+            Math.sin(time * 1.2 + n.pulse) * 0.25
+
+        const glow = ctx.createRadialGradient(
+            n.x,
+            n.y,
+            0,
+            n.x,
+            n.y,
+            n.r * 4
+        )
+
+        glow.addColorStop(
+            0,
+            `rgba(0,122,255,${0.4 + pulse})`
+        )
+
+        glow.addColorStop(
+            1,
+            "rgba(0,122,255,0)"
+        )
+
+        ctx.beginPath()
+
+        ctx.arc(
+            n.x,
+            n.y,
+            n.r * 4,
+            0,
+            Math.PI * 2
+        )
+
+        ctx.fillStyle = glow
+        ctx.fill()
+
+        ctx.beginPath()
+
+        ctx.arc(
+            n.x,
+            n.y,
+            n.r,
+            0,
+            Math.PI * 2
+        )
+
+        ctx.fillStyle =
+            `rgba(0,122,255,${0.75 + pulse})`
+
+        ctx.fill()
+    })
+
+    // healthy check mark
+    ctx.strokeStyle = "rgba(52,199,89,0.9)"
+    ctx.lineWidth = 4
+
+    ctx.lineCap = "round"
+    ctx.lineJoin = "round"
+
+    ctx.beginPath()
+
+    ctx.moveTo(W / 2 - 18, H / 2 + 5)
+    ctx.lineTo(W / 2 - 5, H / 2 + 18)
+    ctx.lineTo(W / 2 + 22, H / 2 - 14)
+
+    ctx.stroke()
+
+    ctx.lineCap = "butt"
+    }   
+
+
+    animationFrame = requestAnimationFrame(animate)
+}
+
+onMounted(async () => {
+
+    await nextTick()
+    const canvas = brainCanvas.value
+    if (!canvas) return
+    createScene(canvas.width, canvas.height)
+    animate()
+})
+
+onBeforeUnmount(() => {
+    cancelAnimationFrame(animationFrame)
+})
 </script>
 
 <template>
@@ -588,7 +1748,7 @@ const daysDescription = [
                         re-injured.
                     </p>
                     </BlurReveal>
-                    <div v-if="scienceHidden" style="opacity: 1; transform: none;">
+                    <div style="opacity: 1; transform: none;">
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-2xl mx-auto mb-10">
                             <div class="bg-white border border-[#ff3b30]/20 rounded-2xl px-4 py-3 text-sm text-[#1d1d1f] italic shadow-sm text-left"
                                 style="opacity: 1; transform: none;">
@@ -618,7 +1778,7 @@ const daysDescription = [
                                 off."
                             </div>
                         </div>
-                        <button @click="() => scienceHidden = !scienceHidden"
+                        <!-- <button @click="() => scienceHidden = !scienceHidden"
                             class="bg-[#ff9500] text-white px-10 py-5 text-lg rounded-full font-semibold flex items-center gap-2 mx-auto shadow-xl shadow-[#ff9500]/25 hover:shadow-2xl hover:shadow-[#ff9500]/35 hover:scale-105 transition-all duration-150 cursor-pointer">
                             Show me the science
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -627,12 +1787,12 @@ const daysDescription = [
                                 <path d="M5 12h14"></path>
                                 <path d="m12 5 7 7-7 7"></path>
                             </svg>
-                        </button>
+                        </button> -->
                     </div>
-                    <div v-else style="opacity: 1; transform: none;">
+                    <div style="opacity: 1; transform: none;">
                         <div class="flex flex-col items-center gap-2 text-[#86868b]" style="opacity: 1;">
-                            <span class="text-xs tracking-widest uppercase font-medium">
-                                Scroll to explore
+                            <span class="text-md tracking-widest uppercase font-medium">
+                                Easy, Just Explore the Fun Science
                             </span>
                             <div class="animateUpandDown">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
@@ -649,7 +1809,7 @@ const daysDescription = [
                     </div>
                 </div>
             </section>
-            <div v-if="!scienceHidden" class="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 py-20 space-y-24">
+            <div class="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 py-20 space-y-24">
                 <div class="relative">
                     <div class="rounded-3xl overflow-hidden shadow-2xl" style="background: linear-gradient(135deg, rgb(29, 29, 31) 0%, rgb(45, 26, 26) 100%);">
                         <div class="bg-[#ff9500] px-8 py-4 flex items-center gap-3">
@@ -1117,26 +2277,20 @@ const daysDescription = [
                                             Animation
                                         </span>
                                     </div>
-                                    <button class="w-8 h-8 rounded-full flex items-center justify-center border transition-all hover:scale-105" style="border-color: rgba(0, 122, 255, 0.25); color: rgb(0, 122, 255);">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause"
-                                            data-fg-oc613="33.53:37.77791:/src/app/components/BrainNeuroscienceAnimation.tsx:1105:22:34692:19:e:Pause::::::Cv7I"
-                                            data-fgid-oc613=":r157:">
-                                            <rect x="14" y="4" width="4" height="16" rx="1"></rect>
-                                            <rect x="6" y="4" width="4" height="16" rx="1"></rect>
-                                        </svg>
-                                    </button>
                                 </div>
                                 <div class="p-6 pb-4">
-                                    <div style="opacity: 1; transform: none;">
+                                    <div style="opacity: 1">
                                         <div class="relative flex items-center justify-center">
-                                            <div class="absolute inset-0 rounded-2xl" style="background: radial-gradient(rgba(0, 122, 255, 0.03) 0%, transparent 70%); transform: scale(1.02599);">
+                                            <div class="absolute inset-0 rounded-2xl"
+                                                style="background: radial-gradient(rgba(0, 122, 255, 0.03) 0%, transparent 70%); transform: scale(1.02599);">
                                             </div>
-                                            <!-- Section to display neuroscience animation -->
-                                            <canvas width="380" height="300" class="relative z-10 rounded-xl"
-                                                style="max-width: 100%; background: rgba(250, 250, 252, 0.5); border: 1px solid red">
+
+                                            <canvas
+                                                ref="brainCanvas"
+                                                width="380"
+                                                height="300"
+                                                class="relative z-10 rounded-xl"
+                                                style="max-width: 100%; background: rgba(250, 250, 252, 0.5);">
                                             </canvas>
                                         </div>
                                     </div>
