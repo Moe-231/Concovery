@@ -98,11 +98,37 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                                     <circle cx="9" cy="7" r="4"></circle>
                                     <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg></div>
+                                </svg>
+                            </div>
                             <h2 class="text-3xl font-semibold text-[#1d1d1f]">For Players</h2>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <a href="https://www.ausport.gov.au/ais/health-wellbeing/concussion" target="_blank"
+                            <div class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 transition-all text-left group cursor-default" style="opacity: 1; transform: none;">
+                                <div class="flex items-start gap-4 mb-4">
+                                    <div class="bg-gradient-to-br from-[#007aff]/10 to-[#5ac8fa]/10 rounded-2xl p-3 flex-shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-file-text text-[#007aff]">
+                                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                                            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                                            <path d="M10 9H8"></path>
+                                            <path d="M16 13H8"></path>
+                                            <path d="M16 17H8"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3
+                                            class="text-lg font-semibold text-[#1d1d1f] mb-2">
+                                            The external resources are under maintenance, please check back later.</h3>
+                                        <p class="text-[#86868b] text-sm font-medium mb-3">
+                                            We apologize for any inconvenience this may cause.
+                                        </p>
+                                    </div>
+            
+                                </div>
+                            </div>
+                            <!-- <a href="https://www.ausport.gov.au/ais/health-wellbeing/concussion" target="_blank"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -208,7 +234,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                                 </div>
                                 <p class="text-[#1d1d1f] leading-relaxed">Plain-language guide to understanding what
                                     happens to your brain during and after concussion</p>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                     <!-- For Parents -->
@@ -227,7 +253,32 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                             <h2 class="text-3xl font-semibold text-[#1d1d1f]">For Parents</h2>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <a href="https://www.ausport.gov.au/concussion/parents" target="_blank"
+                            <div class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 transition-all text-left group cursor-default" style="opacity: 1; transform: none;">
+                                <div class="flex items-start gap-4 mb-4">
+                                    <div class="bg-gradient-to-br from-[#007aff]/10 to-[#5ac8fa]/10 rounded-2xl p-3 flex-shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-file-text text-[#007aff]">
+                                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                                            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                                            <path d="M10 9H8"></path>
+                                            <path d="M16 13H8"></path>
+                                            <path d="M16 17H8"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3
+                                            class="text-lg font-semibold text-[#1d1d1f] mb-2">
+                                            The external resources are under maintenance, please check back later.</h3>
+                                        <p class="text-[#86868b] text-sm font-medium mb-3">
+                                            We apologize for any inconvenience this may cause.
+                                        </p>
+                                    </div>
+            
+                                </div>
+                            </div>
+                            <!-- <a href="https://www.ausport.gov.au/concussion/parents" target="_blank"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -293,7 +344,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                                 </div>
                                 <p class="text-[#1d1d1f] leading-relaxed">Special considerations for young and
                                     developing brains, with age-specific recovery protocols</p>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                     <!-- For Coaches -->
@@ -311,7 +362,32 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                             <h2 class="text-3xl font-semibold text-[#1d1d1f]">For Coaches</h2>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <a href="https://www.ausport.gov.au/concussion/coaches" target="_blank"
+                            <div class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 transition-all text-left group cursor-default" style="opacity: 1; transform: none;">
+                                <div class="flex items-start gap-4 mb-4">
+                                    <div class="bg-gradient-to-br from-[#007aff]/10 to-[#5ac8fa]/10 rounded-2xl p-3 flex-shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-file-text text-[#007aff]">
+                                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                                            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                                            <path d="M10 9H8"></path>
+                                            <path d="M16 13H8"></path>
+                                            <path d="M16 17H8"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3
+                                            class="text-lg font-semibold text-[#1d1d1f] mb-2">
+                                            The external resources are under maintenance, please check back later.</h3>
+                                        <p class="text-[#86868b] text-sm font-medium mb-3">
+                                            We apologize for any inconvenience this may cause.
+                                        </p>
+                                    </div>
+            
+                                </div>
+                            </div>
+                            <!-- <a href="https://www.ausport.gov.au/concussion/coaches" target="_blank"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -377,7 +453,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                                 </div>
                                 <p class="text-[#1d1d1f] leading-relaxed">Immediate response protocols and when to
                                     remove a player from play</p>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </div>

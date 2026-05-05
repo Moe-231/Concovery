@@ -32,42 +32,81 @@ const controlNsPagination = (direction) => {
     }
 }
 
+// const neuroScienceData = [
+//     {
+//         heading: "The Impact",
+//         subheading: "What happends in milliseconds",
+//         description: "A rotational force hits the brain. The skull stops but the brain keeps moving — twisting inside. This shearing force stretches axons (the long fibres connecting neurons) beyond their elastic limit.",
+//         citation: "Diffuse Axonal Injury - Giza & Hovda, 2014"
+//     },
+//     {
+//         heading: "Axonal Shearing",
+//         subheading: "The invisible damage",
+//         description: "Stretched axons lose their ability to transmit signals. Some snap completely. This disrupts communication across the entire brain - even though you cannot see or feel it happening.",
+//         citation: "Axonal Stretch Injury - Queensland Brain Institute"
+//     },
+//     {
+//         heading: "Neurometabolic Crisis",
+//         subheading: "Days 1 through 7",
+//         description: "Damaged axons flood the brain with glutamate. Potassium leaks out of cells. The brain burns through ATP (energy) trying to restore balance. This energy crisis is why you feel foggy, slow, and exhausted.",
+//         citation: "Neurometabolic Cascade - Giza & Hovda, 2014"
+//     },
+//     {
+//         heading: "The Symptom Gap",
+//         subheading: "Day 7 - the danger zone",
+//         description: "Your symptoms clear because the acute energy crisis stabilises. But axonal repair has barely begun. Your brain is only 30-40% recovered. This is why feeling fine is not the same as being healed.",
+//         citation: "AIS Position Statement 2024 - concussioninsport.gov.au"
+//     },
+//     {
+//         heading: "Axonal Repair",
+//         subheading: "Days 7 through 21",
+//         description: "Microtubules slowly rebuild inside damaged axons. New myelin sheaths form. Neural pathways reconnect. This structural repair takes the full 21 days - it cannot be rushed.",
+//         citation: "Structural Recovery Timeline - AIS 2024"
+//     },
+//     {
+//         heading: "Day 21 - Fully Recovered",
+//         subheading: "Safe to return",
+//         description: "Axons are repaired. Energy metabolism is restored. Myelin sheaths are rebuilt. Neural pathways are reconnected. Only now is the brain ready to handle the forces of contact sport.",
+//         citation: "AIS Concussion and Brain Health Position Statement 2024"
+//     }
+// ]
+
 const neuroScienceData = [
     {
         heading: "The Impact",
-        subheading: "What happends in milliseconds",
-        description: "A rotational force hits the brain. The skull stops but the brain keeps moving — twisting inside. This shearing force stretches axons (the long fibres connecting neurons) beyond their elastic limit.",
-        citation: "Diffuse Axonal Injury - Giza & Hovda, 2014"
+        subheading: "What happens instantly",
+        description: "A hit causes your brain to twist inside your skull. Even though your head stops, your brain keeps moving. This stretches important connections in the brain beyond what they can handle.",
+        citation: "Giza & Hovda, 2014"
     },
     {
         heading: "Axonal Shearing",
-        subheading: "The invisible damage",
-        description: "Stretched axons lose their ability to transmit signals. Some snap completely. This disrupts communication across the entire brain - even though you cannot see or feel it happening.",
-        citation: "Axonal Stretch Injury - Queensland Brain Institute"
+        subheading: "Hidden injury",
+        description: "The brain's communication lines get stretched or torn. Messages between different parts of your brain slow down or stop - even if you don't feel it right away.",
+        citation: "Queensland Brain Institute"
     },
     {
-        heading: "Neurometabolic Crisis",
+        heading: "Energy Crash",
         subheading: "Days 1 through 7",
-        description: "Damaged axons flood the brain with glutamate. Potassium leaks out of cells. The brain burns through ATP (energy) trying to restore balance. This energy crisis is why you feel foggy, slow, and exhausted.",
-        citation: "Neurometabolic Cascade - Giza & Hovda, 2014"
+        description: "Your brain goes into overdrive trying to fix itself. It burns a lot of energy, which is why you feel tired, foggy, and slow during this time.",
+        citation: "Giza & Hovda, 2014"
     },
     {
-        heading: "The Symptom Gap",
-        subheading: "Day 7 - the danger zone",
-        description: "Your symptoms clear because the acute energy crisis stabilises. But axonal repair has barely begun. Your brain is only 30-40% recovered. This is why feeling fine is not the same as being healed.",
-        citation: "AIS Position Statement 2024 - concussioninsport.gov.au"
+        heading: "The Danger Zone",
+        subheading: "Around Day 7",
+        description: "You might feel normal again - but your brain isn't fully healed. It's still recovering behind the scenes, which makes this a risky time to return too early.",
+        citation: "AIS 2024"
     },
     {
-        heading: "Axonal Repair",
-        subheading: "Days 7 through 21",
-        description: "Microtubules slowly rebuild inside damaged axons. New myelin sheaths form. Neural pathways reconnect. This structural repair takes the full 21 days - it cannot be rushed.",
-        citation: "Structural Recovery Timeline - AIS 2024"
+        heading: "Repair Phase",
+        subheading: "Days 7-21",
+        description: "Your brain starts rebuilding damaged connections. This process takes time and can't be rushed, even if you feel okay.",
+        citation: "AIS 2024"
     },
     {
-        heading: "Day 21 - Fully Recovered",
-        subheading: "Safe to return",
-        description: "Axons are repaired. Energy metabolism is restored. Myelin sheaths are rebuilt. Neural pathways are reconnected. Only now is the brain ready to handle the forces of contact sport.",
-        citation: "AIS Concussion and Brain Health Position Statement 2024"
+        heading: "Full Recovery",
+        subheading: "Around Day 21",
+        description: "Your brain connections are repaired and working properly again. Only now is it safe to return to full contact sport.",
+        citation: "AIS 2024"
     }
 ]
 
@@ -1748,7 +1787,7 @@ onBeforeUnmount(() => {
                         re-injured.
                     </p>
                     </BlurReveal>
-                    <div style="opacity: 1; transform: none;">
+                    <!-- <div style="opacity: 1; transform: none;">
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-2xl mx-auto mb-10">
                             <div class="bg-white border border-[#ff3b30]/20 rounded-2xl px-4 py-3 text-sm text-[#1d1d1f] italic shadow-sm text-left"
                                 style="opacity: 1; transform: none;">
@@ -1778,7 +1817,7 @@ onBeforeUnmount(() => {
                                 off."
                             </div>
                         </div>
-                        <!-- <button @click="() => scienceHidden = !scienceHidden"
+                        <button @click="() => scienceHidden = !scienceHidden"
                             class="bg-[#ff9500] text-white px-10 py-5 text-lg rounded-full font-semibold flex items-center gap-2 mx-auto shadow-xl shadow-[#ff9500]/25 hover:shadow-2xl hover:shadow-[#ff9500]/35 hover:scale-105 transition-all duration-150 cursor-pointer">
                             Show me the science
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -1787,12 +1826,12 @@ onBeforeUnmount(() => {
                                 <path d="M5 12h14"></path>
                                 <path d="m12 5 7 7-7 7"></path>
                             </svg>
-                        </button> -->
-                    </div>
+                        </button>
+                    </div> -->
                     <div style="opacity: 1; transform: none;">
                         <div class="flex flex-col items-center gap-2 text-[#86868b]" style="opacity: 1;">
                             <span class="text-md tracking-widest uppercase font-medium">
-                                Easy, Just Explore the Fun Science
+                                Recovery is <b class="text-black">Easy</b><br/>Explore the <b class="text-black">Fun</b> Science
                             </span>
                             <div class="animateUpandDown">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
@@ -2280,9 +2319,18 @@ onBeforeUnmount(() => {
                                 </div>
                                 <div class="p-6 pb-4">
                                     <div style="opacity: 1">
-                                        <div class="relative flex items-center justify-center">
-                                            <div class="absolute inset-0 rounded-2xl"
-                                                style="background: radial-gradient(rgba(0, 122, 255, 0.03) 0%, transparent 70%); transform: scale(1.02599);">
+                                        <div class="relative flex flex-col items-center justify-center">
+                                            <div class="w-full text-xs text-gray-800">
+                                                <p>- The circle / ellipse represents the brain</p>
+                                                <p>- Animated elements represent: 
+                                                    <span v-if="selectedNeuroButton === 1">Impacted Axons (They connect neurons)</span>
+                                                    <span v-else-if="selectedNeuroButton === 2">Axons being torn or damaged</span>
+                                                    <span v-else-if="selectedNeuroButton === 3">Molecules inside the brain</span>
+                                                    <span v-else-if="selectedNeuroButton === 4">Molecules inside the brain</span>
+                                                    <span v-else-if="selectedNeuroButton === 5">Axons (bridge between neurons)</span>
+                                                    <span v-else-if="selectedNeuroButton === 6">Healthy Axons and Neurons</span>
+
+                                                </p>
                                             </div>
 
                                             <canvas

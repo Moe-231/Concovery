@@ -23,7 +23,7 @@ const isMenuOpen = ref(false)
                     </router-link>
                     <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/locatesupport" :class="router.currentRoute.value.path == '/locatesupport' ? 'text-blue-500': 'text-black'">Find
                         Support</router-link>
-                    <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/iteration2/crtresources" :class="router.currentRoute.value.path == '/iteration2/crtresources' ? 'text-blue-500': 'text-black'">CRT Resources</router-link>
+                    <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/iteration2/crtresources" :class="router.currentRoute.value.path == '/iteration2/crtresources' ? 'text-blue-500': 'text-black'">Diagnostic Resources</router-link>
                     <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/iteration2/rtprule" :class="router.currentRoute.value.path == '/iteration2/rtprule' ? 'text-blue-500': 'text-black'">21-Day Rule</router-link>       
                 </div>
                 <button v-if="!isMenuOpen" class="md:hidden text-[#1d1d1f] p-2" aria-label="Toggle menu" @click="() => isMenuOpen = true">
@@ -58,7 +58,7 @@ const isMenuOpen = ref(false)
                     Find Support
                 </router-link>
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/iteration2/crtresources" :class="router.currentRoute.value.path == '/iteration2/crtresources' ? 'text-blue-500': 'text-black'">
-                    CRT Resources
+                    Diagnostic Resources
                 </router-link>
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/iteration2/rtprule" :class="router.currentRoute.value.path == '/iteration2/rtprule' ? 'text-blue-500': 'text-black'">
                     21-Day Rule
