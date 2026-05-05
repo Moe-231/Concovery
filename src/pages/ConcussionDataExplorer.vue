@@ -294,6 +294,15 @@ const fetchSportsComparisonData = async () => {
     }
 }
 
+const fetchConcussionData = async (funcToCall) => {
+    try {
+        await applySportsFilter()
+        await applyAgeFilter()   
+    } catch (error) {
+        console.error("Error occurred while fetching concussion data: ", error)
+    } 
+}
+
 onMounted(async() => {
     // Fetching live categories from the database
     await fetchDropdownOptions()
@@ -324,7 +333,7 @@ onMounted(async() => {
         </div>
         <!-- Dropdown Menus -->
         <div class="bg-[#f5f5f7] rounded-3xl p-8 mb-12 shadow-lg" style="opacity: 1; transform: none;">
-            <div class="flex items-center gap-3 mb-6">
+            <div class="flex justify-center items-center gap-3 mb-6">
                 <div class="bg-[#007aff] rounded-2xl p-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -336,7 +345,7 @@ onMounted(async() => {
                 </div>
                 <h2 class="text-2xl font-semibold text-[#1d1d1f]">Filter Data</h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 place-items-center">
                 <!-- Sports Dropdown -->
                 <div>
                     <label class="block text-[#1d1d1f] font-semibold mb-3 text-sm uppercase tracking-wide">
@@ -353,13 +362,13 @@ onMounted(async() => {
                         </span>
                     </span>
                 </div>
-                <div class="flex justify-center items-center py-6">
-                <button @click="() => applySportsFilter()" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none bg-[#007aff] hover:bg-[#0051d5] text-white px-10 py-6 text-lg rounded-full font-semibold shadow-lg shadow-blue-500/25 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-funnel text-white" data-v-inspector="src/pages/ConcussionDataExplorer.vue:110:21"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" data-v-inspector="src/pages/ConcussionDataExplorer.vue:113:25"></path></svg>
-                    <span class="animate-pulse" v-if="fetchingSportsData">Working ....</span>
-                    <span v-else>Apply Filter</span>
-                </button>
-                </div>
+                <!-- <div class="flex justify-center items-center py-6">
+                    <button @click="() => applySportsFilter()" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none bg-[#007aff] hover:bg-[#0051d5] text-white px-10 py-6 text-lg rounded-full font-semibold shadow-lg shadow-blue-500/25 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-funnel text-white" data-v-inspector="src/pages/ConcussionDataExplorer.vue:110:21"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" data-v-inspector="src/pages/ConcussionDataExplorer.vue:113:25"></path></svg>
+                        <span class="animate-pulse" v-if="fetchingSportsData">Working ....</span>
+                        <span v-else>Apply Filter</span>
+                    </button>
+                </div> -->
                 <!-- Agegroup Dropdown -->
                 <div>
                     <label class="block text-[#1d1d1f] font-semibold mb-3 text-sm uppercase tracking-wide">
@@ -376,12 +385,14 @@ onMounted(async() => {
                         </span>
                     </span>
                 </div>
-                <div class="flex justify-center items-center py-6">
-                <button @click="() => applyAgeFilter()" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none bg-[#007aff] hover:bg-[#0051d5] text-white px-10 py-6 text-lg rounded-full font-semibold shadow-lg shadow-blue-500/25 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-funnel text-white" data-v-inspector="src/pages/ConcussionDataExplorer.vue:110:21"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" data-v-inspector="src/pages/ConcussionDataExplorer.vue:113:25"></path></svg>
-                    <span class="animate-pulse" v-if="fetchingAgeData">Working ....</span>
-                    <span v-else>Apply Filter</span>
-                </button>
+            </div>
+            <div>
+                 <div class="flex justify-center items-center py-6">
+                    <button @click="() => fetchConcussionData()" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none bg-[#007aff] hover:bg-[#0051d5] text-white px-10 py-6 text-lg rounded-full font-semibold shadow-lg shadow-blue-500/25 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-funnel text-white" data-v-inspector="src/pages/ConcussionDataExplorer.vue:110:21"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" data-v-inspector="src/pages/ConcussionDataExplorer.vue:113:25"></path></svg>
+                        <span class="animate-pulse" v-if="fetchingAgeData || fetchingSportsData">Working ....</span>
+                        <span v-else>Apply Filter</span>
+                    </button>
                 </div>
             </div>
             
