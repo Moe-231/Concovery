@@ -5,17 +5,18 @@ import TopLevelStatistics from "./TopLevelStatistics.vue";
 import InformativeStatSection from "./InformativeStatSection.vue";
 import TopIntroContainer from "./TopIntroContainer.vue";
 import BorderBeam from "../ui/border-beam/BorderBeam.vue";
+import MainNavigationsIntro from "./MainNavigationsIntro.vue";
 
 
 </script>
 
 <template>
   <TopIntroContainer />
-  <div class="pt-28 pb-28">
-    <TopLevelStatistics />
+  <div class="pt-28">
+    <MainNavigationsIntro />
   </div>
-  <div>
-    <InformativeStatSection />
+  <div style="background: linear-gradient(135deg, rgb(245, 245, 247) 0%, rgb(250, 250, 250) 100%);" class="pt-14 pb-28">
+    <TopLevelStatistics />
   </div>
   <div class="flex flex-col gap-y-8 p-8 lg:p-25">
     <div class="flex items-center justify-center">
@@ -31,6 +32,10 @@ import BorderBeam from "../ui/border-beam/BorderBeam.vue";
     </div>
     <BrainMockup />
   </div>
+  <div>
+    <InformativeStatSection />
+  </div>
+  
 </template>
 
 <style scoped></style>
