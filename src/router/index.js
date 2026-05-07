@@ -4,6 +4,7 @@ import ConcussionDataExplorer from "@/pages/ConcussionDataExplorer.vue";
 import CRTResources from "@/pages/CRTResources.vue";
 import LocateSupportPage from "@/pages/LocateSupportPage.vue";
 import RTPRule from "@/pages/RTPRule.vue";
+import StagedRecovery from "@/pages/StagedRecovery.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -38,6 +39,14 @@ const router = createRouter({
       component: RTPRule,
       meta: {
         title: "21-Day Rule",
+      },
+    },
+    {
+      path: "/iteration3/stagedrecovery",
+      name: "Staged Recovery",
+      component: StagedRecovery,
+      meta: {
+        title: "Staged Recoverys",
       },
     },
   ],
