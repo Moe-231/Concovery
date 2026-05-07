@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import BlurReveal from '../ui/blur-reveal/BlurReveal.vue';
 
 const isAnyStageSelected = ref(false)
 const selectedStage = ref(null)
@@ -22,9 +23,10 @@ const resetStageSelection = () => {
             <div class="bg-[#f5f5f7] rounded-3xl p-8 shadow-xl">
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="text-2xl font-semibold text-[#1d1d1f]">Recovery Stages</h2>
-                    <button v-if="isAnyStageSelected" class="text-[#007aff] hover:text-[#0051d5] font-semibold transition-colors" @click="() => resetStageSelection()">Change Stage</button>
+                    <button v-if="isAnyStageSelected" class="text-[#007aff] hover:text-[#0051d5] underline-offset-8 hover:underline font-semibold transition-all p-2 cursor-pointer" @click="() => resetStageSelection()">Change Stage</button>
                 </div>
                 <!-- Stages Button Section -->
+                <BlurReveal :delay="0.2" :duration="0.75">
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     <!-- Stage 1 -->
                     <button @click="() => handleStageClick('1')" class="relative group rounded-2xl p-6 border-2 transition-all bg-white border-[#007aff] text-[#007aff] hover:shadow-xl hover:scale-105 cursor-pointer" :disabled="isAnyStageSelected && selectedStage != '1'"
@@ -159,6 +161,7 @@ const resetStageSelection = () => {
                         </div>
                     </button>              
                 </div>
+                </BlurReveal>
             </div>
         </div>
         <div class="bg-[#f5f5f7] rounded-3xl p-16 text-center" style="opacity: 1; transform: none;">
