@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import BlurReveal from '../ui/blur-reveal/BlurReveal.vue';
+import StageRecoveryDetails from './StageRecoveryDetails.vue';
 
 const isAnyStageSelected = ref(false)
 const selectedStage = ref(null)
@@ -30,7 +31,7 @@ const resetStageSelection = () => {
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     <!-- Stage 1 -->
                     <button @click="() => handleStageClick('1')" class="relative group rounded-2xl p-6 border-2 transition-all bg-white border-[#007aff] text-[#007aff] hover:shadow-xl hover:scale-105 cursor-pointer" :disabled="isAnyStageSelected && selectedStage != '1'"
-                    :class="selectedStage == '1' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage != '1' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
+                    :class="selectedStage == '1' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage > 1 ? 'bg-[#34c759]/10! border-[#34c759]! text-[#34c759]! cursor-default! hover:shadow-[none]! hover:scale-none!' : isAnyStageSelected && selectedStage != '1' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
                         <div class="flex flex-col items-center gap-3">
                             <svg v-if="selectedStage == '1' && isAnyStageSelected" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity animate-pulse">
                                 <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
@@ -38,7 +39,8 @@ const resetStageSelection = () => {
                             <svg v-if="!isAnyStageSelected && selectedStage != '1'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle">
                                 <circle cx="12" cy="12" r="10"></circle>
                             </svg> 
-                            <svg v-if="isAnyStageSelected && selectedStage != 1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage > 1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check" data-fg-bc1y44="33.113:33.21835:/src/app/pages/Recovery.tsx:266:43:13589:42:e:CheckCircle2::::::CELI" data-fgid-bc1y44=":rp6:"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+                            <!-- <svg v-if="isAnyStageSelected && selectedStage < 1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>  -->
                             <div class="text-center">
                                 <div class="font-bold text-sm mb-1">Stage 1</div>
                                 <div class="text-xs font-semibold">Rest</div>
@@ -52,7 +54,7 @@ const resetStageSelection = () => {
                     </button>
                     <!-- Stage 2 -->
                     <button @click="() => handleStageClick('2')" class="relative group rounded-2xl p-6 border-2 transition-all bg-white border-[#007aff] text-[#007aff] hover:shadow-xl hover:scale-105 cursor-pointer" :disabled="isAnyStageSelected && selectedStage != '1'"
-                    :class="selectedStage == '2' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage != '2' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
+                     :class="selectedStage == '2' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage > 2 ? 'bg-[#34c759]/10! border-[#34c759]! text-[#34c759]! cursor-default! hover:shadow-[none]! hover:scale-none!' : isAnyStageSelected && selectedStage != '2' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
                         <div class="flex flex-col items-center gap-3">
                             <svg v-if="selectedStage == '2' && isAnyStageSelected" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity animate-pulse">
                                 <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
@@ -60,7 +62,8 @@ const resetStageSelection = () => {
                             <svg v-if="!isAnyStageSelected && selectedStage != '2'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle">
                                 <circle cx="12" cy="12" r="10"></circle>
                             </svg> 
-                            <svg v-if="isAnyStageSelected && selectedStage != 2" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage < 2" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage > 2" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check" data-fg-bc1y44="33.113:33.21835:/src/app/pages/Recovery.tsx:266:43:13589:42:e:CheckCircle2::::::CELI" data-fgid-bc1y44=":rp6:"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
                             <div class="text-center">
                                 <div class="font-bold text-sm mb-1">Stage 2</div>
                                 <div class="text-xs font-semibold">Light Activity</div>
@@ -74,7 +77,7 @@ const resetStageSelection = () => {
                     </button>
                     <!-- Stage 3 -->
                     <button @click="() => handleStageClick('3')" class="relative group rounded-2xl p-6 border-2 transition-all bg-white border-[#007aff] text-[#007aff] hover:shadow-xl hover:scale-105 cursor-pointer" :disabled="isAnyStageSelected && selectedStage != '1'"
-                    :class="selectedStage == '3' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage != '3' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
+                     :class="selectedStage == '3' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage > 3 ? 'bg-[#34c759]/10! border-[#34c759]! text-[#34c759]! cursor-default! hover:shadow-[none]! hover:scale-none!' : isAnyStageSelected && selectedStage != '3' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
                         <div class="flex flex-col items-center gap-3">
                             <svg v-if="selectedStage == '3' && isAnyStageSelected" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity animate-pulse">
                                 <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
@@ -82,7 +85,8 @@ const resetStageSelection = () => {
                             <svg v-if="!isAnyStageSelected && selectedStage != '3'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle">
                                 <circle cx="12" cy="12" r="10"></circle>
                             </svg> 
-                            <svg v-if="isAnyStageSelected && selectedStage != 3" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage < 3" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage > 3" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check" data-fg-bc1y44="33.113:33.21835:/src/app/pages/Recovery.tsx:266:43:13589:42:e:CheckCircle2::::::CELI" data-fgid-bc1y44=":rp6:"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg> 
                             <div class="text-center">
                                 <div class="font-bold text-sm mb-1">Stage 3</div>
                                 <div class="text-xs font-semibold">Moderate</div>
@@ -96,7 +100,7 @@ const resetStageSelection = () => {
                     </button>
                     <!-- Stage 4 -->
                     <button @click="() => handleStageClick('4')" class="relative group rounded-2xl p-6 border-2 transition-all bg-white border-[#007aff] text-[#007aff] hover:shadow-xl hover:scale-105 cursor-pointer" :disabled="isAnyStageSelected && selectedStage != '1'"
-                    :class="selectedStage == '4' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage != '4' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
+                    :class="selectedStage == '4' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage > 4 ? 'bg-[#34c759]/10! border-[#34c759]! text-[#34c759]! cursor-default! hover:shadow-[none]! hover:scale-none!' : isAnyStageSelected && selectedStage != '4' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
                         <div class="flex flex-col items-center gap-3">
                             <svg v-if="selectedStage == '4' && isAnyStageSelected" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity animate-pulse">
                                 <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
@@ -104,7 +108,8 @@ const resetStageSelection = () => {
                             <svg v-if="!isAnyStageSelected && selectedStage != '4'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle">
                                 <circle cx="12" cy="12" r="10"></circle>
                             </svg> 
-                            <svg v-if="isAnyStageSelected && selectedStage != 4" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage < 4" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage > 4" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check" data-fg-bc1y44="33.113:33.21835:/src/app/pages/Recovery.tsx:266:43:13589:42:e:CheckCircle2::::::CELI" data-fgid-bc1y44=":rp6:"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg> 
                             <div class="text-center">
                                 <div class="font-bold text-sm mb-1">Stage 4</div>
                                 <div class="text-xs font-semibold">Heavy Activity</div>
@@ -118,7 +123,7 @@ const resetStageSelection = () => {
                     </button>
                     <!-- Stage 5 -->
                     <button @click="() => handleStageClick('5')" class="relative group rounded-2xl p-6 border-2 transition-all bg-white border-[#007aff] text-[#007aff] hover:shadow-xl hover:scale-105 cursor-pointer" :disabled="isAnyStageSelected && selectedStage != '1'"
-                    :class="selectedStage == '5' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage != '5' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
+                    :class="selectedStage == '5' ? 'bg-[#007aff]! scale-105! text-white!' : isAnyStageSelected && selectedStage > 5 ? 'bg-[#34c759]/10! border-[#34c759]! text-[#34c759]! cursor-default! hover:shadow-[none]! hover:scale-none!' : isAnyStageSelected && selectedStage != '5' ? 'border-[#D2D1D7]! text-[#d2d2d7]! cursor-not-allowed! hover:shadow-[none]! hover:scale-none!' : ''">
                         <div class="flex flex-col items-center gap-3">
                             <svg v-if="selectedStage == '5' && isAnyStageSelected" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity animate-pulse">
                                 <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
@@ -126,7 +131,8 @@ const resetStageSelection = () => {
                             <svg v-if="!isAnyStageSelected && selectedStage != '5'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle">
                                 <circle cx="12" cy="12" r="10"></circle>
                             </svg> 
-                            <svg v-if="isAnyStageSelected && selectedStage != 5" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                             <svg v-if="isAnyStageSelected && selectedStage < 5" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage > 5" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check" data-fg-bc1y44="33.113:33.21835:/src/app/pages/Recovery.tsx:266:43:13589:42:e:CheckCircle2::::::CELI" data-fgid-bc1y44=":rp6:"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg> 
                             <div class="text-center">
                                 <div class="font-bold text-sm mb-1">Stage 5</div>
                                 <div class="text-xs font-semibold">Full Training</div>
@@ -148,7 +154,8 @@ const resetStageSelection = () => {
                             <svg v-if="!isAnyStageSelected && selectedStage != '6'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle">
                                 <circle cx="12" cy="12" r="10"></circle>
                             </svg> 
-                            <svg v-if="isAnyStageSelected && selectedStage != '6'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                             <svg v-if="isAnyStageSelected && selectedStage < 6" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+                            <svg v-if="isAnyStageSelected && selectedStage > 6" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check" data-fg-bc1y44="33.113:33.21835:/src/app/pages/Recovery.tsx:266:43:13589:42:e:CheckCircle2::::::CELI" data-fgid-bc1y44=":rp6:"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
                             <div class="text-center">
                                 <div class="font-bold text-sm mb-1">Stage 6</div>
                                 <div class="text-xs font-semibold">Return</div>
@@ -164,7 +171,13 @@ const resetStageSelection = () => {
                 </BlurReveal>
             </div>
         </div>
-        <div class="bg-[#f5f5f7] rounded-3xl p-16 text-center" style="opacity: 1; transform: none;">
+        <!-- Selected Stage Description Component -->
+        <div v-if="isAnyStageSelected">
+            <BlurReveal :delay="0.2" :duration="0.75">
+            <StageRecoveryDetails :stage="parseInt(selectedStage)" />
+            </BlurReveal>
+        </div>
+        <div v-if="!isAnyStageSelected" class="bg-[#f5f5f7] rounded-3xl p-16 text-center" style="opacity: 1; transform: none;">
             <div class="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <svg
                     xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
@@ -205,7 +218,6 @@ const resetStageSelection = () => {
                     Institute of Sport (AIS) Concussion and Brain Health Position Statement 2024</strong></p>
         </div>
     </div>
-
 </template>
 
 <style scoped></style>
