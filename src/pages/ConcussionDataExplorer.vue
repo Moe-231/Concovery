@@ -201,7 +201,9 @@ const fetchDropdownOptions = async () => {
         if (response.status == 200) {
             fetchingDropdowns.value = false
             ageGroupDropdown.value = response?.data?.age_group_results?.rows            
-            sportsDropdown.value = response?.data?.sports_result?.rows         
+            sportsDropdown.value = response?.data?.sports_result?.rows  
+            console.log("The dropdown options for age group are ", ageGroupDropdown.value)
+            console.log("The dropdown options for sports are ", sportsDropdown.value)
         } else {
              fetchingDropdowns.value = false
              console.log("Response is else: ", response)

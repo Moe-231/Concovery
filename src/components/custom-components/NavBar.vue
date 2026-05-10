@@ -24,6 +24,7 @@ const isMenuOpen = ref(false)
                     <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/locatesupport" :class="router.currentRoute.value.path == '/locatesupport' ? 'text-blue-500': 'text-black'">Find
                         Support</router-link>
                     <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/crtresources" :class="router.currentRoute.value.path == '/crtresources' ? 'text-blue-500': 'text-black'">Diagnostic Resources</router-link>
+                    <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/rtprule" :class="router.currentRoute.value.path == '/rtprule' ? 'text-blue-500': 'text-black'">21 Day Science</router-link>
                     <router-link class="transition-colors hover:text-[#007aff] font-semibold" to="/iteration3/stagedrecovery" :class="router.currentRoute.value.path == '/iteration3/stagedrecovery' ? 'text-blue-500': 'text-black'">Staged Recovery</router-link>       
                 </div>
                 <button v-if="!isMenuOpen" class="md:hidden text-[#1d1d1f] p-2" aria-label="Toggle menu" @click="() => isMenuOpen = true">
@@ -59,6 +60,9 @@ const isMenuOpen = ref(false)
                 </router-link>
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/crtresources" :class="router.currentRoute.value.path == '/crtresources' ? 'text-blue-500': 'text-black'">
                     Diagnostic Resources
+                </router-link>
+                <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/rtprule" :class="router.currentRoute.value.path == '/rtprule' ? 'text-blue-500': 'text-black'">
+                    21 Day Science
                 </router-link>
                 <router-link @click="() => isMenuOpen = false" class="block py-2 transition-colors hover:text-[#007aff] font-semibold" to="/iteration3/stagedrecovery" :class="router.currentRoute.value.path == '/iteration3/stagedrecovery' ? 'text-blue-500': 'text-black'">
                     Staged Recovery

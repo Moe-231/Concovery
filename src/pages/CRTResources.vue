@@ -128,7 +128,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
             
                                 </div>
                             </div>
-                            <!-- <a href="https://www.ausport.gov.au/ais/health-wellbeing/concussion" target="_blank"
+                            <!-- <a href="https://www.ausport.gov.au/ais/health-wellbeing/concussion" target="_blank" rel="noopener noreferrer"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -166,7 +166,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                                     management and return-to-play protocols
                                 </p>
                             </a>
-                            <a href="https://www.ausport.gov.au/concussion" target="_blank"
+                            <a href="https://www.ausport.gov.au/concussion" target="_blank" rel="noopener noreferrer"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -202,7 +202,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                                     guidelines, and educational resources
                                 </p>
                             </a>
-                            <a href="https://qbi.uq.edu.au/concussion" target="_blank"
+                            <a href="https://qbi.uq.edu.au/concussion" target="_blank" rel="noopener noreferrer"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -278,7 +278,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
             
                                 </div>
                             </div>
-                            <!-- <a href="https://www.ausport.gov.au/concussion/parents" target="_blank"
+                            <!-- <a href="https://www.ausport.gov.au/concussion/parents" target="_blank" rel="noopener noreferrer"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -311,7 +311,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                                 <p class="text-[#1d1d1f] leading-relaxed">How to recognize symptoms, support recovery,
                                     and make return-to-play decisions for young athletes</p>
                             </a>
-                            <a href="https://www.ausport.gov.au/ais/health-wellbeing/concussion/children" target="_blank"
+                            <a href="https://www.ausport.gov.au/ais/health-wellbeing/concussion/children" target="_blank" rel="noopener noreferrer"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -387,7 +387,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
             
                                 </div>
                             </div>
-                            <!-- <a href="https://www.ausport.gov.au/concussion/coaches" target="_blank"
+                            <!-- <a href="https://www.ausport.gov.au/concussion/coaches" target="_blank" rel="noopener noreferrer"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
@@ -420,7 +420,7 @@ import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue';
                                 <p class="text-[#1d1d1f] leading-relaxed">Free online training on recognizing, managing,
                                     and preventing concussion in community sport</p>
                             </a>
-                            <a href="https://www.ausport.gov.au/ais/health-wellbeing/concussion/sideline" target="_blank"
+                            <a href="https://www.ausport.gov.au/ais/health-wellbeing/concussion/sideline" target="_blank" rel="noopener noreferrer"
                                 class="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#d2d2d7]/50 hover:shadow-2xl hover:scale-[1.02] transition-all text-left group"
                                 style="opacity: 1; transform: none;">
                                 <div class="flex items-start gap-4 mb-4">
