@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-// ── Router is needed to navigate to the exercise page ──────────────────────
 const router = useRouter()
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -17,7 +16,8 @@ interface Stage {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// STATIC DATA — 6 AIS RECOVERY STAGES
+// THE 6 AIS RECOVERY STAGES
+// These are the official Australian Institute of Sport stages.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const stages: Stage[] = [
@@ -30,8 +30,9 @@ const stages: Stage[] = [
 ]
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// EXERCISE DEFINITIONS — used for the modal Step 3 preview list only.
-// Full guided exercise logic lives in ExercisePage.vue.
+// EXERCISE DEFINITIONS
+// Just the names and numbers used for the modal preview list.
+// The actual guided exercise logic lives in ExercisePage.vue.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const exerciseDefinitions = [
@@ -42,18 +43,17 @@ const exerciseDefinitions = [
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 21-DAY DATA
-// Each day (1–21) has:
-//   stage / stageName       → which AIS stage this day belongs to
-//   brainRecoveryPct        → % neurometabolic recovery (from research literature)
-//   cellularProcess         → what is happening in the brain at cellular level
-//   dailyGoal               → plain English goal for today
-//   allowed                 → list of allowed activities
-//                             interactive: 'breathing' | 'cognitive' | 'reaction'
-//   restricted              → list of things NOT to do
-//   warningSign             → when to stop and see a doctor
-//   insight                 → motivational fact for the day
+// One entry per day. Each entry has:
+//   stage / stageName       the AIS stage this day belongs to
+//   brainRecoveryPct        estimated brain recovery percentage from research
+//   cellularProcess         what is happening in the brain right now
+//   dailyGoal               the one thing the user should focus on today
+//   allowed                 activities that are safe to do
+//   restricted              things to avoid today
+//   warningSign             symptoms that mean stop and see a doctor
+//   insight                 a useful fact or motivation for the day
 //
-// SOURCE: Giza & Hovda 2014 (Neurometabolic Cascade), AIS 2024 Return-to-Play
+// Source: Giza and Hovda 2014 (Neurometabolic Cascade), AIS 2024 Return to Play Protocol
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const dayData: Record<number, {
@@ -64,304 +64,304 @@ const dayData: Record<number, {
 }> = {
   1: {
     stage: 1, stageName: 'Complete Rest', brainRecoveryPct: 5,
-    cellularProcess: 'Neurometabolic crisis. Ion pumps working overtime to restore sodium-potassium balance. Glucose demand is at its peak but supply is restricted due to disrupted blood flow.',
-    dailyGoal: 'Do absolutely nothing. Your brain needs every available resource to begin stabilising.',
+    cellularProcess: 'Your brain is in a neurometabolic crisis right now. Ion pumps are working overtime to restore balance. Glucose demand is at its peak but blood flow is disrupted, so supply cannot keep up.',
+    dailyGoal: 'Do absolutely nothing today. Every resource your brain has needs to go toward stabilising.',
     allowed: [
-      { activity: 'Sleep', detail: 'As much as possible. Sleep is the single most powerful recovery tool on Day 1.' },
-      { activity: 'Guided rest breathing', detail: '4-7-8 breathing reduces cognitive load and aids neurological recovery.', interactive: 'breathing' },
-      { activity: 'Lying down in a dark room', detail: 'Minimise all sensory input. Close blinds, no TV, no phone.' },
-      { activity: 'Light meals', detail: 'Eat if you can tolerate it. Avoid caffeine and alcohol entirely.' },
+      { activity: 'Sleep', detail: 'Sleep as much as you can. It is the most powerful recovery tool available on Day 1.' },
+      { activity: 'Guided rest breathing', detail: '4-7-8 breathing lowers your cognitive load and supports neurological recovery.', interactive: 'breathing' },
+      { activity: 'Lying in a dark room', detail: 'Reduce all sensory input. Close the blinds, no TV, no phone.' },
+      { activity: 'Light meals', detail: 'Eat if you can manage it. No caffeine and no alcohol.' },
     ],
-    restricted: ['No screens of any kind — phone, TV, laptop, tablet', 'No reading of any kind', 'No physical activity whatsoever', 'No driving', 'No school or work tasks', 'No loud environments or bright lights'],
-    warningSign: 'Worsening headache, vomiting, or loss of consciousness — call 000 immediately.',
-    insight: 'You will feel like you are doing nothing. You are not. Rest on Day 1 is the most active recovery choice you can make.',
+    restricted: ['No screens at all, including phone, TV, laptop and tablet', 'No reading of any kind', 'No physical activity', 'No driving', 'No school or work tasks', 'No loud environments or bright lights'],
+    warningSign: 'If your headache gets worse, you vomit, or you lose consciousness, call 000 immediately.',
+    insight: 'You might feel like you are doing nothing useful. You are not. Resting on Day 1 is the most active recovery decision you can make.',
   },
   2: {
     stage: 1, stageName: 'Complete Rest', brainRecoveryPct: 10,
-    cellularProcess: 'Ion balance beginning to restore but energy reserves remain critically low. Inflammatory cascade is at its peak. Neurons are highly vulnerable to secondary injury.',
-    dailyGoal: 'Continue complete rest. Do not be fooled if symptoms seem to be easing — the brain is still in crisis.',
+    cellularProcess: 'Ion balance is starting to come back but energy reserves are still critically low. The inflammatory response is at its peak and neurons are extremely vulnerable to a second injury right now.',
+    dailyGoal: 'Keep resting. If symptoms seem to be easing, do not be fooled. Your brain is still in crisis.',
     allowed: [
-      { activity: 'Sleep and rest', detail: 'Continue prioritising sleep above everything else.' },
-      { activity: 'Guided rest breathing', detail: 'Breathing exercises reduce stress hormones that slow brain recovery.', interactive: 'breathing' },
-      { activity: 'Very short walks to bathroom', detail: 'Minimal movement only. Do not exert yourself.' },
-      { activity: 'Light conversation', detail: 'Brief, calm conversation is fine. Avoid stressful topics.' },
+      { activity: 'Sleep and rest', detail: 'Sleep is still your number one priority.' },
+      { activity: 'Guided rest breathing', detail: 'Breathing exercises lower stress hormones that slow brain recovery.', interactive: 'breathing' },
+      { activity: 'Short walks to the bathroom', detail: 'Minimal movement only. Do not exert yourself.' },
+      { activity: 'Brief calm conversation', detail: 'Light conversation is fine. Keep it low stress.' },
     ],
-    restricted: ['No screens of any kind', 'No physical exertion', 'No driving', 'No school or work', 'No alcohol'],
-    warningSign: 'If symptoms are significantly worse than Day 1, see a GP today — do not wait.',
-    insight: 'Day 2 is when most players want to check their phone. Do not. Neurons require energy your brain cannot spare right now.',
+    restricted: ['No screens', 'No physical exertion', 'No driving', 'No school or work', 'No alcohol'],
+    warningSign: 'If symptoms are noticeably worse than yesterday, see a GP today and do not wait.',
+    insight: 'Day 2 is when most players want to grab their phone. Do not. Your neurons need the energy that screen time steals.',
   },
   3: {
     stage: 1, stageName: 'Complete Rest', brainRecoveryPct: 15,
-    cellularProcess: 'Inflammatory response beginning to stabilise. Mitochondria starting to restore ATP production. Blood flow slowly normalising but still below baseline.',
-    dailyGoal: 'Begin very gentle cognitive activity if completely symptom-free. If any symptoms remain, continue complete rest.',
+    cellularProcess: 'The inflammatory response is beginning to settle. Mitochondria are starting to restore ATP production and blood flow is slowly coming back, though it is still below normal.',
+    dailyGoal: 'If you are completely symptom free, you can try very gentle cognitive activity. If any symptoms remain, keep resting.',
     allowed: [
-      { activity: 'Short screen time if symptom-free', detail: 'Maximum 15 minutes at a time, only if no headache.' },
-      { activity: 'Guided rest breathing', detail: 'Continue daily breathing practice to support recovery.', interactive: 'breathing' },
-      { activity: 'Light reading', detail: 'Only if completely symptom-free. Stop if headache returns.' },
-      { activity: 'Brief walk outdoors', detail: '5-10 minutes at a slow pace. Stop if any symptoms emerge.' },
+      { activity: 'Short screen time if symptom free', detail: 'Maximum 15 minutes at a time and only if you have no headache.' },
+      { activity: 'Guided rest breathing', detail: 'Keep up your daily breathing practice.', interactive: 'breathing' },
+      { activity: 'Light reading', detail: 'Only if you are completely symptom free. Stop immediately if a headache returns.' },
+      { activity: 'Short walk outdoors', detail: '5 to 10 minutes at a slow pace. Stop if anything feels off.' },
     ],
-    restricted: ['No sport or physical training', 'No driving', 'No full-time school or work', 'No alcohol', 'No activities that increase heart rate'],
-    warningSign: 'Any return of headache, dizziness, or brain fog means back to complete rest immediately.',
-    insight: 'Symptom-free does not mean brain-healed. You are at 15% recovery. Stage 2 starts tomorrow.',
+    restricted: ['No sport or physical training', 'No driving', 'No full time school or work', 'No alcohol', 'No activities that raise your heart rate'],
+    warningSign: 'Any return of headache, dizziness or brain fog means go straight back to complete rest.',
+    insight: 'Being symptom free does not mean your brain has healed. You are at 15% recovery. Stage 2 starts tomorrow.',
   },
   4: {
     stage: 2, stageName: 'Light Aerobic', brainRecoveryPct: 22,
-    cellularProcess: 'Mitochondrial recovery underway. ATP production improving but still 40% below normal. Inflammation decreasing. Axons beginning early-stage repair processes.',
-    dailyGoal: 'Introduce light aerobic activity that does not raise heart rate above 60% of your maximum.',
+    cellularProcess: 'Mitochondrial recovery is underway. ATP production is improving but still 40% below normal. Inflammation is decreasing and axons are starting early stage repair.',
+    dailyGoal: 'Introduce light aerobic activity that keeps your heart rate below 60% of your maximum.',
     allowed: [
-      { activity: 'Walking', detail: '10-15 minutes at a comfortable pace. If you can hold a conversation, the pace is right.' },
-      { activity: 'Gentle stretching', detail: '10 minutes of light static stretching. No dynamic movements.' },
-      { activity: 'Guided rest breathing', detail: 'Continue daily breathing practice.', interactive: 'breathing' },
-      { activity: 'Cognitive load test', detail: 'Daily digit span test tracks your cognitive recovery progress.', interactive: 'cognitive' },
-      { activity: 'School or work — reduced load', detail: 'Half days only. Take breaks every 30 minutes.' },
+      { activity: 'Walking', detail: '10 to 15 minutes at a comfortable pace. If you can hold a conversation, the pace is right.' },
+      { activity: 'Gentle stretching', detail: '10 minutes of light static stretching only. No dynamic movements.' },
+      { activity: 'Guided rest breathing', detail: 'Keep up your daily breathing practice.', interactive: 'breathing' },
+      { activity: 'Cognitive load test', detail: 'The daily digit span test tracks how your cognitive speed is recovering.', interactive: 'cognitive' },
+      { activity: 'School or work at reduced load', detail: 'Half days only. Take a break every 30 minutes.' },
     ],
-    restricted: ['No running or jogging', 'No gym or weight training', 'No contact of any kind', 'No activities causing sweating or elevated heart rate', 'No alcohol'],
-    warningSign: 'Stop immediately if headache, dizziness, or nausea returns during or after activity.',
-    insight: 'Light movement actually helps recovery by increasing cerebral blood flow. The moment symptoms return, stop.',
+    restricted: ['No running or jogging', 'No gym or weight training', 'No contact of any kind', 'No activities that cause sweating or raise your heart rate significantly', 'No alcohol'],
+    warningSign: 'Stop immediately if headache, dizziness or nausea comes back during or after activity.',
+    insight: 'Light movement actually helps recovery by increasing blood flow to your brain. The moment symptoms return, stop.',
   },
   5: {
     stage: 2, stageName: 'Light Aerobic', brainRecoveryPct: 28,
-    cellularProcess: 'Blood flow normalising. Mitochondria producing ATP more efficiently. Axonal repair mechanisms active. Neurotransmitter levels beginning to restabilise.',
-    dailyGoal: 'Extend light aerobic activity by 5 minutes compared to yesterday if symptom-free.',
+    cellularProcess: 'Blood flow is normalising. Mitochondria are producing ATP more efficiently. Axonal repair is active and neurotransmitter levels are starting to restabilise.',
+    dailyGoal: 'Extend your aerobic activity by about 5 minutes compared to yesterday, if you are still symptom free.',
     allowed: [
-      { activity: 'Walking', detail: '15-20 minutes. Slightly brisker pace than Day 4 if comfortable.' },
-      { activity: 'Stationary bike', detail: '10 minutes at very low resistance. Heart rate below 60% max.' },
-      { activity: 'Cognitive load test', detail: 'Compare your score to yesterday — track your brain speed recovering.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Light cognitive challenge to track brain speed recovery.', interactive: 'reaction' },
+      { activity: 'Walking', detail: '15 to 20 minutes at a slightly brisker pace than yesterday, if it feels comfortable.' },
+      { activity: 'Stationary bike', detail: '10 minutes at very low resistance. Keep heart rate below 60% of your max.' },
+      { activity: 'Cognitive load test', detail: 'Compare your score to yesterday to track how your brain speed is coming back.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'A light cognitive challenge to track how quickly your brain is responding.', interactive: 'reaction' },
     ],
-    restricted: ['No running', 'No resistance training', 'No contact sport', 'No high-intensity activity'],
-    warningSign: 'Fatigue after light activity is normal. Headache is not — stop if it appears.',
-    insight: 'You are at 28% recovery. Do not confuse symptom resolution with brain healing. They are not the same thing.',
+    restricted: ['No running', 'No resistance training', 'No contact sport', 'No high intensity activity'],
+    warningSign: 'Feeling tired after light activity is normal. A headache is not. Stop if it appears.',
+    insight: 'You are at 28% recovery. Do not confuse your symptoms clearing up with your brain being healed. They are different things.',
   },
   6: {
     stage: 2, stageName: 'Light Aerobic', brainRecoveryPct: 34,
-    cellularProcess: 'Energy metabolism at approximately 35% of baseline. Axonal connections stabilising in undamaged regions. Inflammation largely resolved in peripheral areas.',
-    dailyGoal: 'Final day of Stage 2. Prepare to introduce sport-specific movement tomorrow.',
+    cellularProcess: 'Energy metabolism is at about 35% of your normal level. Axonal connections are stabilising in undamaged areas and inflammation has largely resolved around the edges.',
+    dailyGoal: 'This is your last day of Stage 2. Prepare to introduce sport specific movement tomorrow.',
     allowed: [
-      { activity: 'Brisk walking', detail: '20-25 minutes. You should feel slightly warmer but not out of breath.' },
-      { activity: 'Stationary bike', detail: '15 minutes at low resistance. Heart rate can touch 65% max briefly.' },
-      { activity: 'Swimming — gentle laps', detail: 'No flip turns, no diving. Easy freestyle only.' },
-      { activity: 'Cognitive load test', detail: 'Final Stage 2 cognitive check before progressing.', interactive: 'cognitive' },
+      { activity: 'Brisk walking', detail: '20 to 25 minutes. You should feel warmer but not out of breath.' },
+      { activity: 'Stationary bike', detail: '15 minutes at low resistance. Heart rate can briefly touch 65% of your max.' },
+      { activity: 'Swimming at easy pace', detail: 'No flip turns and no diving. Easy freestyle only.' },
+      { activity: 'Cognitive load test', detail: 'A final Stage 2 cognitive check before you move forward.', interactive: 'cognitive' },
       { activity: 'Reaction time test', detail: 'Track your cognitive recovery progress.', interactive: 'reaction' },
     ],
-    restricted: ['No running or jogging', 'No sport-specific drills', 'No weight training', 'No contact'],
-    warningSign: 'If symptoms return today, reset to Day 4. Do not push through to Stage 3.',
-    insight: 'Tomorrow you move to Stage 3. Trusting the process when you feel fine is what protects your long-term brain health.',
+    restricted: ['No running or jogging', 'No sport specific drills', 'No weight training', 'No contact'],
+    warningSign: 'If symptoms return today, reset to Day 4. Do not push yourself into Stage 3.',
+    insight: 'Tomorrow you move to Stage 3. Trusting the process when you feel fine is exactly what protects your long term brain health.',
   },
   7: {
     stage: 3, stageName: 'Sport Specific Exercise', brainRecoveryPct: 40,
-    cellularProcess: 'Axonal connections regenerating in damaged regions. Energy metabolism at 40% — enough for moderate exercise but insufficient to protect against collision. Myelin sheath repair beginning.',
-    dailyGoal: 'Introduce running and sport-specific movement without any contact or collision risk.',
+    cellularProcess: 'Axonal connections are regenerating in the damaged regions. Energy metabolism is at 40%, which is enough for moderate exercise but not enough to protect you from a collision. Myelin sheath repair is just beginning.',
+    dailyGoal: 'Introduce running and sport specific movement today, but with zero contact or collision risk.',
     allowed: [
-      { activity: 'Light jogging', detail: '10-15 minutes where you can still hold a conversation. On grass if possible.' },
-      { activity: 'Dribbling or ball skills', detail: 'Solo drills only. No other players involved.' },
-      { activity: 'Cognitive load test', detail: 'Track your brain speed as physical load increases.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily cognitive recovery check.', interactive: 'reaction' },
+      { activity: 'Light jogging', detail: '10 to 15 minutes at a pace where you can still hold a conversation. On grass if possible.' },
+      { activity: 'Dribbling or ball skills', detail: 'Solo drills only, no other players involved.' },
+      { activity: 'Cognitive load test', detail: 'Track your brain speed as your physical load increases.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Your daily cognitive recovery check.', interactive: 'reaction' },
     ],
     restricted: ['No contact or collision of any kind', 'No team training with other players', 'No heading the ball', 'No weight training', 'No match play or scrimmage'],
-    warningSign: 'Most dangerous day of recovery. You feel 90% fine. Your brain is at 40%. Do not be fooled.',
-    insight: 'This is the Day 7 trap. Axonal connections in the damaged area are still actively regenerating and are highly susceptible to re-injury.',
+    warningSign: 'This is the most dangerous day of your recovery. You feel about 90% fine but your brain is at 40%. Do not be fooled.',
+    insight: 'This is the Day 7 trap. Axonal connections in the damaged area are still regenerating and they are highly susceptible to re-injury right now.',
   },
   8: {
     stage: 3, stageName: 'Sport Specific Exercise', brainRecoveryPct: 46,
-    cellularProcess: 'Myelin sheath repair progressing. Neural pathway efficiency improving but not restored. Energy reserves building but still significantly below pre-injury baseline.',
-    dailyGoal: 'Build on yesterday — extend duration and increase skill complexity slightly.',
+    cellularProcess: 'Myelin sheath repair is progressing. Neural pathway efficiency is improving but not restored yet. Energy reserves are building but still well below your pre-injury baseline.',
+    dailyGoal: 'Build on yesterday. Extend how long you train and add a little more skill complexity.',
     allowed: [
-      { activity: 'Jogging', detail: '15-20 minutes. Can include gentle direction changes.' },
-      { activity: 'Sport-specific skills', detail: 'Passing drills, shooting practice — solo or with a stationary partner.' },
-      { activity: 'Cognitive load test', detail: 'Daily digit span test.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily reaction test tracks cognitive recovery progress.', interactive: 'reaction' },
+      { activity: 'Jogging', detail: '15 to 20 minutes with gentle direction changes included.' },
+      { activity: 'Sport specific skills', detail: 'Passing drills and shooting practice, solo or with a stationary partner.' },
+      { activity: 'Cognitive load test', detail: 'Your daily digit span test.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Daily reaction test tracking your cognitive recovery.', interactive: 'reaction' },
     ],
     restricted: ['No contact', 'No team training', 'No explosive plyometric movements', 'No heading the ball'],
-    warningSign: 'Post-exercise fatigue lasting more than an hour means reduce intensity tomorrow.',
-    insight: 'Consistency across Days 7, 8, and 9 matters more than any individual session.',
+    warningSign: 'If fatigue lasts more than an hour after training, reduce the intensity tomorrow.',
+    insight: 'Consistency across Days 7, 8 and 9 matters more than how hard any one session is.',
   },
   9: {
     stage: 3, stageName: 'Sport Specific Exercise', brainRecoveryPct: 52,
-    cellularProcess: 'Over 50% of neurometabolic function restored. Axonal connections largely re-established in damaged areas. Vulnerability to secondary injury still significantly elevated.',
-    dailyGoal: 'Final day of Stage 3. Push complexity of movement but maintain strict no-contact rule.',
+    cellularProcess: 'Over 50% of neurometabolic function has been restored. Axonal connections are largely re-established in the damaged areas, though vulnerability to a second injury is still significantly elevated.',
+    dailyGoal: 'Push movement complexity to its limit today but keep the strict no contact rule in place.',
     allowed: [
-      { activity: 'Running', detail: '20-25 minutes including direction changes and moderate acceleration.' },
-      { activity: 'Complex sport drills', detail: 'Multi-player passing, controlled shooting, position-specific patterns.' },
-      { activity: 'Resistance training — upper body', detail: 'Light weights only, controlled movements. No maximal effort.' },
-      { activity: 'Cognitive load test', detail: 'Check cognitive speed before moving to Stage 4.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily cognitive check.', interactive: 'reaction' },
+      { activity: 'Running', detail: '20 to 25 minutes including direction changes and moderate acceleration.' },
+      { activity: 'Complex sport drills', detail: 'Multi-player passing, controlled shooting and position specific patterns.' },
+      { activity: 'Upper body resistance training', detail: 'Light weights only with controlled movements. No maximum effort.' },
+      { activity: 'Cognitive load test', detail: 'Check your cognitive speed before moving to Stage 4.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Your daily cognitive check.', interactive: 'reaction' },
     ],
-    restricted: ['No contact whatsoever', 'No collision drills', 'No heading', 'No maximal sprint efforts'],
-    warningSign: 'If symptom-free at end of today you are ready for Stage 4 tomorrow.',
+    restricted: ['No contact at all', 'No collision drills', 'No heading', 'No maximum sprint efforts'],
+    warningSign: 'If you are symptom free at the end of today you are ready for Stage 4 tomorrow.',
     insight: 'You are past the halfway point. Over 50% of neurometabolic function is restored.',
   },
   10: {
     stage: 4, stageName: 'Non-Contact Training', brainRecoveryPct: 58,
-    cellularProcess: 'Significant neurometabolic recovery underway. Energy systems approaching 60% of baseline. Axonal integrity largely restored. Brain can now tolerate higher cognitive and physical load.',
-    dailyGoal: 'Return to full team training environment — but zero contact.',
+    cellularProcess: 'Significant neurometabolic recovery is underway. Energy systems are approaching 60% of normal. Axonal integrity is largely restored and your brain can now handle a higher physical and cognitive load.',
+    dailyGoal: 'Return to full team training today but with zero contact.',
     allowed: [
-      { activity: 'Full team training — no contact', detail: 'Train with teammates at normal intensity. Step out of any contact drills.' },
-      { activity: 'High intensity running', detail: 'Sprints, intervals, shuttle runs — push your cardiovascular system.' },
-      { activity: 'Weight training', detail: 'Progressive resistance. Avoid heavy neck loading.' },
-      { activity: 'Cognitive load test', detail: 'Track cognitive recovery as physical load increases.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily cognitive check.', interactive: 'reaction' },
+      { activity: 'Full team training without contact', detail: 'Train with teammates at normal intensity. Step out of any contact drills.' },
+      { activity: 'High intensity running', detail: 'Sprints, intervals and shuttle runs. Push your cardiovascular system.' },
+      { activity: 'Weight training', detail: 'Progressive resistance is fine. Avoid heavy neck loading.' },
+      { activity: 'Cognitive load test', detail: 'Track cognitive recovery as your physical load increases.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Your daily cognitive check.', interactive: 'reaction' },
     ],
     restricted: ['No contact or tackling', 'No collision drills', 'No heading', 'No match play'],
-    warningSign: 'Returning to team environment brings pressure to make contact. Stick to the protocol.',
-    insight: 'Your brain at 58% recovery cannot withstand a second impact — second impact syndrome risk remains real.',
+    warningSign: 'Being back in the team environment creates pressure to make contact. Stick to the protocol.',
+    insight: 'At 58% recovery your brain cannot handle a second impact. Second impact syndrome is still a real risk.',
   },
   11: {
     stage: 4, stageName: 'Non-Contact Training', brainRecoveryPct: 63,
-    cellularProcess: 'Neural pathway efficiency approaching 65%. Neurotransmitter levels largely normalised. Cognitive function significantly recovered.',
-    dailyGoal: 'Match pre-injury training intensity in all non-contact areas.',
+    cellularProcess: 'Neural pathway efficiency is approaching 65%. Neurotransmitter levels are largely back to normal and cognitive function has recovered significantly.',
+    dailyGoal: 'Match your pre-injury training intensity in all non-contact areas today.',
     allowed: [
-      { activity: 'Full training drills', detail: 'Participate in all drills that do not involve physical contact.' },
-      { activity: 'Tactical training', detail: 'Team formations, set pieces, tactical movements — fully participate.' },
-      { activity: 'Full gym session', detail: 'Normal weight training. Avoid neck loading exercises.' },
-      { activity: 'Cognitive load test', detail: 'Daily cognitive check.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily cognitive check.', interactive: 'reaction' },
+      { activity: 'Full training drills', detail: 'Participate in every drill that does not involve physical contact.' },
+      { activity: 'Tactical training', detail: 'Team formations, set pieces and tactical movements. Fully participate.' },
+      { activity: 'Full gym session', detail: 'Normal weight training is fine. Avoid neck loading exercises.' },
+      { activity: 'Cognitive load test', detail: 'Your daily cognitive check.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Your daily cognitive check.', interactive: 'reaction' },
     ],
     restricted: ['No tackling', 'No physical contests', 'No heading', 'No match simulation with contact'],
-    warningSign: 'Cognitive fatigue during training means reduce load.',
-    insight: 'At 63% you are capable of playing. But capability is not readiness.',
+    warningSign: 'If you feel cognitive fatigue during training, reduce your load.',
+    insight: 'At 63% you are capable of playing. But being capable is not the same as being ready.',
   },
   12: {
     stage: 4, stageName: 'Non-Contact Training', brainRecoveryPct: 67,
-    cellularProcess: 'Myelin sheath repair over 70% complete. Energy metabolism at approximately two-thirds of pre-injury baseline.',
-    dailyGoal: 'Sustained high-intensity non-contact training.',
+    cellularProcess: 'Myelin sheath repair is over 70% complete. Energy metabolism is at roughly two thirds of your pre-injury baseline.',
+    dailyGoal: 'Sustain high intensity non-contact training throughout the session today.',
     allowed: [
-      { activity: 'High intensity interval training', detail: 'Full HIIT session. Your cardiovascular system can handle it.' },
-      { activity: 'Technical skill work at full speed', detail: 'Ball skills, footwork, positional drills at match pace.' },
-      { activity: 'Full gym session', detail: 'All exercises except direct neck loading.' },
-      { activity: 'Cognitive load test', detail: 'Daily cognitive check.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily cognitive check.', interactive: 'reaction' },
+      { activity: 'High intensity interval training', detail: 'A full HIIT session. Your cardiovascular system can handle it.' },
+      { activity: 'Technical skill work at full speed', detail: 'Ball skills, footwork and positional drills at match pace.' },
+      { activity: 'Full gym session', detail: 'All exercises are fine except direct neck loading.' },
+      { activity: 'Cognitive load test', detail: 'Your daily cognitive check.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Your daily cognitive check.', interactive: 'reaction' },
     ],
     restricted: ['No contact', 'No heading', 'No match play'],
-    warningSign: 'Headache during high-intensity exercise means reduce load and reassess.',
-    insight: 'Three more days of non-contact training. This discipline separates full recoveries from persistent symptoms.',
+    warningSign: 'A headache during high intensity exercise means reduce your load and reassess.',
+    insight: 'Three more days of non-contact training. This discipline is what separates full recoveries from persistent symptoms.',
   },
   13: {
     stage: 4, stageName: 'Non-Contact Training', brainRecoveryPct: 72,
-    cellularProcess: 'Axonal repair approximately 75% complete. Remaining vulnerable regions in deeper white matter tracts.',
-    dailyGoal: 'Push training intensity to its absolute limit within the no-contact rule.',
+    cellularProcess: 'Axonal repair is about 75% complete. The remaining vulnerable regions are in the deeper white matter tracts.',
+    dailyGoal: 'Push training intensity to its absolute limit within the no contact rule.',
     allowed: [
-      { activity: 'Match-intensity training', detail: 'Every drill at full match pace — except contact.' },
-      { activity: 'Plyometrics', detail: 'Explosive jumps, bounds, direction changes at full speed.' },
-      { activity: 'Full team session', detail: 'Lead drills, play your position — step out only when contact unavoidable.' },
-      { activity: 'Cognitive load test', detail: 'Daily cognitive check.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily cognitive check.', interactive: 'reaction' },
+      { activity: 'Match intensity training', detail: 'Every drill at full match pace, except contact.' },
+      { activity: 'Plyometrics', detail: 'Explosive jumps, bounds and direction changes at full speed.' },
+      { activity: 'Full team session', detail: 'Lead drills and play your position. Step out only when contact is unavoidable.' },
+      { activity: 'Cognitive load test', detail: 'Your daily cognitive check.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Your daily cognitive check.', interactive: 'reaction' },
     ],
     restricted: ['No contact or tackling', 'No heading', 'No match play'],
-    warningSign: 'Any symptom at this stage requires immediate medical review.',
-    insight: 'You are doing everything at match pace except making contact. You are 72% recovered and 8 days from clearance.',
+    warningSign: 'Any symptom at this stage means you need an immediate medical review.',
+    insight: 'You are doing everything at match pace except making contact. You are 72% recovered with 8 days until clearance.',
   },
   14: {
     stage: 4, stageName: 'Non-Contact Training', brainRecoveryPct: 76,
-    cellularProcess: 'White matter tract repair at approximately 80%. Brain approaching the threshold where it can safely absorb contact forces.',
-    dailyGoal: 'Final non-contact session. Confirm symptom-free before progressing to Stage 5.',
+    cellularProcess: 'White matter tract repair is about 80% complete. Your brain is approaching the threshold where it can safely absorb contact forces.',
+    dailyGoal: 'Final non-contact session today. Confirm you are symptom free before progressing to Stage 5.',
     allowed: [
       { activity: 'All non-contact training', detail: 'Full participation at match intensity.' },
-      { activity: 'Pre-contact preparation drills', detail: 'Controlled technique without impact — if supervised by a coach.' },
-      { activity: 'Cognitive load test', detail: 'Final cognitive check before contact phase.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily cognitive check.', interactive: 'reaction' },
+      { activity: 'Pre-contact preparation drills', detail: 'Controlled technique without impact, if supervised by a coach.' },
+      { activity: 'Cognitive load test', detail: 'Final cognitive check before the contact phase begins.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Your daily cognitive check.', interactive: 'reaction' },
     ],
     restricted: ['No full contact', 'No heading', 'No match play'],
-    warningSign: 'Must be completely symptom-free at rest and during exercise to proceed tomorrow.',
-    insight: 'Day 14 symptom-free. Tomorrow is a significant milestone.',
+    warningSign: 'You must be completely symptom free at rest and during exercise before you can move on tomorrow.',
+    insight: 'Day 14 symptom free. Tomorrow is a real milestone.',
   },
   15: {
     stage: 5, stageName: 'Full Contact Practice', brainRecoveryPct: 80,
-    cellularProcess: 'Brain architecture stable enough to absorb controlled contact forces. Axonal repair 85% complete. Energy metabolism at 80% of baseline.',
-    dailyGoal: 'Reintroduce controlled contact in a supervised training environment.',
+    cellularProcess: 'Your brain structure is now stable enough to absorb controlled contact forces. Axonal repair is 85% complete and energy metabolism is at 80% of normal.',
+    dailyGoal: 'Reintroduce controlled contact today in a supervised training environment.',
     allowed: [
-      { activity: 'Controlled contact training', detail: 'Tackle practice at reduced intensity. Inform your coach this is your first contact session.' },
-      { activity: 'Full team training with contact', detail: 'Participate fully but communicate if anything feels off.' },
+      { activity: 'Controlled contact training', detail: 'Tackle practice at reduced intensity. Let your coach know this is your first contact session back.' },
+      { activity: 'Full team training with contact', detail: 'Participate fully but speak up immediately if anything feels off.' },
       { activity: 'Contested marking or ruck work', detail: 'Physical contests at moderate intensity.' },
-      { activity: 'Cognitive load test', detail: 'Daily cognitive check.', interactive: 'cognitive' },
-      { activity: 'Reaction time test', detail: 'Daily cognitive check.', interactive: 'reaction' },
+      { activity: 'Cognitive load test', detail: 'Your daily cognitive check.', interactive: 'cognitive' },
+      { activity: 'Reaction time test', detail: 'Your daily cognitive check.', interactive: 'reaction' },
     ],
-    restricted: ['No match play until medical clearance', 'No heading in training', 'Do not return without informing coach of concussion history'],
-    warningSign: 'Any headache or dizziness during contact drills — stop immediately and return to Stage 4.',
-    insight: 'Tell your coach and teammates this is your first contact session post-concussion. Transparency protects you.',
+    restricted: ['No match play until you have medical clearance', 'No heading in training', 'Do not return without telling your coach about your concussion history'],
+    warningSign: 'Any headache or dizziness during contact drills means stop immediately and return to Stage 4.',
+    insight: 'Tell your coach and teammates this is your first contact session post-concussion. Being open about it protects you.',
   },
   16: {
     stage: 5, stageName: 'Full Contact Practice', brainRecoveryPct: 84,
-    cellularProcess: 'Contact forces absorbed without triggering symptom cascade. Deep white matter repair ongoing.',
-    dailyGoal: 'Progress contact intensity if yesterday was completely symptom-free.',
+    cellularProcess: 'Contact forces are being absorbed without triggering a symptom cascade. Deep white matter repair is still ongoing.',
+    dailyGoal: 'Progress your contact intensity today if yesterday was completely symptom free.',
     allowed: [
-      { activity: 'Full contact training at normal intensity', detail: 'If Day 15 was symptom-free, train at normal match-preparation intensity.' },
-      { activity: 'Match simulation drills', detail: 'Contested situations, game scenarios with full physical intensity.' },
-      { activity: 'Heading practice', detail: 'Can reintroduce controlled heading if sport requires it and symptom-free.' },
-      { activity: 'Cognitive load test', detail: 'Daily cognitive check.', interactive: 'cognitive' },
+      { activity: 'Full contact training at normal intensity', detail: 'If Day 15 was symptom free, train at your normal match preparation intensity.' },
+      { activity: 'Match simulation drills', detail: 'Contested situations and game scenarios at full physical intensity.' },
+      { activity: 'Heading practice', detail: 'You can reintroduce controlled heading if your sport requires it and you are symptom free.' },
+      { activity: 'Cognitive load test', detail: 'Your daily cognitive check.', interactive: 'cognitive' },
     ],
-    restricted: ['No match play until medical clearance', 'Do not hide any symptoms from coach or medical staff'],
-    warningSign: 'Symptoms on Day 16 after contact means return to Stage 4 and seek medical review.',
-    insight: 'At 84% you are very close to full health. The remaining 16% continues repairing for weeks after return.',
+    restricted: ['No match play until you have medical clearance', 'Do not hide any symptoms from your coach or medical staff'],
+    warningSign: 'Symptoms on Day 16 after contact means return to Stage 4 and get a medical review.',
+    insight: 'At 84% you are very close to full health. The remaining 16% continues repairing for weeks after you return.',
   },
   17: {
     stage: 5, stageName: 'Full Contact Practice', brainRecoveryPct: 87,
-    cellularProcess: 'Axonal repair approaching 90% completion. Energy metabolism at 87% of pre-injury baseline.',
-    dailyGoal: 'Full training at match intensity including all contact situations.',
+    cellularProcess: 'Axonal repair is approaching 90% completion. Energy metabolism is at 87% of your pre-injury baseline.',
+    dailyGoal: 'Full training at match intensity today including all contact situations.',
     allowed: [
-      { activity: 'Full contact training', detail: 'All drills at match intensity. No restrictions on contact type.' },
-      { activity: 'Contested situations', detail: 'Marking contests, tackles, physical duels — full intensity.' },
-      { activity: 'Heading', detail: 'If sport requires it and completely symptom-free.' },
-      { activity: 'Cognitive load test', detail: 'Daily cognitive check.', interactive: 'cognitive' },
+      { activity: 'Full contact training', detail: 'All drills at match intensity with no restrictions on contact type.' },
+      { activity: 'Contested situations', detail: 'Marking contests, tackles and physical duels at full intensity.' },
+      { activity: 'Heading', detail: 'Fine if your sport requires it and you are completely symptom free.' },
+      { activity: 'Cognitive load test', detail: 'Your daily cognitive check.', interactive: 'cognitive' },
     ],
     restricted: ['No match play until Day 21 medical clearance'],
-    warningSign: 'Four days from return. Do not take risks that could set you back.',
+    warningSign: 'Four days until you return. Do not take risks that could push your timeline back.',
     insight: 'Players who complete every day of the protocol come back at 100%. Those who rush come back at 80%.',
   },
   18: {
     stage: 5, stageName: 'Full Contact Practice', brainRecoveryPct: 90,
-    cellularProcess: 'Over 90% neurometabolic recovery. Brain is functionally restored for sporting activity.',
-    dailyGoal: 'Simulate match conditions as closely as possible in training.',
+    cellularProcess: 'Over 90% neurometabolic recovery. Your brain is functionally restored for sporting activity.',
+    dailyGoal: 'Simulate match conditions as closely as possible in training today.',
     allowed: [
-      { activity: 'Match simulation', detail: 'Intra-squad games, practice matches — full intensity, full contact.' },
+      { activity: 'Match simulation', detail: 'Intra-squad games and practice matches at full intensity with full contact.' },
       { activity: 'All training activities', detail: 'No restrictions in the training environment.' },
-      { activity: 'Cognitive load test', detail: 'Daily cognitive check.', interactive: 'cognitive' },
+      { activity: 'Cognitive load test', detail: 'Your daily cognitive check.', interactive: 'cognitive' },
     ],
     restricted: ['No official match play until medical clearance on Day 21'],
-    warningSign: 'Three days from clearance — any symptom now requires medical review.',
-    insight: 'You are 90% recovered. The final 10% continues for weeks after return. That is normal and expected.',
+    warningSign: 'Three days from clearance. Any symptom now needs a medical review.',
+    insight: 'You are 90% recovered. The final 10% continues for weeks after you return. That is completely normal.',
   },
   19: {
     stage: 5, stageName: 'Full Contact Practice', brainRecoveryPct: 93,
-    cellularProcess: 'Neurometabolic function at 93%. Brain performing at near-normal levels under physical load.',
-    dailyGoal: 'Final preparation before medical clearance. Train with confidence.',
+    cellularProcess: 'Neurometabolic function is at 93%. Your brain is performing at near-normal levels under physical load.',
+    dailyGoal: 'Final preparation before medical clearance. Train with confidence today.',
     allowed: [
       { activity: 'Full unrestricted training', detail: 'Everything except official match play.' },
-      { activity: 'Cognitive load test', detail: 'Daily cognitive check.', interactive: 'cognitive' },
+      { activity: 'Cognitive load test', detail: 'Your daily cognitive check.', interactive: 'cognitive' },
     ],
-    restricted: ['No official competition until medical clearance'],
-    warningSign: 'Two days from clearance. Do not take unnecessary risks.',
-    insight: 'Almost there. Most players do not make it this far without cutting corners. You have done it properly.',
+    restricted: ['No official competition until you have medical clearance'],
+    warningSign: 'Two days from clearance. No unnecessary risks.',
+    insight: 'Most players do not make it this far without cutting corners. You have done it the right way.',
   },
   20: {
     stage: 5, stageName: 'Full Contact Practice', brainRecoveryPct: 96,
-    cellularProcess: 'All primary axonal repair complete. White matter integrity restored. Brain ready for full competition following medical clearance.',
-    dailyGoal: 'Final training day before medical clearance assessment tomorrow.',
+    cellularProcess: 'All primary axonal repair is complete. White matter integrity is restored. Your brain is ready for full competition after medical clearance.',
+    dailyGoal: 'Final training day before your medical clearance assessment tomorrow.',
     allowed: [
       { activity: 'All training activities', detail: 'Train as if tomorrow is match day.' },
       { activity: 'Cognitive load test', detail: 'Final cognitive check before clearance.', interactive: 'cognitive' },
     ],
     restricted: ['No official match play until after medical clearance on Day 21'],
-    warningSign: 'Any symptom today delays clearance — seek medical review immediately.',
+    warningSign: 'Any symptom today delays your clearance. See a doctor immediately.',
     insight: 'One day until clearance. You have protected your brain for 20 days. Tomorrow you return stronger.',
   },
   21: {
     stage: 6, stageName: 'Return to Play', brainRecoveryPct: 100,
-    cellularProcess: 'Full neurometabolic recovery. Energy systems restored to baseline. Axonal integrity complete. Brain fully prepared for competitive sport.',
-    dailyGoal: 'Obtain medical clearance and return to full competition.',
+    cellularProcess: 'Full neurometabolic recovery. Energy systems are back to baseline. Axonal integrity is complete. Your brain is fully prepared for competitive sport.',
+    dailyGoal: 'Get your medical clearance today and return to full competition.',
     allowed: [
-      { activity: 'Medical clearance assessment', detail: 'See your GP or sports medicine doctor for formal sign-off before returning.' },
-      { activity: 'Full return to competition', detail: 'Once medically cleared, you can play without restriction.' },
+      { activity: 'Medical clearance assessment', detail: 'See your GP or sports medicine doctor for formal sign-off before you return.' },
+      { activity: 'Full return to competition', detail: 'Once medically cleared, you can play without any restrictions.' },
       { activity: 'All sport activities', detail: 'No limitations. You are fully recovered.' },
     ],
-    restricted: ['Do not return without medical clearance — this is a legal and safety requirement', "Don't play through symptoms that emerge post-return", "Don't hide future concussions from coaching staff"],
-    warningSign: 'If symptoms emerge after return to play, stop immediately and restart the protocol.',
+    restricted: ['Do not return without medical clearance, it is a legal and safety requirement', 'Do not play through any symptoms that come back after returning', 'Do not hide future concussions from your coaching staff'],
+    warningSign: 'If symptoms come back after you return to play, stop immediately and restart the protocol.',
     insight: 'You did it. 21 days. Every player who completes the full protocol comes back at 100%. Welcome back.',
   },
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 1 — DATE & DAY TRACKING
+// SECTION 1 — DATE AND DAY TRACKING
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const injuryDate      = ref('')
@@ -369,7 +369,7 @@ const daysSinceInjury = ref<number | null>(null)
 const selectedDay     = ref<number | null>(null)
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 2 — CALENDAR STATE
+// SECTION 2 — CALENDAR
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const showCalendar  = ref(false)
@@ -412,19 +412,16 @@ function formatDisplayDate(dateStr: string) {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 3 — DAILY CHECK-IN MODAL
+// SECTION 3 — CHECK-IN MODAL
 //
-// HOW IT WORKS:
-//   1. User clicks "Start today's check-in"
-//   2. Modal opens at Step 1 (Sleep)
-//   3. User answers sleep, then symptoms
-//   4. On Stage 2+: Step 3 shows the exercise list + "Start exercises" button
-//      - That button navigates to /exercises (ExercisePage.vue)
-//      - ExercisePage saves 'concovery_return_modal' = 'true' when done
-//      - When user returns, onMounted detects that flag and reopens modal at Step 4
-//   5. Step 4 (or 3 on Stage 1): Recovery Journal
-//
-// totalCheckInSteps: 4 on Stage 2+ (includes exercises), 3 on Stage 1
+// How the flow works:
+//   Step 1: Sleep quality
+//   Step 2: Symptom check
+//   Step 3: Neck exercises (Stage 2 and above only)
+//           Clicking "Start exercises" goes to /exercises (ExercisePage.vue)
+//           ExercisePage sets a flag in localStorage when done
+//           When the user comes back, the modal reopens at the journal step
+//   Step 4: Recovery journal (or Step 3 on Stage 1)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const showCheckInModal = ref(false)
@@ -441,22 +438,17 @@ function openCheckIn() {
   symptomAnswers.value     = [null, null, null]
   showSymptomSection.value = false
 }
-
-function closeCheckIn() {
-  showCheckInModal.value = false
-}
-
+function closeCheckIn() { showCheckInModal.value = false }
 function nextCheckInStep() {
-  if (checkInStep.value < totalCheckInSteps.value) { checkInStep.value++ }
-  else { closeCheckIn() }
+  if (checkInStep.value < totalCheckInSteps.value) checkInStep.value++
+  else closeCheckIn()
 }
-
 function prevCheckInStep() {
   if (checkInStep.value > 1) checkInStep.value--
 }
 
-// Called from modal Step 3 — saves a flag so we know to reopen the modal
-// when the user returns from ExercisePage
+// Takes the user to the exercise page and saves a flag so
+// the modal knows to reopen at the journal step when they come back
 function goToExercises() {
   localStorage.setItem('concovery_return_modal', 'true')
   closeCheckIn()
@@ -465,8 +457,8 @@ function goToExercises() {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 4 — SLEEP CHECK-IN
-// User reports sleep quality. 3 consecutive poor nights triggers a GP warning.
-// Saved to localStorage under key 'concovery_sleep'
+// Three consecutive nights of poor sleep triggers a GP warning.
+// Saved to localStorage under 'concovery_sleep'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const sleepQuality   = ref<'well' | 'okay' | 'poorly' | null>(null)
@@ -489,9 +481,9 @@ function submitSleep(quality: 'well' | 'okay' | 'poorly') {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 5 — SYMPTOM CHECK (one question at a time)
-// symptomStep: 0=not started | 1/2/3=question | 4=result shown
-// If user answers YES to any question → skips to result immediately
+// SECTION 5 — SYMPTOM CHECK
+// One question at a time. If the user answers yes to any question,
+// it jumps straight to the result without asking the rest.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const symptomStep        = ref(0)
@@ -506,9 +498,9 @@ function startSymptomCheck() {
 function answerSymptom(answer: boolean) {
   const idx = symptomStep.value - 1
   symptomAnswers.value[idx] = answer
-  if (answer === true)            symptomStep.value = 4   // yes answer — jump to result
-  else if (symptomStep.value < 3) symptomStep.value++     // next question
-  else                            symptomStep.value = 4   // all 3 answered no
+  if (answer === true)            symptomStep.value = 4
+  else if (symptomStep.value < 3) symptomStep.value++
+  else                            symptomStep.value = 4
 }
 function resetSymptoms() {
   symptomStep.value    = 1
@@ -517,9 +509,9 @@ function resetSymptoms() {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 6 — ACTIVITY CHECKLIST
-// Non-interactive allowed activities can be ticked off.
-// Key format: "${dayNumber}-${activityName}" e.g. "7-Light jogging"
-// Saved to localStorage under key 'concovery_activities'
+// Non-interactive activities can be ticked off as done.
+// Key format is "dayNumber-activityName", for example "7-Light jogging"
+// Saved to localStorage under 'concovery_activities'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const checkedActivities = ref<Record<string, boolean>>({})
@@ -530,9 +522,28 @@ function toggleActivity(key: string) {
 }
 function isActivityChecked(key: string) { return checkedActivities.value[key] || false }
 
+// Pick the right icon for each activity based on its name
+function getActivityIcon(activityName: string): string {
+  const name = activityName.toLowerCase()
+  if (name.includes('sleep'))                                           return 'sleep'
+  if (name.includes('breath'))                                          return 'breathing'
+  if (name.includes('cognitive') || name.includes('digit'))            return 'cognitive'
+  if (name.includes('reaction'))                                        return 'reaction'
+  if (name.includes('walk') || name.includes('jog') || name.includes('run')) return 'movement'
+  if (name.includes('swim'))                                            return 'swim'
+  if (name.includes('bike') || name.includes('cycling'))               return 'bike'
+  if (name.includes('gym') || name.includes('weight') || name.includes('hiit') || name.includes('resistance') || name.includes('plyometric')) return 'gym'
+  if (name.includes('stretch'))                                         return 'stretch'
+  if (name.includes('school') || name.includes('work') || name.includes('read')) return 'study'
+  if (name.includes('tactical') || name.includes('drill') || name.includes('skill') || name.includes('ball') || name.includes('dribble') || name.includes('pass')) return 'sport'
+  if (name.includes('medical') || name.includes('clearance'))          return 'medical'
+  if (name.includes('conversation') || name.includes('lying') || name.includes('meal') || name.includes('rest')) return 'rest'
+  return 'default'
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 7 — BREATHING EXERCISE (4-7-8 technique)
-// 3 cycles of: inhale 4s → hold 7s → exhale 8s
+// Three cycles of: inhale 4 seconds, hold 7 seconds, exhale 8 seconds
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const breathingActive   = ref(false)
@@ -593,9 +604,10 @@ function stopBreathing() {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 8 — COGNITIVE LOAD TEST (Digit Span)
-// Digits flash one at a time. User recalls them in order.
-// Sequence length grows with recovery progress (3 on Day 4 → 7 on Day 21)
-// Saved to localStorage under key 'concovery_cognitive'
+// Based on the SCAT5 digit span test used in clinical concussion assessments.
+// Digits flash one at a time. The user has to recall them in order.
+// Sequence length gets longer as recovery progresses.
+// Saved to localStorage under 'concovery_cognitive'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const cognitivePhase        = ref<'idle' | 'showing' | 'input' | 'result'>('idle')
@@ -667,8 +679,8 @@ function resetCognitive() {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 9 — REACTION TIME TEST
-// 5 rounds. Green circle appears after 1.5–3.5s random delay.
-// Saved to localStorage under key 'concovery_reaction'
+// Five rounds. A green circle appears after a random delay between 1.5 and 3.5 seconds.
+// Saved to localStorage under 'concovery_reaction'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const reactionPhase     = ref<'idle' | 'waiting' | 'ready' | 'result'>('idle')
@@ -715,15 +727,15 @@ function tapReaction() {
 }
 function resetReaction() { reactionPhase.value = 'idle'; reactionTimes.value = []; reactionRound.value = 0 }
 function getReactionLabel(ms: number) {
-  if (ms < 250) return { label: 'Excellent — brain speed fully recovered',         color: '#1B7C3D' }
-  if (ms < 350) return { label: 'Good — cognitive recovery progressing well',      color: '#1A4FAB' }
-  if (ms < 450) return { label: 'Fair — continue recovery protocol',               color: '#E65100' }
-  return             { label: 'Slow — brain still recovering, do not rush return', color: '#C62828' }
+  if (ms < 250) return { label: 'Excellent, brain speed is fully recovered',     color: '#1B7C3D' }
+  if (ms < 350) return { label: 'Good, cognitive recovery is progressing well',  color: '#1A4FAB' }
+  if (ms < 450) return { label: 'Fair, keep following the recovery protocol',    color: '#E65100' }
+  return             { label: 'Still slow, your brain is still recovering. Do not rush your return', color: '#C62828' }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 10 — RECOVERY JOURNAL
-// Daily free-text entry saved to localStorage under key 'concovery_journal'
+// A daily free-text entry saved to localStorage under 'concovery_journal'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const journalEntry       = ref('')
@@ -772,20 +784,17 @@ function jumpToDay(day: number) {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 12 — LIFECYCLE HOOKS
-// onMounted: restore all localStorage data + check if returning from ExercisePage
-// onUnmounted: clear all timers to prevent memory leaks
+// onMounted: restore saved data and check if coming back from the exercise page
+// onUnmounted: clear all timers so nothing keeps running in the background
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 onMounted(() => {
-  // Restore injury date
   const savedDate = localStorage.getItem('concovery_injury_date')
   if (savedDate) { injuryDate.value = savedDate; calculateDays(savedDate) }
 
-  // Restore activity checklist
   const savedActivities = localStorage.getItem('concovery_activities')
   if (savedActivities) checkedActivities.value = JSON.parse(savedActivities)
 
-  // Restore sleep history and mark today as already submitted if applicable
   const savedSleep = localStorage.getItem('concovery_sleep')
   if (savedSleep) {
     sleepHistory.value = JSON.parse(savedSleep)
@@ -794,22 +803,17 @@ onMounted(() => {
     if (todaySleep) { sleepQuality.value = todaySleep.quality as any; sleepSubmitted.value = true }
   }
 
-  // Restore journal
   const savedJournal = localStorage.getItem('concovery_journal')
   if (savedJournal) journalEntries.value = JSON.parse(savedJournal)
 
-  // Restore cognitive test history
   const savedCognitive = localStorage.getItem('concovery_cognitive')
   if (savedCognitive) cognitiveHistory.value = JSON.parse(savedCognitive)
 
-  // ── Check if returning from ExercisePage ──────────────────────────────
-  // ExercisePage sets this flag when exercises are complete or skipped.
-  // We reopen the check-in modal at the journal step automatically.
+  // If the user is returning from the exercise page, reopen the modal at the journal step
   const returnFlag = localStorage.getItem('concovery_return_modal')
   if (returnFlag === 'true') {
     localStorage.removeItem('concovery_return_modal')
     showCheckInModal.value = true
-    // Jump to journal step (last step — 4 on Stage 2+, 3 on Stage 1)
     checkInStep.value = currentStage.value && currentStage.value >= 2 ? 4 : 3
   }
 })
@@ -822,9 +826,9 @@ onUnmounted(() => {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 13 — COMPUTED PROPERTIES
+// These update automatically whenever the values they depend on change.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// Which AIS stage the user is currently in (1–6)
 const currentStage = computed(() => {
   if (!daysSinceInjury.value) return null
   const d = daysSinceInjury.value
@@ -836,34 +840,31 @@ const currentStage = computed(() => {
   return 6
 })
 
-// Which day is shown in the brain status section
-// selectedDay = user clicked a day on timeline (preview mode)
-// null = show their actual current day
+// Which day to show in the brain status section.
+// If the user clicked a day on the timeline, show that day.
+// Otherwise show their actual current day.
 const viewingDay = computed(() => {
   if (selectedDay.value !== null) return selectedDay.value
   if (daysSinceInjury.value)      return Math.min(daysSinceInjury.value, 21)
   return null
 })
 
-// Data for the currently viewed day
 const viewingDayData = computed(() => {
   if (!viewingDay.value) return null
   return dayData[viewingDay.value]
 })
 
-// True when the user is viewing their actual current day (not a preview)
+// True when the user is looking at their actual current day, not a preview
 const isViewingToday = computed(() => {
   if (!daysSinceInjury.value || selectedDay.value === null) return true
   return selectedDay.value === Math.min(daysSinceInjury.value, 21)
 })
 
-// Days remaining until return-to-play eligibility
 const daysUntilReturn = computed(() => {
   if (!daysSinceInjury.value) return null
   return Math.max(0, 21 - daysSinceInjury.value)
 })
 
-// True if user answered YES to any symptom question
 const hasSymptoms = computed(() => symptomAnswers.value.some(a => a === true))
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -930,7 +931,6 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </button>
 
-            <!-- Calendar dropdown -->
             <div v-if="showCalendar" class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-2xl shadow-2xl border border-[#EBEBEB] p-4 z-50 w-80">
               <div class="flex items-center justify-between mb-4">
                 <button @click="prevMonth" class="p-2 hover:bg-[#F5F8FF] rounded-lg transition-colors">
@@ -957,13 +957,11 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
             </div>
           </div>
 
-          <!-- Day counter card -->
           <Transition name="fade-scale">
             <div v-if="daysSinceInjury !== null" class="bg-white rounded-2xl border border-[#EBEBEB] shadow-lg p-8">
               <div class="text-6xl font-black text-[#1A4FAB] mb-2" style="letter-spacing:-0.03em;">You are on Day {{ daysSinceInjury }}</div>
               <p class="text-lg text-[#5A7A9B] mb-6">of your 21-day recovery</p>
 
-              <!-- 21-day interactive timeline — click any day to preview it -->
               <div class="mb-6">
                 <div class="flex justify-between text-sm text-[#5A7A9B] mb-3 px-1">
                   <span>Day 1</span><span>Day 7</span><span>Day 14</span><span>Day 21</span>
@@ -973,7 +971,7 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                     v-for="day in 21" :key="day"
                     @click="selectedDay = day"
                     class="flex-1 flex flex-col items-center gap-1 group"
-                    :title="`Day ${day} — ${dayData[day]?.stageName}`"
+                    :title="`Day ${day}, ${dayData[day]?.stageName}`"
                   >
                     <div
                       class="w-full rounded-full transition-all duration-200"
@@ -998,9 +996,9 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
               </div>
 
               <p v-if="daysUntilReturn && daysUntilReturn > 0" class="text-[#5A7A9B] mb-4 text-sm">{{ daysUntilReturn }} days until you can return to play</p>
-              <p v-else-if="daysUntilReturn === 0" class="text-[#1B7C3D] font-semibold mb-4 text-sm">You have reached Day 21 — seek medical clearance before returning</p>
+              <p v-else-if="daysUntilReturn === 0" class="text-[#1B7C3D] font-semibold mb-4 text-sm">You have reached Day 21. Get medical clearance before returning.</p>
               <span v-if="currentStage" class="inline-block bg-[#1A4FAB] text-white text-base font-semibold px-5 py-2 rounded-full">
-                Stage {{ currentStage }} — {{ stages[currentStage - 1].name }}
+                Stage {{ currentStage }}, {{ stages[currentStage - 1].name }}
               </span>
             </div>
           </Transition>
@@ -1012,11 +1010,10 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
     <section v-if="viewingDay && viewingDayData" class="bg-[#F7F9FC] py-28">
       <div class="max-w-[1200px] mx-auto px-10">
 
-        <!-- Preview banner — only visible when user is browsing a past/future day -->
         <div v-if="!isViewingToday" class="bg-[#1A4FAB]/10 border border-[#1A4FAB]/30 rounded-xl px-5 py-3 mb-6 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <span class="text-[#1A4FAB] text-base font-semibold">Previewing Day {{ viewingDay }} — {{ viewingDayData.stageName }}</span>
+            <span class="text-[#1A4FAB] text-base font-semibold">Previewing Day {{ viewingDay }}, {{ viewingDayData.stageName }}</span>
             <span class="text-[#5A7A9B] text-xs">(You are on Day {{ daysSinceInjury }})</span>
           </div>
           <button @click="selectedDay = null" class="text-xs text-[#1A4FAB] font-semibold hover:underline">Back to today</button>
@@ -1024,13 +1021,12 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-          <!-- LEFT: Brain status -->
+          <!-- Brain status card -->
           <div class="bg-white rounded-2xl p-10 border border-[#EBEBEB] shadow-sm">
             <span class="inline-block bg-[#1A4FAB]/10 text-[#1A4FAB] text-xs font-semibold px-4 py-1.5 rounded-full mb-4">
-              Day {{ viewingDay }} — {{ viewingDayData.stageName }}
+              Day {{ viewingDay }}, {{ viewingDayData.stageName }}
             </span>
 
-            <!-- Brain recovery bar -->
             <div class="mb-6">
               <div class="flex justify-between text-sm text-[#5A7A9B] mb-1">
                 <span>Brain recovery</span>
@@ -1044,160 +1040,204 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
               </div>
             </div>
 
-            <h3 class="text-base font-bold text-[#1A1A1A] mb-1">Today's goal</h3>
+            <h3 class="text-base font-bold text-[#1A1A1A] mb-1">Your goal today</h3>
             <p class="text-[#1A4FAB] font-semibold text-sm mb-5">{{ viewingDayData.dailyGoal }}</p>
-            <h3 class="text-base font-bold text-[#1A1A1A] mb-2">What's happening in your brain</h3>
+            <h3 class="text-base font-bold text-[#1A1A1A] mb-2">What is happening in your brain</h3>
             <p class="text-[#1A1A1A] text-base leading-relaxed mb-5">{{ viewingDayData.cellularProcess }}</p>
 
-            <!-- Warning -->
             <div class="bg-[#C62828]/10 border border-[#C62828] rounded-xl p-5 flex gap-2 mb-4">
               <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               <p class="text-sm text-[#1A1A1A] font-semibold">{{ viewingDayData.warningSign }}</p>
             </div>
 
-            <!-- Insight -->
             <div class="bg-[#1A4FAB]/5 border border-[#1A4FAB]/20 rounded-xl p-5 flex gap-2">
               <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               <p class="text-sm text-[#1A1A1A] italic leading-relaxed">{{ viewingDayData.insight }}</p>
             </div>
-            <p class="text-sm text-[#5A7A9B] italic mt-4">Source: Giza & Hovda, 2014 — Neurometabolic Cascade · AIS 2024</p>
+            <p class="text-sm text-[#5A7A9B] italic mt-4">Source: Giza and Hovda, 2014. Neurometabolic Cascade. AIS 2024</p>
           </div>
 
-          <!-- RIGHT: Activities -->
+          <!-- Activities card with stagger animation -->
           <div class="bg-white rounded-2xl p-10 border border-[#EBEBEB] shadow-sm">
             <h3 class="text-3xl font-bold text-[#1A1A1A] mb-8">What you can do today</h3>
 
-            <!-- Allowed -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 text-[#1B7C3D] font-bold mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B7C3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <!-- Allowed activities with icons and stagger animation -->
+            <div class="mb-8">
+              <div class="flex items-center gap-2 text-[#1B7C3D] font-bold text-base mb-5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B7C3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 Allowed Today
               </div>
-              <div class="space-y-3">
+
+              <div class="space-y-3" :key="`activities-${viewingDay}`">
                 <div
-                  v-for="a in viewingDayData.allowed" :key="a.activity"
-                  class="bg-[#F5FFF7] border border-[#1B7C3D]/20 rounded-xl p-5"
+                  v-for="(a, idx) in viewingDayData.allowed"
+                  :key="a.activity"
+                  class="activity-card flex items-start gap-4 bg-[#F5FFF7] border border-[#1B7C3D]/20 rounded-2xl p-5"
                   :class="isActivityChecked(`${viewingDay}-${a.activity}`) && !a.interactive ? 'opacity-60' : ''"
+                  :style="{ animationDelay: `${idx * 90}ms` }"
                 >
-                  <div class="flex items-start gap-3">
-                    <!-- Checkbox for physical activities -->
-                    <button
-                      v-if="!a.interactive"
-                      @click="toggleActivity(`${viewingDay}-${a.activity}`)"
-                      class="flex-shrink-0 mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-all"
-                      :class="isActivityChecked(`${viewingDay}-${a.activity}`) ? 'bg-[#1B7C3D] border-[#1B7C3D]' : 'border-[#1B7C3D]'"
-                    >
-                      <svg v-if="isActivityChecked(`${viewingDay}-${a.activity}`)" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                    </button>
-                    <!-- Play icon for interactive widgets -->
-                    <svg v-else class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <!-- Activity icon -->
+                  <div class="flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center" :class="a.interactive ? 'bg-[#1A4FAB]/10' : 'bg-[#1B7C3D]/10'">
 
-                    <div class="flex-1">
-                      <div class="font-semibold text-[#1A1A1A] text-sm mb-1" :class="isActivityChecked(`${viewingDay}-${a.activity}`) && !a.interactive ? 'line-through text-[#5A7A9B]' : ''">{{ a.activity }}</div>
-                      <p class="text-sm text-[#5A7A9B] leading-relaxed mb-2">{{ a.detail }}</p>
+                    <!-- Sleep icon -->
+                    <svg v-if="getActivityIcon(a.activity) === 'sleep'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 
-                      <!-- ── BREATHING WIDGET ─────────────────────────── -->
-                      <div v-if="a.interactive === 'breathing' && isViewingToday" class="mt-2">
-                        <div v-if="!breathingActive && breathingPhase === 'idle'">
-                          <button @click="startBreathing" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start breathing exercise</button>
-                        </div>
-                        <div v-else class="bg-[#F5F8FF] rounded-xl p-6 text-center">
-                          <div class="relative w-16 h-16 mx-auto mb-2">
-                            <svg class="w-16 h-16 -rotate-90" viewBox="0 0 80 80">
-                              <circle cx="40" cy="40" r="34" stroke="#EBEBEB" stroke-width="6" fill="none"/>
-                              <circle cx="40" cy="40" r="34" stroke="#1A4FAB" stroke-width="6" fill="none" :stroke-dasharray="`${(breathingProgress / 100) * 213.6} 213.6`" class="transition-all duration-1000"/>
-                            </svg>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center">
-                              <span class="text-sm font-bold text-[#1A4FAB] uppercase">{{ breathingPhase }}</span>
-                              <span class="text-base font-black text-[#1A1A1A]">{{ breathingCount }}</span>
-                            </div>
+                    <!-- Breathing icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'breathing'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+
+                    <!-- Cognitive icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'cognitive'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+
+                    <!-- Reaction icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'reaction'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+
+                    <!-- Movement icon (walk/jog/run) -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'movement'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/><path d="m7.5 17.5 1-4.5 2.5 2 3-4.5"/><path d="m11 9-1 3h4l-1.5 4"/><path d="m16.5 17.5-1-4.5"/></svg>
+
+                    <!-- Swim icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'swim'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 17c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><circle cx="16.5" cy="6.5" r="1.5"/></svg>
+
+                    <!-- Bike icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'bike'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>
+
+                    <!-- Gym icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'gym'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14"/><path d="M18 5v14"/><path d="M2 9h4"/><path d="M18 9h4"/><path d="M2 15h4"/><path d="M18 15h4"/><path d="M6 9h12"/><path d="M6 15h12"/></svg>
+
+                    <!-- Stretch icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'stretch'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/></svg>
+
+                    <!-- Study / school icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'study'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+
+                    <!-- Sport / drills icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'sport'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+
+                    <!-- Medical icon -->
+                    <svg v-else-if="getActivityIcon(a.activity) === 'medical'" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+
+                    <!-- Rest icon (default) -->
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" :stroke="a.interactive ? '#1A4FAB' : '#1B7C3D'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </div>
+
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <!-- Checkbox for non-interactive activities -->
+                      <button
+                        v-if="!a.interactive"
+                        @click="toggleActivity(`${viewingDay}-${a.activity}`)"
+                        class="flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all"
+                        :class="isActivityChecked(`${viewingDay}-${a.activity}`) ? 'bg-[#1B7C3D] border-[#1B7C3D]' : 'border-[#1B7C3D]'"
+                      >
+                        <svg v-if="isActivityChecked(`${viewingDay}-${a.activity}`)" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                      </button>
+                      <span class="font-semibold text-[#1A1A1A] text-sm" :class="isActivityChecked(`${viewingDay}-${a.activity}`) && !a.interactive ? 'line-through text-[#5A7A9B]' : ''">{{ a.activity }}</span>
+                    </div>
+                    <p class="text-sm text-[#5A7A9B] leading-relaxed mb-2">{{ a.detail }}</p>
+
+                    <!-- Breathing widget -->
+                    <div v-if="a.interactive === 'breathing' && isViewingToday" class="mt-2">
+                      <div v-if="!breathingActive && breathingPhase === 'idle'">
+                        <button @click="startBreathing" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start breathing exercise</button>
+                      </div>
+                      <div v-else class="bg-[#F5F8FF] rounded-xl p-6 text-center">
+                        <div class="relative w-16 h-16 mx-auto mb-2">
+                          <svg class="w-16 h-16 -rotate-90" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="34" stroke="#EBEBEB" stroke-width="6" fill="none"/>
+                            <circle cx="40" cy="40" r="34" stroke="#1A4FAB" stroke-width="6" fill="none" :stroke-dasharray="`${(breathingProgress / 100) * 213.6} 213.6`" class="transition-all duration-1000"/>
+                          </svg>
+                          <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-sm font-bold text-[#1A4FAB] uppercase">{{ breathingPhase }}</span>
+                            <span class="text-base font-black text-[#1A1A1A]">{{ breathingCount }}</span>
                           </div>
-                          <p class="text-sm text-[#5A7A9B] mb-2">Cycle {{ breathingCycles + 1 }} of 3</p>
-                          <button @click="stopBreathing" class="text-xs text-[#C62828] hover:underline">Stop</button>
+                        </div>
+                        <p class="text-sm text-[#5A7A9B] mb-2">Cycle {{ breathingCycles + 1 }} of 3</p>
+                        <button @click="stopBreathing" class="text-xs text-[#C62828] hover:underline">Stop</button>
+                      </div>
+                    </div>
+
+                    <!-- Cognitive widget -->
+                    <div v-if="a.interactive === 'cognitive' && isViewingToday" class="mt-2">
+                      <div v-if="cognitivePhase === 'idle'">
+                        <button @click="startCognitiveTest" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start digit span test</button>
+                        <span v-if="cognitiveHistory.length > 0" class="text-sm text-[#5A7A9B] ml-2">
+                          Last: {{ cognitiveHistory[cognitiveHistory.length - 1].correct ? 'Correct' : 'Incorrect' }}, {{ cognitiveHistory[cognitiveHistory.length - 1].length }} digits
+                        </span>
+                      </div>
+                      <div v-else-if="cognitivePhase === 'showing'" class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-xl p-6 text-center">
+                        <p class="text-sm text-[#5A7A9B] mb-3">Watch the digits carefully</p>
+                        <div class="h-16 flex items-center justify-center">
+                          <Transition name="fade-scale" mode="out-in">
+                            <span v-if="cognitiveShowDigit !== null" :key="cognitiveShowDigit" class="text-5xl font-black text-[#1A4FAB]">{{ cognitiveShowDigit }}</span>
+                            <span v-else class="text-5xl font-black text-[#EBEBEB]">?</span>
+                          </Transition>
+                        </div>
+                        <p class="text-sm text-[#5A7A9B] mt-2">{{ cognitiveCurrentIndex }} of {{ cognitiveSequence.length }} shown</p>
+                      </div>
+                      <div v-else-if="cognitivePhase === 'input'" class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-xl p-6">
+                        <p class="text-sm text-[#5A7A9B] mb-3 text-center">Enter the digits in order</p>
+                        <div class="flex gap-1 justify-center mb-3 min-h-[36px] flex-wrap">
+                          <div v-for="(digit, i) in cognitiveInput" :key="i" class="w-8 h-8 bg-[#1A4FAB] text-white rounded-lg flex items-center justify-center font-bold text-sm">{{ digit }}</div>
+                          <div v-for="i in (cognitiveSequence.length - cognitiveInput.length)" :key="'e'+i" class="w-8 h-8 bg-white border-2 border-[#EBEBEB] rounded-lg"/>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1 mb-2">
+                          <button v-for="n in [1,2,3,4,5,6,7,8,9]" :key="n" @click="tapCognitiveDigit(n)" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#1A1A1A] hover:bg-[#1A4FAB] hover:text-white transition-colors">{{ n }}</button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1">
+                          <button @click="deleteCognitiveInput" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#C62828] hover:bg-[#FFF5F5] transition-colors">Del</button>
+                          <button @click="tapCognitiveDigit(0)" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#1A1A1A] hover:bg-[#1A4FAB] hover:text-white transition-colors">0</button>
+                          <div/>
                         </div>
                       </div>
-
-                      <!-- ── COGNITIVE WIDGET ─────────────────────────── -->
-                      <div v-if="a.interactive === 'cognitive' && isViewingToday" class="mt-2">
-                        <div v-if="cognitivePhase === 'idle'">
-                          <button @click="startCognitiveTest" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start digit span test</button>
-                          <span v-if="cognitiveHistory.length > 0" class="text-sm text-[#5A7A9B] ml-2">
-                            Last: {{ cognitiveHistory[cognitiveHistory.length - 1].correct ? 'Correct' : 'Incorrect' }} — {{ cognitiveHistory[cognitiveHistory.length - 1].length }} digits
-                          </span>
-                        </div>
-                        <div v-else-if="cognitivePhase === 'showing'" class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-xl p-6 text-center">
-                          <p class="text-sm text-[#5A7A9B] mb-3">Watch the digits carefully</p>
-                          <div class="h-16 flex items-center justify-center">
-                            <Transition name="fade-scale" mode="out-in">
-                              <span v-if="cognitiveShowDigit !== null" :key="cognitiveShowDigit" class="text-5xl font-black text-[#1A4FAB]">{{ cognitiveShowDigit }}</span>
-                              <span v-else class="text-5xl font-black text-[#EBEBEB]">—</span>
-                            </Transition>
-                          </div>
-                          <p class="text-sm text-[#5A7A9B] mt-2">{{ cognitiveCurrentIndex }} of {{ cognitiveSequence.length }} shown</p>
-                        </div>
-                        <div v-else-if="cognitivePhase === 'input'" class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-xl p-6">
-                          <p class="text-sm text-[#5A7A9B] mb-3 text-center">Enter the digits in order</p>
-                          <div class="flex gap-1 justify-center mb-3 min-h-[36px] flex-wrap">
-                            <div v-for="(digit, i) in cognitiveInput" :key="i" class="w-8 h-8 bg-[#1A4FAB] text-white rounded-lg flex items-center justify-center font-bold text-sm">{{ digit }}</div>
-                            <div v-for="i in (cognitiveSequence.length - cognitiveInput.length)" :key="'e'+i" class="w-8 h-8 bg-white border-2 border-[#EBEBEB] rounded-lg"/>
-                          </div>
-                          <div class="grid grid-cols-3 gap-1 mb-2">
-                            <button v-for="n in [1,2,3,4,5,6,7,8,9]" :key="n" @click="tapCognitiveDigit(n)" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#1A1A1A] hover:bg-[#1A4FAB] hover:text-white transition-colors">{{ n }}</button>
-                          </div>
-                          <div class="grid grid-cols-3 gap-1">
-                            <button @click="deleteCognitiveInput" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#C62828] hover:bg-[#FFF5F5] transition-colors">Del</button>
-                            <button @click="tapCognitiveDigit(0)" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#1A1A1A] hover:bg-[#1A4FAB] hover:text-white transition-colors">0</button>
-                            <div/>
-                          </div>
-                        </div>
-                        <div v-else-if="cognitivePhase === 'result'" class="rounded-xl p-6 text-center" :class="cognitiveResult === 'correct' ? 'bg-[#1B7C3D]/10 border border-[#1B7C3D]' : 'bg-[#C62828]/10 border border-[#C62828]'">
-                          <p class="font-bold text-sm mb-1" :class="cognitiveResult === 'correct' ? 'text-[#1B7C3D]' : 'text-[#C62828]'">{{ cognitiveResult === 'correct' ? 'Correct sequence' : 'Incorrect sequence' }}</p>
-                          <p class="text-sm text-[#5A7A9B] mb-1">Sequence: {{ cognitiveSequence.join(' — ') }}</p>
-                          <p class="text-sm text-[#5A7A9B] mb-3">Your input: {{ cognitiveInput.join(' — ') }}</p>
-                          <button @click="resetCognitive" class="text-xs text-[#1A4FAB] hover:underline">Try again</button>
-                        </div>
+                      <div v-else-if="cognitivePhase === 'result'" class="rounded-xl p-6 text-center" :class="cognitiveResult === 'correct' ? 'bg-[#1B7C3D]/10 border border-[#1B7C3D]' : 'bg-[#C62828]/10 border border-[#C62828]'">
+                        <p class="font-bold text-sm mb-1" :class="cognitiveResult === 'correct' ? 'text-[#1B7C3D]' : 'text-[#C62828]'">{{ cognitiveResult === 'correct' ? 'Correct sequence' : 'Incorrect sequence' }}</p>
+                        <p class="text-sm text-[#5A7A9B] mb-1">Sequence: {{ cognitiveSequence.join(', ') }}</p>
+                        <p class="text-sm text-[#5A7A9B] mb-3">Your input: {{ cognitiveInput.join(', ') }}</p>
+                        <button @click="resetCognitive" class="text-xs text-[#1A4FAB] hover:underline">Try again</button>
                       </div>
+                    </div>
 
-                      <!-- ── REACTION TIME WIDGET ─────────────────────── -->
-                      <div v-if="a.interactive === 'reaction' && isViewingToday" class="mt-2">
-                        <div v-if="reactionPhase === 'idle'">
-                          <button @click="startReactionTest" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start reaction test</button>
-                        </div>
-                        <div v-else-if="reactionPhase === 'waiting'" @click="tapReaction" class="bg-[#F5F8FF] border-2 border-[#1A4FAB] rounded-xl p-5 text-center cursor-pointer hover:bg-[#EEF3FF] transition-colors">
-                          <p class="text-xs font-semibold text-[#1A1A1A] mb-1">Round {{ reactionRound }} of 5</p>
-                          <p class="text-sm text-[#5A7A9B]">Wait for the green circle...</p>
-                          <div class="w-10 h-10 rounded-full bg-[#EBEBEB] mx-auto mt-2"/>
-                        </div>
-                        <div v-else-if="reactionPhase === 'ready'" @click="tapReaction" class="bg-[#1B7C3D]/10 border-2 border-[#1B7C3D] rounded-xl p-5 text-center cursor-pointer hover:bg-[#1B7C3D]/20 transition-colors">
-                          <p class="text-xs font-semibold text-[#1A1A1A] mb-2">Tap now</p>
-                          <div class="w-10 h-10 rounded-full bg-[#1B7C3D] mx-auto animate-pulse"/>
-                        </div>
-                        <div v-else-if="reactionPhase === 'result'" class="bg-[#F5F8FF] rounded-xl p-5 text-center">
-                          <p class="text-base font-black text-[#1A4FAB]">{{ reactionResult }}ms</p>
-                          <p class="text-xs font-semibold mb-2" :style="{ color: getReactionLabel(reactionResult).color }">{{ getReactionLabel(reactionResult).label }}</p>
-                          <button @click="resetReaction" class="text-sm text-[#5A7A9B] hover:underline">Test again</button>
-                        </div>
+                    <!-- Reaction time widget -->
+                    <div v-if="a.interactive === 'reaction' && isViewingToday" class="mt-2">
+                      <div v-if="reactionPhase === 'idle'">
+                        <button @click="startReactionTest" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start reaction test</button>
                       </div>
+                      <div v-else-if="reactionPhase === 'waiting'" @click="tapReaction" class="bg-[#F5F8FF] border-2 border-[#1A4FAB] rounded-xl p-5 text-center cursor-pointer hover:bg-[#EEF3FF] transition-colors">
+                        <p class="text-xs font-semibold text-[#1A1A1A] mb-1">Round {{ reactionRound }} of 5</p>
+                        <p class="text-sm text-[#5A7A9B]">Wait for the green circle...</p>
+                        <div class="w-10 h-10 rounded-full bg-[#EBEBEB] mx-auto mt-2"/>
+                      </div>
+                      <div v-else-if="reactionPhase === 'ready'" @click="tapReaction" class="bg-[#1B7C3D]/10 border-2 border-[#1B7C3D] rounded-xl p-5 text-center cursor-pointer hover:bg-[#1B7C3D]/20 transition-colors">
+                        <p class="text-xs font-semibold text-[#1A1A1A] mb-2">Tap now</p>
+                        <div class="w-10 h-10 rounded-full bg-[#1B7C3D] mx-auto animate-pulse"/>
+                      </div>
+                      <div v-else-if="reactionPhase === 'result'" class="bg-[#F5F8FF] rounded-xl p-5 text-center">
+                        <p class="text-base font-black text-[#1A4FAB]">{{ reactionResult }}ms</p>
+                        <p class="text-xs font-semibold mb-2" :style="{ color: getReactionLabel(reactionResult).color }">{{ getReactionLabel(reactionResult).label }}</p>
+                        <button @click="resetReaction" class="text-sm text-[#5A7A9B] hover:underline">Test again</button>
+                      </div>
+                    </div>
 
-                      <!-- Preview note for interactive items on non-current days -->
-                      <div v-if="a.interactive && !isViewingToday" class="mt-2">
-                        <span class="text-sm text-[#5A7A9B] italic">Available on Day {{ viewingDay }} when you reach it</span>
-                      </div>
+                    <!-- Note for interactive items when previewing a future day -->
+                    <div v-if="a.interactive && !isViewingToday" class="mt-2">
+                      <span class="text-sm text-[#5A7A9B] italic">Available when you reach Day {{ viewingDay }}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Restricted -->
+            <!-- Restricted activities as compact pills -->
             <div class="mb-6">
-              <div class="flex items-center gap-2 text-[#C62828] font-bold mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              <div class="flex items-center gap-2 text-[#C62828] font-bold text-base mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 Not Today
               </div>
-              <div class="space-y-2">
-                <div v-for="r in viewingDayData.restricted" :key="r" class="flex items-start gap-3 bg-[#FFF5F5] border border-[#C62828]/20 rounded-xl p-5">
-                  <span class="text-[#C62828] font-bold flex-shrink-0 text-sm">✗</span>
+              <div class="flex flex-wrap gap-2">
+                <div
+                  v-for="r in viewingDayData.restricted" :key="r"
+                  class="inline-flex items-center gap-2 bg-[#FFF5F5] border border-[#C62828]/20 rounded-full px-4 py-2"
+                >
+                  <span class="text-[#C62828] font-bold text-sm flex-shrink-0">✗</span>
                   <span class="text-[#1A1A1A] text-sm">{{ r }}</span>
                 </div>
               </div>
@@ -1205,26 +1245,21 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
 
             <div class="bg-[#E65100]/10 border border-[#E65100] rounded-xl p-6 flex gap-3">
               <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <p class="text-sm text-[#1A1A1A] font-semibold">If any symptoms return — stop immediately and go back to Stage 1</p>
+              <p class="text-sm text-[#1A1A1A] font-semibold">If any symptoms come back, stop immediately and return to Stage 1</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ══ DAILY CHECK-IN BUTTON ══════════════════════════════════════════════ -->
-    <!--
-      Only shown when user is viewing their actual current day.
-      Opens the modal for the 4-step check-in flow.
-    -->
+    <!-- ══ CHECK-IN BUTTON ════════════════════════════════════════════════════ -->
     <section v-if="daysSinceInjury && isViewingToday" class="bg-white py-16">
       <div class="max-w-[1200px] mx-auto px-10 text-center">
         <div class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-2xl p-8 max-w-xl mx-auto">
           <h2 class="text-xl font-bold text-[#1A1A1A] mb-2">Complete today's check-in</h2>
           <p class="text-[#5A7A9B] text-sm mb-6">
-            Takes about 3 minutes. Track your sleep, symptoms{{ currentStage && currentStage >= 2 ? ', exercises' : '' }}, and how you feel today.
+            Takes about 3 minutes. Track your sleep, symptoms{{ currentStage && currentStage >= 2 ? ', exercises' : '' }} and how you feel today.
           </p>
-          <!-- Step dots preview -->
           <div class="flex gap-2 justify-center mb-6">
             <div v-for="i in totalCheckInSteps" :key="i" class="w-2 h-2 rounded-full bg-[#EBEBEB]" />
           </div>
@@ -1239,14 +1274,7 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
       </div>
     </section>
 
-    <!-- ══ DAILY CHECK-IN MODAL ════════════════════════════════════════════════
-      STEP 1: Sleep quality (3 buttons)
-      STEP 2: Symptom check (conversational yes/no questions)
-      STEP 3: Neck exercises — shows preview list + "Start exercises" button
-              which navigates to /exercises (ExercisePage.vue)
-              When user returns, onMounted reopens modal at Step 4 automatically
-      STEP 4: Recovery journal (free text, saves locally)
-    ════════════════════════════════════════════════════════════════════════ -->
+    <!-- ══ CHECK-IN MODAL ═════════════════════════════════════════════════════ -->
     <Transition name="modal">
       <div
         v-if="showCheckInModal"
@@ -1255,7 +1283,6 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
       >
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
 
-          <!-- Modal header: step counter + progress bar + close button -->
           <div class="px-10 pt-10 pb-8 border-b border-[#EBEBEB]">
             <div class="flex items-center justify-between mb-4">
               <span class="text-sm font-semibold text-[#5A7A9B] uppercase tracking-widest">
@@ -1273,24 +1300,21 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
             </div>
           </div>
 
-          <!-- Modal body: one step at a time -->
           <div class="px-10 py-10 min-h-[440px]">
             <Transition name="slide-up" mode="out-in">
 
-              <!-- ── STEP 1: SLEEP ─────────────────────────────────────── -->
+              <!-- STEP 1: Sleep -->
               <div v-if="checkInStep === 1" key="sleep">
                 <div class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase mb-2">Sleep</div>
                 <h3 class="text-3xl font-bold text-[#1A1A1A] mb-3">How did you sleep last night?</h3>
-                <p class="text-[#5A7A9B] text-base mb-10">Sleep quality is one of the strongest predictors of concussion recovery speed.</p>
+                <p class="text-[#5A7A9B] text-base mb-10">Sleep quality is one of the strongest predictors of how quickly you will recover.</p>
 
-                <!-- If not yet submitted today — show 3 options -->
                 <div v-if="!sleepSubmitted" class="flex flex-col gap-3">
-                  <button @click="submitSleep('well'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#1B7C3D] text-[#1B7C3D] hover:bg-[#1B7C3D] hover:text-white">Well — slept through the night</button>
-                  <button @click="submitSleep('okay'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#E65100] text-[#E65100] hover:bg-[#E65100] hover:text-white">Okay — some disruptions</button>
-                  <button @click="submitSleep('poorly'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#C62828] text-[#C62828] hover:bg-[#C62828] hover:text-white">Poorly — struggled to sleep</button>
+                  <button @click="submitSleep('well'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#1B7C3D] text-[#1B7C3D] hover:bg-[#1B7C3D] hover:text-white">Well, slept through the night</button>
+                  <button @click="submitSleep('okay'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#E65100] text-[#E65100] hover:bg-[#E65100] hover:text-white">Okay, a few disruptions</button>
+                  <button @click="submitSleep('poorly'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#C62828] text-[#C62828] hover:bg-[#C62828] hover:text-white">Poorly, struggled to sleep</button>
                 </div>
 
-                <!-- Already submitted today — show summary + continue -->
                 <div v-else>
                   <div class="bg-[#F7F9FC] border border-[#EBEBEB] rounded-xl p-6 flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
@@ -1299,27 +1323,24 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                     </div>
                     <button @click="sleepSubmitted = false; sleepQuality = null" class="text-sm text-[#5A7A9B] hover:underline">Change</button>
                   </div>
-                  <!-- 3 consecutive poor nights warning -->
                   <div v-if="consecutivePoorSleep" class="bg-[#C62828]/10 border border-[#C62828] rounded-xl p-6 flex gap-3 mb-6">
                     <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                    <p class="text-sm text-[#1A1A1A] font-semibold">Three consecutive nights of poor sleep — mention this to your GP.</p>
+                    <p class="text-sm text-[#1A1A1A] font-semibold">Three nights of poor sleep in a row. Please mention this to your GP at your next appointment.</p>
                   </div>
                   <button @click="nextCheckInStep" class="w-full bg-[#1A4FAB] text-white py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Continue</button>
                 </div>
               </div>
 
-              <!-- ── STEP 2: SYMPTOMS ──────────────────────────────────── -->
+              <!-- STEP 2: Symptoms -->
               <div v-else-if="checkInStep === 2" key="symptoms">
                 <div class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase mb-2">Symptoms</div>
                 <h3 class="text-3xl font-bold text-[#1A1A1A] mb-3">How are you feeling today?</h3>
-                <p class="text-[#5A7A9B] text-base mb-10">Answer honestly — this affects your recovery timeline.</p>
+                <p class="text-[#5A7A9B] text-base mb-10">Be honest with yourself. This affects your recovery timeline.</p>
 
-                <!-- Not started yet -->
                 <div v-if="symptomStep === 0" class="text-center">
                   <button @click="startSymptomCheck" class="w-full bg-[#1A4FAB] text-white py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start symptom check</button>
                 </div>
 
-                <!-- Active question -->
                 <div v-else-if="symptomStep >= 1 && symptomStep <= 3">
                   <div class="text-sm font-semibold text-[#5A7A9B] uppercase tracking-widest mb-4 text-center">Question {{ symptomStep }} of 3</div>
                   <Transition name="slide-up" mode="out-in">
@@ -1338,19 +1359,16 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                   </Transition>
                 </div>
 
-                <!-- Result -->
                 <div v-else-if="symptomStep === 4">
-                  <!-- Symptom free -->
                   <div v-if="!hasSymptoms" class="bg-[#1B7C3D]/10 border-2 border-[#1B7C3D] rounded-2xl p-8 text-center mb-6">
                     <svg class="mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1B7C3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     <p class="text-lg font-bold text-[#1A1A1A] mb-1">You are clear for today.</p>
-                    <p class="text-[#5A7A9B] text-sm">Continue with Stage {{ currentStage }} activities.</p>
+                    <p class="text-[#5A7A9B] text-sm">Continue with your Stage {{ currentStage }} activities as planned.</p>
                   </div>
-                  <!-- Symptoms present -->
                   <div v-else class="bg-[#C62828]/10 border-2 border-[#C62828] rounded-2xl p-8 text-center mb-6">
                     <svg class="mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                     <p class="text-lg font-bold text-[#1A1A1A] mb-1">Stop all activity today.</p>
-                    <p class="text-[#5A7A9B] text-sm mb-4">See a GP or sports doctor before continuing.</p>
+                    <p class="text-[#5A7A9B] text-sm mb-4">See a GP or sports doctor before you continue.</p>
                     <router-link to="/locatesupport" @click="closeCheckIn">
                       <button class="bg-[#C62828] text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-[#B71C1C] transition-colors flex items-center gap-2 mx-auto">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1362,27 +1380,19 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                 </div>
               </div>
 
-              <!-- ── STEP 3: NECK EXERCISES (Stage 2+ only) ───────────────
-                Shows a preview list of the 3 exercises.
-                "Start neck exercises" navigates to /exercises (ExercisePage.vue).
-                ExercisePage saves a localStorage flag on completion/skip.
-                When user returns, onMounted reads that flag and reopens
-                this modal automatically at the journal step.
-              ─────────────────────────────────────────────────────────── -->
+              <!-- STEP 3: Neck Exercises (Stage 2 and above only) -->
               <div v-else-if="checkInStep === 3 && currentStage && currentStage >= 2" key="exercises">
                 <div class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase mb-2">Neck Exercises</div>
                 <h3 class="text-3xl font-bold text-[#1A1A1A] mb-3">Time for your neck exercises</h3>
                 <p class="text-[#5A7A9B] text-sm mb-6">
-                  You will be taken to a guided exercise page with camera support.
-                  When you are done, you will return here automatically to complete the journal.
+                  You will be taken to a guided exercise page with optional camera support.
+                  When you finish, you will come straight back here to write your journal entry.
                 </p>
 
-                <!-- Exercise preview list -->
                 <div class="space-y-3 mb-6">
                   <div
                     v-for="(def, idx) in exerciseDefinitions" :key="idx"
-                    class="border rounded-xl p-6 flex items-center justify-between"
-                    :class="'border-[#EBEBEB] bg-white'"
+                    class="border rounded-xl p-6 flex items-center justify-between border-[#EBEBEB] bg-white"
                   >
                     <div class="flex items-center gap-3">
                       <div class="w-8 h-8 rounded-full bg-[#1A4FAB]/10 flex items-center justify-center flex-shrink-0">
@@ -1390,13 +1400,12 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                       </div>
                       <div>
                         <p class="text-sm font-bold text-[#1A1A1A]">{{ def.name }}</p>
-                        <p class="text-sm text-[#5A7A9B]">{{ def.sets }} sets × {{ def.reps }} reps</p>
+                        <p class="text-sm text-[#5A7A9B]">{{ def.sets }} sets, {{ def.reps }} reps</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Navigate to ExercisePage — this closes the modal and pushes /exercises -->
                 <button
                   @click="goToExercises"
                   class="w-full bg-[#1A4FAB] text-white py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors flex items-center justify-center gap-2 mb-3"
@@ -1405,18 +1414,16 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                   Start neck exercises
                 </button>
 
-                <!-- Allow user to skip exercises and go to journal -->
-                <button
-                  @click="nextCheckInStep"
-                  class="w-full py-3 rounded-full text-base font-semibold text-[#5A7A9B] hover:text-[#1A1A1A] transition-colors"
-                >Skip for now</button>
+                <button @click="nextCheckInStep" class="w-full py-3 rounded-full text-base font-semibold text-[#5A7A9B] hover:text-[#1A1A1A] transition-colors">
+                  Skip for now
+                </button>
               </div>
 
-              <!-- ── STEP 4 (or Step 3 on Stage 1): JOURNAL ────────────── -->
+              <!-- STEP 4 (or Step 3 on Stage 1): Journal -->
               <div v-else key="journal">
                 <div class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase mb-2">Recovery Journal</div>
                 <h3 class="text-3xl font-bold text-[#1A1A1A] mb-3">Write about your day</h3>
-                <p class="text-[#5A7A9B] text-sm mb-6">One sentence is enough. Saves privately to this device only.</p>
+                <p class="text-[#5A7A9B] text-sm mb-6">One sentence is enough. Saved privately on this device only.</p>
 
                 <div class="bg-[#F7F9FC] border border-[#EBEBEB] rounded-xl p-6 mb-4">
                   <div class="flex items-center justify-between mb-2">
@@ -1444,24 +1451,22 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
             </Transition>
           </div>
 
-          <!-- Modal footer: back button (hidden on step 1) -->
-          <div v-if="checkInStep > 1" class="px-8 pb-8">
+          <div v-if="checkInStep > 1" class="px-10 pb-10">
             <button @click="prevCheckInStep" class="text-sm text-[#5A7A9B] hover:text-[#1A1A1A] transition-colors flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
               Back
             </button>
           </div>
-
         </div>
       </div>
     </Transition>
 
-    <!-- ══ 6 STAGE TIMELINE — EXPANDABLE ══════════════════════════════════════ -->
+    <!-- ══ 6 STAGE TIMELINE ════════════════════════════════════════════════════ -->
     <section v-if="daysSinceInjury && currentStage" class="bg-white py-28">
       <div class="max-w-[1200px] mx-auto px-10">
         <div class="text-center mb-12">
           <h2 class="text-4xl font-bold text-[#1A1A1A] mb-4">Your full recovery journey</h2>
-          <p class="text-[#5A7A9B]">Australian Institute of Sport 2024 mandatory protocol — select any stage to explore</p>
+          <p class="text-[#5A7A9B]">Australian Institute of Sport 2024 mandatory protocol. Click any stage to explore the days inside it.</p>
         </div>
 
         <div class="space-y-3">
@@ -1530,11 +1535,11 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
       </div>
     </section>
 
-    <!-- ══ FIND SUPPORT CTA ════════════════════════════════════════════════════ -->
+    <!-- ══ SUPPORT CTA ════════════════════════════════════════════════════════ -->
     <section style="background:#0A1628;" class="py-20 text-center">
       <div class="max-w-[1200px] mx-auto px-10">
         <h2 class="text-3xl font-bold text-white mb-4">Not sure if you are ready?</h2>
-        <p class="text-white/60 mb-8 max-w-lg mx-auto leading-relaxed">Find the nearest GP, sports medicine clinic, or hospital for a professional assessment.</p>
+        <p class="text-white/60 mb-8 max-w-lg mx-auto leading-relaxed">Find the nearest GP, sports medicine clinic or hospital for a professional assessment.</p>
         <router-link to="/locatesupport">
           <button class="bg-[#1A4FAB] text-white px-10 py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors flex items-center gap-2 mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1549,12 +1554,33 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
 </template>
 
 <style scoped>
+/* Activity cards slide in from below with a stagger */
+.activity-card {
+  opacity: 0;
+  animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page transitions */
 .fade-scale-enter-active, .fade-scale-leave-active { transition: opacity 0.4s ease, transform 0.4s ease; }
 .fade-scale-enter-from, .fade-scale-leave-to { opacity: 0; transform: scale(0.97); }
+
 .slide-up-enter-active, .slide-up-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
 .slide-up-enter-from { opacity: 0; transform: translateY(16px); }
 .slide-up-leave-to { opacity: 0; transform: translateY(-16px); }
+
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
 .modal-enter-active, .modal-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
 .modal-enter-from, .modal-leave-to { opacity: 0; transform: scale(0.96); }
 </style>
