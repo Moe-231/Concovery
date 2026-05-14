@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { Line } from 'vue-chartjs'
 import {
   Chart as ChartJS, Title, Tooltip, Legend,
@@ -74,10 +74,37 @@ const ageTotal   = computed(() => ageMale.value + ageFemale.value)
 
 // Fill percentages for the SVG body silhouettes.
 // The higher number always fills to 100%, the other fills proportionally.
-const sportMaleFillPct   = computed(() => sportTotal.value ? (sportMale.value   / Math.max(sportMale.value, sportFemale.value)) * 100 : 0)
-const sportFemaleFillPct = computed(() => sportTotal.value ? (sportFemale.value / Math.max(sportMale.value, sportFemale.value)) * 100 : 0)
-const ageMaleFillPct     = computed(() => ageTotal.value   ? (ageMale.value     / Math.max(ageMale.value,  ageFemale.value))   * 100 : 0)
-const ageFemaleFillPct   = computed(() => ageTotal.value   ? (ageFemale.value   / Math.max(ageMale.value,  ageFemale.value))   * 100 : 0)
+
+const animSportMale   = ref(0)
+const animSportFemale = ref(0)
+const animAgeMale     = ref(0)
+const animAgeFemale   = ref(0)
+
+// Normalize to total sum so both values are sub-100% and both change
+const sportMaleFillPct   = computed(() => sportTotal.value ? (sportMale.value   / sportTotal.value) * 100 : 0)
+const sportFemaleFillPct = computed(() => sportTotal.value ? (sportFemale.value / sportTotal.value) * 100 : 0)
+const ageMaleFillPct     = computed(() => ageTotal.value   ? (ageMale.value     / ageTotal.value)   * 100 : 0)
+const ageFemaleFillPct   = computed(() => ageTotal.value   ? (ageFemale.value   / ageTotal.value)   * 100 : 0)
+
+// JS animation using requestAnimationFrame so both bodies smoothly move
+function animateTo(startVal, endVal, setter) {
+  const duration = 700
+  const startTime = performance.now()
+  const diff = endVal - startVal
+  function step(now) {
+    const elapsed = now - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const eased = 1 - Math.pow(1 - progress, 3) // ease out cubic
+    setter(startVal + diff * eased)
+    if (progress < 1) requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+
+watch(sportMaleFillPct,   val => animateTo(animSportMale.value,   val, v => animSportMale.value   = v))
+watch(sportFemaleFillPct, val => animateTo(animSportFemale.value, val, v => animSportFemale.value = v))
+watch(ageMaleFillPct,     val => animateTo(animAgeMale.value,     val, v => animAgeMale.value     = v))
+watch(ageFemaleFillPct,   val => animateTo(animAgeFemale.value,   val, v => animAgeFemale.value   = v))
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // AGE GROUP ICON ROW
@@ -358,9 +385,8 @@ onMounted(async () => {
             <h3 class="text-2xl font-bold text-white mb-1">{{ sportsType }}</h3>
             <p class="text-white/50 text-sm mb-8">Concussion hospitalisations in the most recent reporting year</p>
 
-            <div v-if="loadingSports" class="text-center py-10 text-white/40 animate-pulse">Loading...</div>
 
-            <div v-else class="flex items-end justify-center gap-12">
+            <div class="flex items-end justify-center gap-12">
 
               <!-- Male body -->
               <div class="flex flex-col items-center gap-3">
@@ -369,7 +395,7 @@ onMounted(async () => {
                   <svg viewBox="0 0 56 120" width="70" height="150" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <clipPath id="male-sport-clip">
-                        <rect x="0" :y="120 - (sportMaleFillPct / 100) * 120" width="56" :height="(sportMaleFillPct / 100) * 120" />
+                        <rect x="0" :y="120 - (animSportMale / 100) * 120" width="56" :height="(animSportMale / 100) * 120" />
                       </clipPath>
                     </defs>
                     <g clip-path="url(#male-sport-clip)">
@@ -400,7 +426,7 @@ onMounted(async () => {
                   <svg viewBox="0 0 56 120" width="70" height="150" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <clipPath id="female-sport-clip">
-                        <rect x="0" :y="120 - (sportFemaleFillPct / 100) * 120" width="56" :height="(sportFemaleFillPct / 100) * 120" />
+                        <rect x="0" :y="120 - (animSportFemale / 100) * 120" width="56" :height="(animSportFemale / 100) * 120" />
                       </clipPath>
                     </defs>
                     <g clip-path="url(#female-sport-clip)">
@@ -586,9 +612,9 @@ onMounted(async () => {
         <h3 class="text-2xl font-bold text-white mb-1">Age group {{ ageGroup }}</h3>
         <p class="text-white/50 text-sm mb-8">Hospitalisations across all sports in this age bracket</p>
 
-        <div v-if="loadingAge" class="text-center py-10 text-white/40 animate-pulse">Loading...</div>
 
-        <div v-else class="flex items-end justify-center gap-12">
+
+        <div class="flex items-end justify-center gap-12">
 
           <!-- Male body -->
           <div class="flex flex-col items-center gap-3">
@@ -597,7 +623,7 @@ onMounted(async () => {
               <svg viewBox="0 0 56 120" width="70" height="150" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <clipPath id="male-age-clip">
-                    <rect x="0" :y="120 - (ageMaleFillPct / 100) * 120" width="56" :height="(ageMaleFillPct / 100) * 120" />
+                    <rect x="0" :y="120 - (animAgeMale / 100) * 120" width="56" :height="(animAgeMale / 100) * 120" />
                   </clipPath>
                 </defs>
                 <g clip-path="url(#male-age-clip)">
@@ -628,7 +654,7 @@ onMounted(async () => {
               <svg viewBox="0 0 56 120" width="70" height="150" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <clipPath id="female-age-clip">
-                    <rect x="0" :y="120 - (ageFemaleFillPct / 100) * 120" width="56" :height="(ageFemaleFillPct / 100) * 120" />
+                    <rect x="0" :y="120 - (animAgeFemale / 100) * 120" width="56" :height="(animAgeFemale / 100) * 120" />
                   </clipPath>
                 </defs>
                 <g clip-path="url(#female-age-clip)">
@@ -652,7 +678,7 @@ onMounted(async () => {
           {{ ageMale > ageFemale ? 'Males were more commonly affected in this bracket.' : 'Females were more commonly affected in this bracket.' }}
           <span v-if="ageGroup === '0-4'"> Very young children are still concussed during sport and play. Even at this age, the protocol applies.</span>
           <span v-else-if="ageGroup === '5-14'"> School age players are developing fast and their brains are particularly vulnerable to repeated impacts.</span>
-          <span v-else-if="ageGroup === '15-24'"> This is the highest risk age group in Victorian community sport, accounting for 39% of all hospitalisations.</span>
+          <span v-else-if="ageGroup === '15-24'"> This is the highest risk age group in Australian community sport, accounting for 39% of all hospitalisations.</span>
           <span v-else-if="ageGroup === '25-44'"> Peak competition years. Players in this bracket often push through symptoms due to work and family pressure.</span>
           <span v-else-if="ageGroup === '45-64'"> Recreational players. Less frequent but the recovery window is just as important at this age.</span>
           <span v-else-if="ageGroup === '65+'"> Older players have longer recovery times. The 21-day protocol is especially important in this bracket.</span>
