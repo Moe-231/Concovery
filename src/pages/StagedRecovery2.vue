@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
+
+// ── Router is needed to navigate to the exercise page ──────────────────────
+const router = useRouter()
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // TYPE DEFINITIONS
-// These define the shape of objects used throughout the component
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 interface Stage {
@@ -15,86 +18,49 @@ interface Stage {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // STATIC DATA — 6 AIS RECOVERY STAGES
-// These never change. Used for the stage timeline at the bottom of the page.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const stages: Stage[] = [
-  { id: 1, name: 'Complete Rest',          shortName: 'Rest',          days: '1-3'   },
-  { id: 2, name: 'Light Aerobic',          shortName: 'Light Aerobic', days: '4-6'   },
-  { id: 3, name: 'Sport Specific Exercise',shortName: 'Sport Specific',days: '7-9'   },
-  { id: 4, name: 'Non-Contact Training',   shortName: 'Non-Contact',   days: '10-14' },
-  { id: 5, name: 'Full Contact',           shortName: 'Full Contact',  days: '15-20' },
-  { id: 6, name: 'Return to Play',         shortName: 'Return to Play',days: '21+'   },
+  { id: 1, name: 'Complete Rest',           shortName: 'Rest',           days: '1-3'   },
+  { id: 2, name: 'Light Aerobic',           shortName: 'Light Aerobic',  days: '4-6'   },
+  { id: 3, name: 'Sport Specific Exercise', shortName: 'Sport Specific', days: '7-9'   },
+  { id: 4, name: 'Non-Contact Training',    shortName: 'Non-Contact',    days: '10-14' },
+  { id: 5, name: 'Full Contact',            shortName: 'Full Contact',   days: '15-20' },
+  { id: 6, name: 'Return to Play',          shortName: 'Return to Play', days: '21+'   },
 ]
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// NECK EXERCISE DEFINITIONS
-// Each exercise has sets, reps, hold time, rest time, and diagram type.
-// The exerciseDefinitions array drives the new guided exercise section.
-// NOTE: neckExercises below is kept for backward compatibility but is unused
-//       in the new template — exerciseDefinitions replaces it.
+// EXERCISE DEFINITIONS — used for the modal Step 3 preview list only.
+// Full guided exercise logic lives in ExercisePage.vue.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const exerciseDefinitions = [
-  {
-    name: 'Chin Tucks',
-    reps: 10,
-    sets: 3,
-    holdSeconds: 5,
-    restSeconds: 30,
-    instructions: 'Gently pull your chin straight back — like you are making a double chin. Hold the position, then release slowly.',
-    cue: 'Pull chin straight back — not down',
-    diagram: 'chin-tuck',
-  },
-  {
-    name: 'Neck Rotations',
-    reps: 10,
-    sets: 1,
-    holdSeconds: 3,
-    restSeconds: 20,
-    instructions: 'Slowly turn your head to the left until you feel a gentle stretch. Hold briefly, then return to centre. Repeat to the right. That is one rep.',
-    cue: 'Turn slowly — stop before pain',
-    diagram: 'neck-rotation',
-  },
-  {
-    name: 'Neck Isometrics',
-    reps: 8,
-    sets: 3,
-    holdSeconds: 8,
-    restSeconds: 30,
-    instructions: 'Place your palm flat against your forehead. Push your head forward into your hand — resist with your neck so your head does not move. Hold for 8 seconds.',
-    cue: 'Head must stay completely still',
-    diagram: 'isometric',
-  },
+  { name: 'Chin Tucks',      sets: 3, reps: 10 },
+  { name: 'Neck Rotations',  sets: 1, reps: 10 },
+  { name: 'Neck Isometrics', sets: 3, reps: 8  },
 ]
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 21-DAY DATA
-// This is the core dataset. Each day (1-21) has unique content:
-//   - stage:            which of the 6 AIS stages this day falls in
-//   - stageName:        human-readable stage name
-//   - brainRecoveryPct: estimated % neurometabolic recovery (from literature)
-//   - cellularProcess:  what is happening in the brain at a cellular level
-//   - dailyGoal:        plain English goal for the day
-//   - allowed:          list of allowed activities, each with a detail description
-//                       and optional interactive widget type ('breathing', 'cognitive', 'reaction')
-//   - restricted:       list of restricted activities
-//   - warningSign:      when to stop and seek medical help
-//   - insight:          motivational/educational message for the day
+// Each day (1–21) has:
+//   stage / stageName       → which AIS stage this day belongs to
+//   brainRecoveryPct        → % neurometabolic recovery (from research literature)
+//   cellularProcess         → what is happening in the brain at cellular level
+//   dailyGoal               → plain English goal for today
+//   allowed                 → list of allowed activities
+//                             interactive: 'breathing' | 'cognitive' | 'reaction'
+//   restricted              → list of things NOT to do
+//   warningSign             → when to stop and see a doctor
+//   insight                 → motivational fact for the day
 //
-// SOURCE: Giza & Hovda 2014 (Neurometabolic Cascade), AIS 2024 Return-to-Play Protocol
+// SOURCE: Giza & Hovda 2014 (Neurometabolic Cascade), AIS 2024 Return-to-Play
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const dayData: Record<number, {
-  stage: number
-  stageName: string
-  brainRecoveryPct: number
-  cellularProcess: string
-  dailyGoal: string
+  stage: number; stageName: string; brainRecoveryPct: number
+  cellularProcess: string; dailyGoal: string
   allowed: { activity: string; detail: string; interactive?: string }[]
-  restricted: string[]
-  warningSign: string
-  insight: string
+  restricted: string[]; warningSign: string; insight: string
 }> = {
   1: {
     stage: 1, stageName: 'Complete Rest', brainRecoveryPct: 5,
@@ -395,27 +361,22 @@ const dayData: Record<number, {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 1 — DATE & DAY TRACKING STATE
-// injuryDate:      the date the user entered (stored in localStorage)
-// daysSinceInjury: calculated from injuryDate to today
-// selectedDay:     which day the user is currently previewing on the timeline
-//                  null = viewing their actual current day
+// SECTION 1 — DATE & DAY TRACKING
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const injuryDate       = ref('')
-const daysSinceInjury  = ref<number | null>(null)
-const selectedDay      = ref<number | null>(null)
+const injuryDate      = ref('')
+const daysSinceInjury = ref<number | null>(null)
+const selectedDay     = ref<number | null>(null)
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 2 — CALENDAR STATE
-// Controls the custom calendar dropdown for date selection
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const showCalendar    = ref(false)
-const today           = new Date()
-const calendarMonth   = ref(today.getMonth())
-const calendarYear    = ref(today.getFullYear())
-const monthNames      = ['January','February','March','April','May','June','July','August','September','October','November','December']
+const showCalendar  = ref(false)
+const today         = new Date()
+const calendarMonth = ref(today.getMonth())
+const calendarYear  = ref(today.getFullYear())
+const monthNames    = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
 const calendarDaysInMonth = computed(() => new Date(calendarYear.value, calendarMonth.value + 1, 0).getDate())
 const calendarStartDay    = computed(() => new Date(calendarYear.value, calendarMonth.value, 1).getDay())
@@ -425,26 +386,19 @@ function prevMonth() {
   if (calendarMonth.value === 0) { calendarMonth.value = 11; calendarYear.value-- }
   else calendarMonth.value--
 }
-
 function nextMonth() {
   if (calendarMonth.value === 11) { calendarMonth.value = 0; calendarYear.value++ }
   else calendarMonth.value++
 }
-
-function isFutureDay(day: number) {
-  return new Date(calendarYear.value, calendarMonth.value, day) > today
-}
-
+function isFutureDay(day: number) { return new Date(calendarYear.value, calendarMonth.value, day) > today }
 function isToday(day: number) {
   return day === today.getDate() && calendarMonth.value === today.getMonth() && calendarYear.value === today.getFullYear()
 }
-
 function isSelectedCalDay(day: number) {
   if (!injuryDate.value) return false
   const d = new Date(injuryDate.value)
   return day === d.getDate() && calendarMonth.value === d.getMonth() && calendarYear.value === d.getFullYear()
 }
-
 function selectCalendarDate(day: number) {
   const d    = new Date(calendarYear.value, calendarMonth.value, day)
   const yyyy = d.getFullYear()
@@ -453,16 +407,66 @@ function selectCalendarDate(day: number) {
   injuryDate.value   = `${yyyy}-${mm}-${dd}`
   showCalendar.value = false
 }
-
 function formatDisplayDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 3 — SLEEP CHECK-IN
-// User reports sleep quality each day. If 3 consecutive poor nights are
-// detected, a warning is shown advising them to mention it to their GP.
-// Data is saved to localStorage under key 'concovery_sleep'
+// SECTION 3 — DAILY CHECK-IN MODAL
+//
+// HOW IT WORKS:
+//   1. User clicks "Start today's check-in"
+//   2. Modal opens at Step 1 (Sleep)
+//   3. User answers sleep, then symptoms
+//   4. On Stage 2+: Step 3 shows the exercise list + "Start exercises" button
+//      - That button navigates to /exercises (ExercisePage.vue)
+//      - ExercisePage saves 'concovery_return_modal' = 'true' when done
+//      - When user returns, onMounted detects that flag and reopens modal at Step 4
+//   5. Step 4 (or 3 on Stage 1): Recovery Journal
+//
+// totalCheckInSteps: 4 on Stage 2+ (includes exercises), 3 on Stage 1
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const showCheckInModal = ref(false)
+const checkInStep      = ref(1)
+
+const totalCheckInSteps = computed(() => {
+  return currentStage.value && currentStage.value >= 2 ? 4 : 3
+})
+
+function openCheckIn() {
+  showCheckInModal.value   = true
+  checkInStep.value        = 1
+  symptomStep.value        = 0
+  symptomAnswers.value     = [null, null, null]
+  showSymptomSection.value = false
+}
+
+function closeCheckIn() {
+  showCheckInModal.value = false
+}
+
+function nextCheckInStep() {
+  if (checkInStep.value < totalCheckInSteps.value) { checkInStep.value++ }
+  else { closeCheckIn() }
+}
+
+function prevCheckInStep() {
+  if (checkInStep.value > 1) checkInStep.value--
+}
+
+// Called from modal Step 3 — saves a flag so we know to reopen the modal
+// when the user returns from ExercisePage
+function goToExercises() {
+  localStorage.setItem('concovery_return_modal', 'true')
+  closeCheckIn()
+  router.push('/exercises')
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SECTION 4 — SLEEP CHECK-IN
+// User reports sleep quality. 3 consecutive poor nights triggers a GP warning.
+// Saved to localStorage under key 'concovery_sleep'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const sleepQuality   = ref<'well' | 'okay' | 'poorly' | null>(null)
@@ -471,55 +475,51 @@ const sleepSubmitted = ref(false)
 
 const consecutivePoorSleep = computed(() => {
   if (sleepHistory.value.length < 3) return false
-  const last3 = sleepHistory.value.slice(-3)
-  return last3.every(s => s.quality === 'poorly')
+  return sleepHistory.value.slice(-3).every(s => s.quality === 'poorly')
 })
 
 function submitSleep(quality: 'well' | 'okay' | 'poorly') {
   sleepQuality.value   = quality
   sleepSubmitted.value = true
-  const entry = { date: new Date().toISOString().split('T')[0], quality, day: daysSinceInjury.value || 1 }
+  const entry  = { date: new Date().toISOString().split('T')[0], quality, day: daysSinceInjury.value || 1 }
   const existing = sleepHistory.value.findIndex(s => s.date === entry.date)
-  if (existing >= 0) { sleepHistory.value[existing] = entry }
-  else               { sleepHistory.value.push(entry) }
+  if (existing >= 0) sleepHistory.value[existing] = entry
+  else               sleepHistory.value.push(entry)
   localStorage.setItem('concovery_sleep', JSON.stringify(sleepHistory.value))
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 4 — SYMPTOM CHECK (CONVERSATIONAL ONE-AT-A-TIME)
-// symptomStep:     0=not started, 1/2/3=question index, 4=result
-// symptomAnswers:  array of true/false/null for each of the 3 questions
-// If any answer is true, the check stops immediately and shows a warning.
+// SECTION 5 — SYMPTOM CHECK (one question at a time)
+// symptomStep: 0=not started | 1/2/3=question | 4=result shown
+// If user answers YES to any question → skips to result immediately
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const symptomStep      = ref(0)
-const symptomAnswers   = ref<(boolean | null)[]>([null, null, null])
-const symptomQuestions = ['Do you have a headache?', 'Any dizziness or balance issues?', 'Difficulty concentrating?']
+const symptomStep        = ref(0)
+const symptomAnswers     = ref<(boolean | null)[]>([null, null, null])
+const symptomQuestions   = ['Do you have a headache?', 'Any dizziness or balance issues?', 'Difficulty concentrating?']
 const showSymptomSection = ref(false)
 
 function startSymptomCheck() {
   showSymptomSection.value = true
   symptomStep.value        = 1
 }
-
 function answerSymptom(answer: boolean) {
   const idx = symptomStep.value - 1
   symptomAnswers.value[idx] = answer
-  if (answer === true)              { symptomStep.value = 4 }       // stop immediately on yes
-  else if (symptomStep.value < 3)   { symptomStep.value++ }         // next question
-  else                               { symptomStep.value = 4 }       // all answered
+  if (answer === true)            symptomStep.value = 4   // yes answer — jump to result
+  else if (symptomStep.value < 3) symptomStep.value++     // next question
+  else                            symptomStep.value = 4   // all 3 answered no
 }
-
 function resetSymptoms() {
   symptomStep.value    = 1
   symptomAnswers.value = [null, null, null]
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 5 — ACTIVITY CHECKLIST
-// Allows users to tick off non-interactive allowed activities.
-// Saved to localStorage under key 'concovery_activities'.
-// Key format: `${dayNumber}-${activityName}` e.g. "7-Light jogging"
+// SECTION 6 — ACTIVITY CHECKLIST
+// Non-interactive allowed activities can be ticked off.
+// Key format: "${dayNumber}-${activityName}" e.g. "7-Light jogging"
+// Saved to localStorage under key 'concovery_activities'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const checkedActivities = ref<Record<string, boolean>>({})
@@ -528,15 +528,11 @@ function toggleActivity(key: string) {
   checkedActivities.value[key] = !checkedActivities.value[key]
   localStorage.setItem('concovery_activities', JSON.stringify(checkedActivities.value))
 }
-
-function isActivityChecked(key: string) {
-  return checkedActivities.value[key] || false
-}
+function isActivityChecked(key: string) { return checkedActivities.value[key] || false }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 6 — BREATHING EXERCISE (4-7-8 technique)
-// Guides user through 3 cycles of: inhale 4s → hold 7s → exhale 8s
-// Clinically recommended for concussion recovery to reduce cognitive load.
+// SECTION 7 — BREATHING EXERCISE (4-7-8 technique)
+// 3 cycles of: inhale 4s → hold 7s → exhale 8s
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const breathingActive   = ref(false)
@@ -553,7 +549,6 @@ function startBreathing() {
 }
 
 function runBreathingCycle() {
-  // Phase 1: Inhale for 4 seconds
   breathingPhase.value    = 'inhale'
   breathingCount.value    = 4
   breathingProgress.value = 0
@@ -564,7 +559,6 @@ function runBreathingCycle() {
     breathingCount.value    = 4 - elapsed
     if (elapsed >= 4) {
       clearInterval(breathingInterval!)
-      // Phase 2: Hold for 7 seconds
       breathingPhase.value = 'hold'; breathingCount.value = 7; breathingProgress.value = 0; elapsed = 0
       breathingInterval = setInterval(() => {
         elapsed++
@@ -572,7 +566,6 @@ function runBreathingCycle() {
         breathingCount.value    = 7 - elapsed
         if (elapsed >= 7) {
           clearInterval(breathingInterval!)
-          // Phase 3: Exhale for 8 seconds
           breathingPhase.value = 'exhale'; breathingCount.value = 8; breathingProgress.value = 0; elapsed = 0
           breathingInterval = setInterval(() => {
             elapsed++
@@ -581,7 +574,7 @@ function runBreathingCycle() {
             if (elapsed >= 8) {
               clearInterval(breathingInterval!)
               breathingCycles.value++
-              if (breathingCycles.value < 3) { runBreathingCycle() }  // next cycle
+              if (breathingCycles.value < 3) runBreathingCycle()
               else { breathingPhase.value = 'idle'; breathingActive.value = false; breathingProgress.value = 100 }
             }
           }, 1000)
@@ -599,11 +592,10 @@ function stopBreathing() {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 7 — COGNITIVE LOAD TEST (Digit Span)
-// Based on the SCAT5 digit span assessment used in clinical concussion testing.
-// A sequence of digits flashes one at a time. User must recall them in order.
-// Sequence length increases as recovery progresses (3 digits on Day 4 → 7 on Day 21).
-// Results saved to localStorage under key 'concovery_cognitive'.
+// SECTION 8 — COGNITIVE LOAD TEST (Digit Span)
+// Digits flash one at a time. User recalls them in order.
+// Sequence length grows with recovery progress (3 on Day 4 → 7 on Day 21)
+// Saved to localStorage under key 'concovery_cognitive'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const cognitivePhase        = ref<'idle' | 'showing' | 'input' | 'result'>('idle')
@@ -615,7 +607,6 @@ const cognitiveHistory      = ref<{ day: number; date: string; length: number; c
 const cognitiveShowDigit    = ref<number | null>(null)
 let cognitiveTimeout: ReturnType<typeof setTimeout> | null = null
 
-// Digit span length increases with recovery progress
 function getDigitSpanLength(day: number): number {
   if (day <= 6)  return 3
   if (day <= 9)  return 4
@@ -656,7 +647,7 @@ function tapCognitiveDigit(digit: number) {
   if (cognitivePhase.value !== 'input') return
   cognitiveInput.value.push(digit)
   if (cognitiveInput.value.length === cognitiveSequence.value.length) {
-    const correct        = cognitiveInput.value.every((d, i) => d === cognitiveSequence.value[i])
+    const correct         = cognitiveInput.value.every((d, i) => d === cognitiveSequence.value[i])
     cognitiveResult.value = correct ? 'correct' : 'incorrect'
     cognitivePhase.value  = 'result'
     const entry = { day: daysSinceInjury.value || 1, date: new Date().toISOString().split('T')[0], length: cognitiveSequence.value.length, correct }
@@ -666,20 +657,18 @@ function tapCognitiveDigit(digit: number) {
 }
 
 function deleteCognitiveInput() { cognitiveInput.value.pop() }
-
 function resetCognitive() {
-  cognitivePhase.value        = 'idle'
-  cognitiveSequence.value     = []
-  cognitiveInput.value        = []
-  cognitiveResult.value       = null
-  cognitiveShowDigit.value    = null
+  cognitivePhase.value     = 'idle'
+  cognitiveSequence.value  = []
+  cognitiveInput.value     = []
+  cognitiveResult.value    = null
+  cognitiveShowDigit.value = null
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 8 — REACTION TIME TEST
-// 5 rounds. A green circle appears after a random delay (1.5-3.5s).
-// User taps as fast as possible. Average time is calculated and interpreted.
-// Results saved to localStorage under key 'concovery_reaction'.
+// SECTION 9 — REACTION TIME TEST
+// 5 rounds. Green circle appears after 1.5–3.5s random delay.
+// Saved to localStorage under key 'concovery_reaction'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const reactionPhase     = ref<'idle' | 'waiting' | 'ready' | 'result'>('idle')
@@ -695,18 +684,15 @@ function startReactionTest() {
   reactionRound.value = 1
   scheduleReaction()
 }
-
 function scheduleReaction() {
-  const delay = 1500 + Math.random() * 2000   // random delay 1.5s - 3.5s
+  const delay = 1500 + Math.random() * 2000
   reactionTimeout = setTimeout(() => {
     reactionPhase.value     = 'ready'
     reactionStartTime.value = Date.now()
   }, delay)
 }
-
 function tapReaction() {
   if (reactionPhase.value === 'waiting') {
-    // Tapped too early — reset this round
     if (reactionTimeout) clearTimeout(reactionTimeout)
     scheduleReaction()
     return
@@ -719,7 +705,6 @@ function tapReaction() {
       reactionPhase.value = 'waiting'
       scheduleReaction()
     } else {
-      // All 5 rounds done — calculate average
       reactionResult.value = Math.round(reactionTimes.value.reduce((a, b) => a + b, 0) / reactionTimes.value.length)
       reactionPhase.value  = 'result'
       const saved = JSON.parse(localStorage.getItem('concovery_reaction') || '[]')
@@ -728,26 +713,17 @@ function tapReaction() {
     }
   }
 }
-
-function resetReaction() {
-  reactionPhase.value = 'idle'
-  reactionTimes.value = []
-  reactionRound.value = 0
-}
-
-// Interpret reaction time result
+function resetReaction() { reactionPhase.value = 'idle'; reactionTimes.value = []; reactionRound.value = 0 }
 function getReactionLabel(ms: number) {
-  if (ms < 250) return { label: 'Excellent — brain speed fully recovered',      color: '#1B7C3D' }
-  if (ms < 350) return { label: 'Good — cognitive recovery progressing well',   color: '#1A4FAB' }
-  if (ms < 450) return { label: 'Fair — continue recovery protocol',            color: '#E65100' }
+  if (ms < 250) return { label: 'Excellent — brain speed fully recovered',         color: '#1B7C3D' }
+  if (ms < 350) return { label: 'Good — cognitive recovery progressing well',      color: '#1A4FAB' }
+  if (ms < 450) return { label: 'Fair — continue recovery protocol',               color: '#E65100' }
   return             { label: 'Slow — brain still recovering, do not rush return', color: '#C62828' }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 9 — RECOVERY JOURNAL
-// User writes a daily entry about how they feel.
-// Saved to localStorage under key 'concovery_journal'.
-// Can be downloaded as a PDF to show GP at clearance appointment.
+// SECTION 10 — RECOVERY JOURNAL
+// Daily free-text entry saved to localStorage under key 'concovery_journal'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const journalEntry       = ref('')
@@ -768,209 +744,15 @@ function saveJournalEntry() {
     text: journalEntry.value.trim(),
   }
   const existing = journalEntries.value.findIndex(e => e.date === entry.date)
-  if (existing >= 0) { journalEntries.value[existing] = entry }
-  else               { journalEntries.value.push(entry) }
+  if (existing >= 0) journalEntries.value[existing] = entry
+  else               journalEntries.value.push(entry)
   localStorage.setItem('concovery_journal', JSON.stringify(journalEntries.value))
   journalSaved.value = true
   setTimeout(() => { journalSaved.value = false }, 2000)
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 10 — NECK EXERCISES WITH CAMERA + STREAK TRACKING
-//
-// exerciseDefinitions: the 3 exercises with full metadata
-// exerciseState:       per-exercise runtime state (phase, reps, sets, timer)
-//   phase: 'idle'     = ready to start next rep
-//   phase: 'holding'  = user is holding the position, timer counting down
-//   phase: 'resting'  = rest between sets, timer counting down
-//   phase: 'complete' = all sets done for today
-//
-// exerciseStreak:      how many consecutive days all 3 exercises were completed
-// weeklyCompletion:    array of 7 booleans for the last 7 days (for the grid)
-//
-// Camera: uses browser MediaDevices API (front camera only, nothing recorded)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-// Per-exercise runtime state (one entry per exercise in exerciseDefinitions)
-const exerciseState = ref(exerciseDefinitions.map(() => ({
-  phase:              'idle' as 'idle' | 'holding' | 'resting' | 'complete',
-  currentSet:         1,
-  currentRep:         0,
-  timer:              0,
-  totalRepsCompleted: 0,
-})))
-
-// Camera state (one entry per exercise card)
-const videoRefs      = ref<(HTMLVideoElement | null)[]>([null, null, null])
-const cameraActive   = ref<boolean[]>([false, false, false])
-const cameraStreams   = ref<(MediaStream | null)[]>([null, null, null])
-const positionFeedback = ref<string[]>(['', '', ''])
-
-// Exercise interval references (for cleanup on unmount)
-let exerciseIntervals: (ReturnType<typeof setInterval> | null)[] = [null, null, null]
-
-// Streak and weekly completion grid
-const exerciseStreak    = ref(0)
-const weeklyCompletion  = ref<boolean[]>([false, false, false, false, false, false, false])
-
-function loadExerciseHistory() {
-  const saved = localStorage.getItem('concovery_exercise_history')
-  if (!saved) return
-  const history: { date: string; completed: boolean }[] = JSON.parse(saved)
-
-  // Calculate consecutive day streak
-  let streak = 0
-  for (let i = 0; i < 30; i++) {
-    const d = new Date(today)
-    d.setDate(d.getDate() - i)
-    const dateStr = d.toISOString().split('T')[0]
-    const entry   = history.find(h => h.date === dateStr)
-    if (entry?.completed) { streak++ }
-    else if (i > 0)       { break }   // streak broken
-  }
-  exerciseStreak.value = streak
-
-  // Fill last 7 days for weekly grid
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(today)
-    d.setDate(d.getDate() - (6 - i))
-    const dateStr = d.toISOString().split('T')[0]
-    weeklyCompletion.value[i] = history.find(h => h.date === dateStr)?.completed || false
-  }
-}
-
-function saveExerciseCompletion() {
-  const saved   = localStorage.getItem('concovery_exercise_history')
-  const history: { date: string; completed: boolean }[] = saved ? JSON.parse(saved) : []
-  const todayStr = new Date().toISOString().split('T')[0]
-  const existing = history.findIndex(h => h.date === todayStr)
-  if (existing >= 0) { history[existing].completed = true }
-  else               { history.push({ date: todayStr, completed: true }) }
-  localStorage.setItem('concovery_exercise_history', JSON.stringify(history))
-  loadExerciseHistory()
-}
-
-// True when all 3 exercises are in 'complete' phase
-const allExercisesDone = computed(() =>
-  exerciseState.value.every(s => s.phase === 'complete')
-)
-
-// Instructional text shown in the camera overlay during exercise
-function getInstructionalCue(exerciseIdx: number, phase: string, timerPct: number): string {
-  const exercise = exerciseDefinitions[exerciseIdx]
-  if (phase === 'holding') {
-    if (timerPct < 30) return exercise.cue
-    if (timerPct < 70) return 'Hold steady — do not move'
-    return 'Almost done — keep holding'
-  }
-  if (phase === 'resting') return 'Rest — breathe normally'
-  return 'Position yourself in the frame'
-}
-
-// Start a single rep hold for a given exercise card
-function startRep(idx: number) {
-  const state     = exerciseState.value[idx]
-  const def       = exerciseDefinitions[idx]
-  state.phase     = 'holding'
-  state.timer     = def.holdSeconds
-  const totalTime = def.holdSeconds
-  if (exerciseIntervals[idx]) clearInterval(exerciseIntervals[idx]!)
-
-  exerciseIntervals[idx] = setInterval(() => {
-    state.timer--
-    const pct = ((totalTime - state.timer) / totalTime) * 100
-    positionFeedback.value[idx] = getInstructionalCue(idx, 'holding', pct)
-
-    if (state.timer <= 0) {
-      clearInterval(exerciseIntervals[idx]!)
-      state.currentRep++
-      state.totalRepsCompleted++
-
-      const setDone    = state.currentRep >= def.reps
-      const allSetsDone = setDone && state.currentSet >= def.sets
-
-      if (allSetsDone) {
-        // All sets complete for this exercise
-        state.phase = 'complete'
-        positionFeedback.value[idx] = 'Exercise complete'
-        if (allExercisesDone.value) saveExerciseCompletion()
-      } else if (setDone) {
-        // One set done — rest before next set
-        state.phase     = 'resting'
-        state.timer     = def.restSeconds
-        state.currentRep = 0
-        state.currentSet++
-        positionFeedback.value[idx] = 'Rest — next set coming up'
-        exerciseIntervals[idx] = setInterval(() => {
-          state.timer--
-          positionFeedback.value[idx] = `Rest — next set in ${state.timer}s`
-          if (state.timer <= 0) {
-            clearInterval(exerciseIntervals[idx]!)
-            state.phase = 'idle'
-            positionFeedback.value[idx] = 'Ready for next set'
-          }
-        }, 1000)
-      } else {
-        // Rep done — ready for next rep
-        state.phase = 'idle'
-        positionFeedback.value[idx] = 'Good — tap Start Rep to continue'
-      }
-    }
-  }, 1000)
-}
-
-function resetExercise(idx: number) {
-  if (exerciseIntervals[idx]) clearInterval(exerciseIntervals[idx]!)
-  exerciseState.value[idx] = { phase: 'idle', currentSet: 1, currentRep: 0, timer: 0, totalRepsCompleted: 0 }
-  positionFeedback.value[idx] = ''
-}
-
-// Camera functions
-async function startCamera(idx: number) {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 320, height: 240 } })
-    cameraStreams.value[idx]  = stream
-    cameraActive.value[idx]   = true
-    await new Promise(resolve => setTimeout(resolve, 100))
-    const videoEl = videoRefs.value[idx]
-    if (videoEl) { videoEl.srcObject = stream; videoEl.play() }
-    positionFeedback.value[idx] = 'Camera ready — position yourself in the frame'
-  } catch {
-    positionFeedback.value[idx] = 'Camera access denied — please allow camera permissions'
-  }
-}
-
-function stopCamera(idx: number) {
-  const stream = cameraStreams.value[idx]
-  if (stream) { stream.getTracks().forEach(t => t.stop()); cameraStreams.value[idx] = null }
-  cameraActive.value[idx]     = false
-  positionFeedback.value[idx] = ''
-}
-
-function stopAllCameras() { for (let i = 0; i < 3; i++) stopCamera(i) }
-
-// Progress ring SVG calculation
-function getRepRingDasharray(idx: number): string {
-  const state = exerciseState.value[idx]
-  const def   = exerciseDefinitions[idx]
-  if (state.phase === 'complete') return '251.2 251.2'
-  if (state.phase === 'holding')  return `${((def.holdSeconds  - state.timer) / def.holdSeconds)  * 251.2} 251.2`
-  if (state.phase === 'resting')  return `${((def.restSeconds  - state.timer) / def.restSeconds)  * 251.2} 251.2`
-  return '0 251.2'
-}
-
-function getRepRingColor(idx: number): string {
-  const phase = exerciseState.value[idx].phase
-  if (phase === 'complete') return '#1B7C3D'
-  if (phase === 'resting')  return '#E65100'
-  return '#1A4FAB'
-}
-
-function formatTimer(secs: number) { return `0:${String(secs).padStart(2, '0')}` }
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SECTION 11 — EXPANDABLE STAGE TIMELINE
-// expandedStage: which of the 6 stage cards is currently open (null = all closed)
+// SECTION 11 — EXPANDABLE STAGE TIMELINE (bottom of page)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const expandedStage = ref<number | null>(null)
@@ -978,15 +760,11 @@ const expandedStage = ref<number | null>(null)
 function toggleStage(stageId: number) {
   expandedStage.value = expandedStage.value === stageId ? null : stageId
 }
-
-// Get all days that belong to a given stage (for expanded day cards)
 function getDaysForStage(stageId: number) {
   return Object.entries(dayData)
     .filter(([, d]) => d.stage === stageId)
     .map(([day, d]) => ({ day: parseInt(day), ...d }))
 }
-
-// Click a day card inside an expanded stage — scroll to top and show that day
 function jumpToDay(day: number) {
   selectedDay.value = day
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -994,20 +772,20 @@ function jumpToDay(day: number) {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 12 — LIFECYCLE HOOKS
-// onMounted: load all saved localStorage data when the page loads
-// onUnmounted: clear all timers and stop cameras when user leaves the page
+// onMounted: restore all localStorage data + check if returning from ExercisePage
+// onUnmounted: clear all timers to prevent memory leaks
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 onMounted(() => {
-  // Restore injury date from previous session
+  // Restore injury date
   const savedDate = localStorage.getItem('concovery_injury_date')
   if (savedDate) { injuryDate.value = savedDate; calculateDays(savedDate) }
 
-  // Restore activity checklist state
+  // Restore activity checklist
   const savedActivities = localStorage.getItem('concovery_activities')
   if (savedActivities) checkedActivities.value = JSON.parse(savedActivities)
 
-  // Restore sleep history and check if already submitted today
+  // Restore sleep history and mark today as already submitted if applicable
   const savedSleep = localStorage.getItem('concovery_sleep')
   if (savedSleep) {
     sleepHistory.value = JSON.parse(savedSleep)
@@ -1016,7 +794,7 @@ onMounted(() => {
     if (todaySleep) { sleepQuality.value = todaySleep.quality as any; sleepSubmitted.value = true }
   }
 
-  // Restore journal entries
+  // Restore journal
   const savedJournal = localStorage.getItem('concovery_journal')
   if (savedJournal) journalEntries.value = JSON.parse(savedJournal)
 
@@ -1024,29 +802,29 @@ onMounted(() => {
   const savedCognitive = localStorage.getItem('concovery_cognitive')
   if (savedCognitive) cognitiveHistory.value = JSON.parse(savedCognitive)
 
-  // Load exercise streak and weekly grid
-  loadExerciseHistory()
+  // ── Check if returning from ExercisePage ──────────────────────────────
+  // ExercisePage sets this flag when exercises are complete or skipped.
+  // We reopen the check-in modal at the journal step automatically.
+  const returnFlag = localStorage.getItem('concovery_return_modal')
+  if (returnFlag === 'true') {
+    localStorage.removeItem('concovery_return_modal')
+    showCheckInModal.value = true
+    // Jump to journal step (last step — 4 on Stage 2+, 3 on Stage 1)
+    checkInStep.value = currentStage.value && currentStage.value >= 2 ? 4 : 3
+  }
 })
 
 onUnmounted(() => {
-  // Stop all cameras
-  stopAllCameras()
-  // Clear all exercise timers
-  exerciseIntervals.forEach(i => { if (i) clearInterval(i) })
-  // Clear breathing timer
   if (breathingInterval) clearInterval(breathingInterval)
-  // Clear reaction timeout
-  if (reactionTimeout) clearTimeout(reactionTimeout)
-  // Clear cognitive timeout
-  if (cognitiveTimeout) clearTimeout(cognitiveTimeout)
+  if (reactionTimeout)   clearTimeout(reactionTimeout)
+  if (cognitiveTimeout)  clearTimeout(cognitiveTimeout)
 })
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 13 — COMPUTED PROPERTIES
-// These auto-update whenever their dependencies change
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// Which of the 6 AIS stages the user is currently in
+// Which AIS stage the user is currently in (1–6)
 const currentStage = computed(() => {
   if (!daysSinceInjury.value) return null
   const d = daysSinceInjury.value
@@ -1058,12 +836,12 @@ const currentStage = computed(() => {
   return 6
 })
 
-// Which day is currently displayed in the brain status section
-// If user clicked a day on the timeline → show that day
-// Otherwise → show their actual current day (capped at 21)
+// Which day is shown in the brain status section
+// selectedDay = user clicked a day on timeline (preview mode)
+// null = show their actual current day
 const viewingDay = computed(() => {
-  if (selectedDay.value !== null)   return selectedDay.value
-  if (daysSinceInjury.value)        return Math.min(daysSinceInjury.value, 21)
+  if (selectedDay.value !== null) return selectedDay.value
+  if (daysSinceInjury.value)      return Math.min(daysSinceInjury.value, 21)
   return null
 })
 
@@ -1073,60 +851,50 @@ const viewingDayData = computed(() => {
   return dayData[viewingDay.value]
 })
 
-// True when user is viewing their actual current day (not previewing another)
+// True when the user is viewing their actual current day (not a preview)
 const isViewingToday = computed(() => {
   if (!daysSinceInjury.value || selectedDay.value === null) return true
   return selectedDay.value === Math.min(daysSinceInjury.value, 21)
 })
 
-// How many days until the user can return to play
+// Days remaining until return-to-play eligibility
 const daysUntilReturn = computed(() => {
   if (!daysSinceInjury.value) return null
   return Math.max(0, 21 - daysSinceInjury.value)
 })
 
-// Progress percentage for the timeline bar (0-100)
-const progressPct = computed(() => {
-  if (!daysSinceInjury.value) return 0
-  return Math.min((daysSinceInjury.value / 21) * 100, 100)
-})
-
-// True if any symptom check answer was yes
+// True if user answered YES to any symptom question
 const hasSymptoms = computed(() => symptomAnswers.value.some(a => a === true))
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SECTION 14 — CORE METHODS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// Calculate how many days since the injury date and save to localStorage
 function calculateDays(dateStr: string) {
   const injury   = new Date(dateStr)
   const now      = new Date()
   const diffDays = Math.ceil(Math.abs(now.getTime() - injury.getTime()) / (1000 * 60 * 60 * 24))
   daysSinceInjury.value    = diffDays
-  selectedDay.value        = null        // reset to today view
-  symptomStep.value        = 0           // reset symptom check
+  selectedDay.value        = null
+  symptomStep.value        = 0
   symptomAnswers.value     = [null, null, null]
   showSymptomSection.value = false
   localStorage.setItem('concovery_injury_date', dateStr)
 }
 
-// Re-run calculateDays whenever the injury date changes
 watch(injuryDate, (val) => { if (val) calculateDays(val) })
 
-// Get status of a day node on the 21-day timeline
 function getDayStatus(day: number): 'past' | 'today' | 'future' {
   if (!daysSinceInjury.value) return 'future'
-  if (day < daysSinceInjury.value)                    return 'past'
-  if (day === Math.min(daysSinceInjury.value, 21))    return 'today'
+  if (day < daysSinceInjury.value)                 return 'past'
+  if (day === Math.min(daysSinceInjury.value, 21)) return 'today'
   return 'future'
 }
 
-// Get status of a stage card (complete / current / upcoming)
 function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
-  if (!currentStage.value)             return 'upcoming'
-  if (stageId < currentStage.value)    return 'complete'
-  if (stageId === currentStage.value)  return 'current'
+  if (!currentStage.value)            return 'upcoming'
+  if (stageId < currentStage.value)   return 'complete'
+  if (stageId === currentStage.value) return 'current'
   return 'upcoming'
 }
 </script>
@@ -1136,7 +904,7 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
 
     <!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
     <section style="background:#0A1628;" class="text-white">
-      <div class="max-w-[1200px] mx-auto px-6 py-20">
+      <div class="max-w-[1200px] mx-auto px-10 py-20">
         <div class="inline-flex items-center border border-white/20 rounded-full px-4 py-1.5 mb-6">
           <span class="text-white/50 text-xs font-medium tracking-widest uppercase">Your Recovery Journey</span>
         </div>
@@ -1150,8 +918,8 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
     </section>
 
     <!-- ══ DATE INPUT ════════════════════════════════════════════════════════ -->
-    <section class="bg-white py-20">
-      <div class="max-w-[1200px] mx-auto px-6">
+    <section class="bg-white py-28">
+      <div class="max-w-[1200px] mx-auto px-10">
         <div class="max-w-2xl mx-auto text-center">
           <h2 class="text-3xl font-bold text-[#1A1A1A] mb-8">When did you get your concussion?</h2>
 
@@ -1162,6 +930,7 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </button>
 
+            <!-- Calendar dropdown -->
             <div v-if="showCalendar" class="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-2xl shadow-2xl border border-[#EBEBEB] p-4 z-50 w-80">
               <div class="flex items-center justify-between mb-4">
                 <button @click="prevMonth" class="p-2 hover:bg-[#F5F8FF] rounded-lg transition-colors">
@@ -1188,14 +957,15 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
             </div>
           </div>
 
+          <!-- Day counter card -->
           <Transition name="fade-scale">
             <div v-if="daysSinceInjury !== null" class="bg-white rounded-2xl border border-[#EBEBEB] shadow-lg p-8">
               <div class="text-6xl font-black text-[#1A4FAB] mb-2" style="letter-spacing:-0.03em;">You are on Day {{ daysSinceInjury }}</div>
               <p class="text-lg text-[#5A7A9B] mb-6">of your 21-day recovery</p>
 
-              <!-- 21-day interactive timeline -->
+              <!-- 21-day interactive timeline — click any day to preview it -->
               <div class="mb-6">
-                <div class="flex justify-between text-xs text-[#5A7A9B] mb-3 px-1">
+                <div class="flex justify-between text-sm text-[#5A7A9B] mb-3 px-1">
                   <span>Day 1</span><span>Day 7</span><span>Day 14</span><span>Day 21</span>
                 </div>
                 <div class="flex gap-0.5 justify-between mb-3">
@@ -1215,21 +985,21 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                       }"
                     />
                     <span
-                      class="text-xs font-bold transition-all"
+                      class="text-sm font-bold transition-all"
                       :class="selectedDay === day || getDayStatus(day) === 'today' ? 'text-[#1A4FAB]' : 'text-transparent group-hover:text-[#5A7A9B]'"
                     >{{ day }}</span>
                   </button>
                 </div>
                 <div class="flex gap-4 justify-center">
-                  <div class="flex items-center gap-1.5"><div class="w-3 h-1.5 rounded-full bg-[#1B7C3D]"/><span class="text-xs text-[#5A7A9B]">Past</span></div>
-                  <div class="flex items-center gap-1.5"><div class="w-3 h-1.5 rounded-full bg-[#1A4FAB]"/><span class="text-xs text-[#5A7A9B]">Today</span></div>
-                  <div class="flex items-center gap-1.5"><div class="w-3 h-1.5 rounded-full bg-[#EBEBEB]"/><span class="text-xs text-[#5A7A9B]">Upcoming</span></div>
+                  <div class="flex items-center gap-1.5"><div class="w-3 h-1.5 rounded-full bg-[#1B7C3D]"/><span class="text-sm text-[#5A7A9B]">Past</span></div>
+                  <div class="flex items-center gap-1.5"><div class="w-3 h-1.5 rounded-full bg-[#1A4FAB]"/><span class="text-sm text-[#5A7A9B]">Today</span></div>
+                  <div class="flex items-center gap-1.5"><div class="w-3 h-1.5 rounded-full bg-[#EBEBEB]"/><span class="text-sm text-[#5A7A9B]">Upcoming</span></div>
                 </div>
               </div>
 
               <p v-if="daysUntilReturn && daysUntilReturn > 0" class="text-[#5A7A9B] mb-4 text-sm">{{ daysUntilReturn }} days until you can return to play</p>
               <p v-else-if="daysUntilReturn === 0" class="text-[#1B7C3D] font-semibold mb-4 text-sm">You have reached Day 21 — seek medical clearance before returning</p>
-              <span v-if="currentStage" class="inline-block bg-[#1A4FAB] text-white text-sm font-semibold px-5 py-2 rounded-full">
+              <span v-if="currentStage" class="inline-block bg-[#1A4FAB] text-white text-base font-semibold px-5 py-2 rounded-full">
                 Stage {{ currentStage }} — {{ stages[currentStage - 1].name }}
               </span>
             </div>
@@ -1239,14 +1009,14 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
     </section>
 
     <!-- ══ BRAIN STATUS + ACTIVITIES ════════════════════════════════════════ -->
-    <section v-if="viewingDay && viewingDayData" class="bg-[#F7F9FC] py-20">
-      <div class="max-w-[1200px] mx-auto px-6">
+    <section v-if="viewingDay && viewingDayData" class="bg-[#F7F9FC] py-28">
+      <div class="max-w-[1200px] mx-auto px-10">
 
-        <!-- Preview banner -->
+        <!-- Preview banner — only visible when user is browsing a past/future day -->
         <div v-if="!isViewingToday" class="bg-[#1A4FAB]/10 border border-[#1A4FAB]/30 rounded-xl px-5 py-3 mb-6 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <span class="text-[#1A4FAB] text-sm font-semibold">Previewing Day {{ viewingDay }} — {{ viewingDayData.stageName }}</span>
+            <span class="text-[#1A4FAB] text-base font-semibold">Previewing Day {{ viewingDay }} — {{ viewingDayData.stageName }}</span>
             <span class="text-[#5A7A9B] text-xs">(You are on Day {{ daysSinceInjury }})</span>
           </div>
           <button @click="selectedDay = null" class="text-xs text-[#1A4FAB] font-semibold hover:underline">Back to today</button>
@@ -1254,41 +1024,50 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-          <!-- Brain status card -->
-          <div class="bg-white rounded-2xl p-8 border border-[#EBEBEB] shadow-sm">
+          <!-- LEFT: Brain status -->
+          <div class="bg-white rounded-2xl p-10 border border-[#EBEBEB] shadow-sm">
             <span class="inline-block bg-[#1A4FAB]/10 text-[#1A4FAB] text-xs font-semibold px-4 py-1.5 rounded-full mb-4">
               Day {{ viewingDay }} — {{ viewingDayData.stageName }}
             </span>
+
+            <!-- Brain recovery bar -->
             <div class="mb-6">
-              <div class="flex justify-between text-xs text-[#5A7A9B] mb-1">
+              <div class="flex justify-between text-sm text-[#5A7A9B] mb-1">
                 <span>Brain recovery</span>
                 <span class="font-bold text-[#1A4FAB]">{{ viewingDayData.brainRecoveryPct }}%</span>
               </div>
-              <div class="h-3 bg-[#EBEBEB] rounded-full overflow-hidden">
-                <div class="h-full rounded-full transition-all duration-700"
-                  :style="{ width: `${viewingDayData.brainRecoveryPct}%`, background: viewingDayData.brainRecoveryPct < 40 ? '#C62828' : viewingDayData.brainRecoveryPct < 70 ? '#E65100' : '#1B7C3D' }" />
+              <div class="h-5 bg-[#EBEBEB] rounded-full overflow-hidden">
+                <div
+                  class="h-full rounded-full transition-all duration-700"
+                  :style="{ width: `${viewingDayData.brainRecoveryPct}%`, background: viewingDayData.brainRecoveryPct < 40 ? '#C62828' : viewingDayData.brainRecoveryPct < 70 ? '#E65100' : '#1B7C3D' }"
+                />
               </div>
             </div>
+
             <h3 class="text-base font-bold text-[#1A1A1A] mb-1">Today's goal</h3>
             <p class="text-[#1A4FAB] font-semibold text-sm mb-5">{{ viewingDayData.dailyGoal }}</p>
             <h3 class="text-base font-bold text-[#1A1A1A] mb-2">What's happening in your brain</h3>
-            <p class="text-[#1A1A1A] text-sm leading-relaxed mb-5">{{ viewingDayData.cellularProcess }}</p>
-            <div class="bg-[#C62828]/10 border border-[#C62828] rounded-xl p-3 flex gap-2 mb-4">
+            <p class="text-[#1A1A1A] text-base leading-relaxed mb-5">{{ viewingDayData.cellularProcess }}</p>
+
+            <!-- Warning -->
+            <div class="bg-[#C62828]/10 border border-[#C62828] rounded-xl p-5 flex gap-2 mb-4">
               <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <p class="text-xs text-[#1A1A1A] font-semibold">{{ viewingDayData.warningSign }}</p>
+              <p class="text-sm text-[#1A1A1A] font-semibold">{{ viewingDayData.warningSign }}</p>
             </div>
-            <div class="bg-[#1A4FAB]/5 border border-[#1A4FAB]/20 rounded-xl p-3 flex gap-2">
+
+            <!-- Insight -->
+            <div class="bg-[#1A4FAB]/5 border border-[#1A4FAB]/20 rounded-xl p-5 flex gap-2">
               <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <p class="text-xs text-[#1A1A1A] italic leading-relaxed">{{ viewingDayData.insight }}</p>
+              <p class="text-sm text-[#1A1A1A] italic leading-relaxed">{{ viewingDayData.insight }}</p>
             </div>
-            <p class="text-xs text-[#5A7A9B] italic mt-4">Source: Giza & Hovda, 2014 — Neurometabolic Cascade · AIS 2024</p>
+            <p class="text-sm text-[#5A7A9B] italic mt-4">Source: Giza & Hovda, 2014 — Neurometabolic Cascade · AIS 2024</p>
           </div>
 
-          <!-- Activities card -->
-          <div class="bg-white rounded-2xl p-8 border border-[#EBEBEB] shadow-sm">
-            <h3 class="text-2xl font-bold text-[#1A1A1A] mb-6">What you can do today</h3>
+          <!-- RIGHT: Activities -->
+          <div class="bg-white rounded-2xl p-10 border border-[#EBEBEB] shadow-sm">
+            <h3 class="text-3xl font-bold text-[#1A1A1A] mb-8">What you can do today</h3>
 
-            <!-- Allowed activities -->
+            <!-- Allowed -->
             <div class="mb-6">
               <div class="flex items-center gap-2 text-[#1B7C3D] font-bold mb-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B7C3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -1297,10 +1076,11 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
               <div class="space-y-3">
                 <div
                   v-for="a in viewingDayData.allowed" :key="a.activity"
-                  class="bg-[#F5FFF7] border border-[#1B7C3D]/20 rounded-xl p-3"
+                  class="bg-[#F5FFF7] border border-[#1B7C3D]/20 rounded-xl p-5"
                   :class="isActivityChecked(`${viewingDay}-${a.activity}`) && !a.interactive ? 'opacity-60' : ''"
                 >
                   <div class="flex items-start gap-3">
+                    <!-- Checkbox for physical activities -->
                     <button
                       v-if="!a.interactive"
                       @click="toggleActivity(`${viewingDay}-${a.activity}`)"
@@ -1309,53 +1089,54 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                     >
                       <svg v-if="isActivityChecked(`${viewingDay}-${a.activity}`)" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                     </button>
+                    <!-- Play icon for interactive widgets -->
                     <svg v-else class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
 
                     <div class="flex-1">
                       <div class="font-semibold text-[#1A1A1A] text-sm mb-1" :class="isActivityChecked(`${viewingDay}-${a.activity}`) && !a.interactive ? 'line-through text-[#5A7A9B]' : ''">{{ a.activity }}</div>
-                      <p class="text-xs text-[#5A7A9B] leading-relaxed mb-2">{{ a.detail }}</p>
+                      <p class="text-sm text-[#5A7A9B] leading-relaxed mb-2">{{ a.detail }}</p>
 
-                      <!-- Breathing widget -->
+                      <!-- ── BREATHING WIDGET ─────────────────────────── -->
                       <div v-if="a.interactive === 'breathing' && isViewingToday" class="mt-2">
                         <div v-if="!breathingActive && breathingPhase === 'idle'">
                           <button @click="startBreathing" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start breathing exercise</button>
                         </div>
-                        <div v-else class="bg-[#F5F8FF] rounded-xl p-4 text-center">
+                        <div v-else class="bg-[#F5F8FF] rounded-xl p-6 text-center">
                           <div class="relative w-16 h-16 mx-auto mb-2">
                             <svg class="w-16 h-16 -rotate-90" viewBox="0 0 80 80">
                               <circle cx="40" cy="40" r="34" stroke="#EBEBEB" stroke-width="6" fill="none"/>
                               <circle cx="40" cy="40" r="34" stroke="#1A4FAB" stroke-width="6" fill="none" :stroke-dasharray="`${(breathingProgress / 100) * 213.6} 213.6`" class="transition-all duration-1000"/>
                             </svg>
                             <div class="absolute inset-0 flex flex-col items-center justify-center">
-                              <span class="text-xs font-bold text-[#1A4FAB] uppercase">{{ breathingPhase }}</span>
+                              <span class="text-sm font-bold text-[#1A4FAB] uppercase">{{ breathingPhase }}</span>
                               <span class="text-base font-black text-[#1A1A1A]">{{ breathingCount }}</span>
                             </div>
                           </div>
-                          <p class="text-xs text-[#5A7A9B] mb-2">Cycle {{ breathingCycles + 1 }} of 3</p>
+                          <p class="text-sm text-[#5A7A9B] mb-2">Cycle {{ breathingCycles + 1 }} of 3</p>
                           <button @click="stopBreathing" class="text-xs text-[#C62828] hover:underline">Stop</button>
                         </div>
                       </div>
 
-                      <!-- Cognitive load test widget -->
+                      <!-- ── COGNITIVE WIDGET ─────────────────────────── -->
                       <div v-if="a.interactive === 'cognitive' && isViewingToday" class="mt-2">
                         <div v-if="cognitivePhase === 'idle'">
                           <button @click="startCognitiveTest" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start digit span test</button>
-                          <span v-if="cognitiveHistory.length > 0" class="text-xs text-[#5A7A9B] ml-2">
+                          <span v-if="cognitiveHistory.length > 0" class="text-sm text-[#5A7A9B] ml-2">
                             Last: {{ cognitiveHistory[cognitiveHistory.length - 1].correct ? 'Correct' : 'Incorrect' }} — {{ cognitiveHistory[cognitiveHistory.length - 1].length }} digits
                           </span>
                         </div>
-                        <div v-else-if="cognitivePhase === 'showing'" class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-xl p-4 text-center">
-                          <p class="text-xs text-[#5A7A9B] mb-3">Watch the digits carefully</p>
+                        <div v-else-if="cognitivePhase === 'showing'" class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-xl p-6 text-center">
+                          <p class="text-sm text-[#5A7A9B] mb-3">Watch the digits carefully</p>
                           <div class="h-16 flex items-center justify-center">
                             <Transition name="fade-scale" mode="out-in">
                               <span v-if="cognitiveShowDigit !== null" :key="cognitiveShowDigit" class="text-5xl font-black text-[#1A4FAB]">{{ cognitiveShowDigit }}</span>
                               <span v-else class="text-5xl font-black text-[#EBEBEB]">—</span>
                             </Transition>
                           </div>
-                          <p class="text-xs text-[#5A7A9B] mt-2">{{ cognitiveCurrentIndex }} of {{ cognitiveSequence.length }} shown</p>
+                          <p class="text-sm text-[#5A7A9B] mt-2">{{ cognitiveCurrentIndex }} of {{ cognitiveSequence.length }} shown</p>
                         </div>
-                        <div v-else-if="cognitivePhase === 'input'" class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-xl p-4">
-                          <p class="text-xs text-[#5A7A9B] mb-3 text-center">Enter the digits in order</p>
+                        <div v-else-if="cognitivePhase === 'input'" class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-xl p-6">
+                          <p class="text-sm text-[#5A7A9B] mb-3 text-center">Enter the digits in order</p>
                           <div class="flex gap-1 justify-center mb-3 min-h-[36px] flex-wrap">
                             <div v-for="(digit, i) in cognitiveInput" :key="i" class="w-8 h-8 bg-[#1A4FAB] text-white rounded-lg flex items-center justify-center font-bold text-sm">{{ digit }}</div>
                             <div v-for="i in (cognitiveSequence.length - cognitiveInput.length)" :key="'e'+i" class="w-8 h-8 bg-white border-2 border-[#EBEBEB] rounded-lg"/>
@@ -1364,43 +1145,43 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                             <button v-for="n in [1,2,3,4,5,6,7,8,9]" :key="n" @click="tapCognitiveDigit(n)" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#1A1A1A] hover:bg-[#1A4FAB] hover:text-white transition-colors">{{ n }}</button>
                           </div>
                           <div class="grid grid-cols-3 gap-1">
-                            <button @click="deleteCognitiveInput" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-xs font-bold text-[#C62828] hover:bg-[#FFF5F5] transition-colors">Del</button>
+                            <button @click="deleteCognitiveInput" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#C62828] hover:bg-[#FFF5F5] transition-colors">Del</button>
                             <button @click="tapCognitiveDigit(0)" class="py-2 bg-white border border-[#EBEBEB] rounded-lg text-sm font-bold text-[#1A1A1A] hover:bg-[#1A4FAB] hover:text-white transition-colors">0</button>
                             <div/>
                           </div>
                         </div>
-                        <div v-else-if="cognitivePhase === 'result'" class="rounded-xl p-4 text-center" :class="cognitiveResult === 'correct' ? 'bg-[#1B7C3D]/10 border border-[#1B7C3D]' : 'bg-[#C62828]/10 border border-[#C62828]'">
+                        <div v-else-if="cognitivePhase === 'result'" class="rounded-xl p-6 text-center" :class="cognitiveResult === 'correct' ? 'bg-[#1B7C3D]/10 border border-[#1B7C3D]' : 'bg-[#C62828]/10 border border-[#C62828]'">
                           <p class="font-bold text-sm mb-1" :class="cognitiveResult === 'correct' ? 'text-[#1B7C3D]' : 'text-[#C62828]'">{{ cognitiveResult === 'correct' ? 'Correct sequence' : 'Incorrect sequence' }}</p>
-                          <p class="text-xs text-[#5A7A9B] mb-1">Sequence: {{ cognitiveSequence.join(' — ') }}</p>
-                          <p class="text-xs text-[#5A7A9B] mb-3">Your input: {{ cognitiveInput.join(' — ') }}</p>
+                          <p class="text-sm text-[#5A7A9B] mb-1">Sequence: {{ cognitiveSequence.join(' — ') }}</p>
+                          <p class="text-sm text-[#5A7A9B] mb-3">Your input: {{ cognitiveInput.join(' — ') }}</p>
                           <button @click="resetCognitive" class="text-xs text-[#1A4FAB] hover:underline">Try again</button>
                         </div>
                       </div>
 
-                      <!-- Reaction time widget -->
+                      <!-- ── REACTION TIME WIDGET ─────────────────────── -->
                       <div v-if="a.interactive === 'reaction' && isViewingToday" class="mt-2">
                         <div v-if="reactionPhase === 'idle'">
                           <button @click="startReactionTest" class="text-xs bg-[#1A4FAB] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start reaction test</button>
                         </div>
-                        <div v-else-if="reactionPhase === 'waiting'" @click="tapReaction" class="bg-[#F5F8FF] border-2 border-[#1A4FAB] rounded-xl p-3 text-center cursor-pointer hover:bg-[#EEF3FF] transition-colors">
+                        <div v-else-if="reactionPhase === 'waiting'" @click="tapReaction" class="bg-[#F5F8FF] border-2 border-[#1A4FAB] rounded-xl p-5 text-center cursor-pointer hover:bg-[#EEF3FF] transition-colors">
                           <p class="text-xs font-semibold text-[#1A1A1A] mb-1">Round {{ reactionRound }} of 5</p>
-                          <p class="text-xs text-[#5A7A9B]">Wait for the green circle...</p>
+                          <p class="text-sm text-[#5A7A9B]">Wait for the green circle...</p>
                           <div class="w-10 h-10 rounded-full bg-[#EBEBEB] mx-auto mt-2"/>
                         </div>
-                        <div v-else-if="reactionPhase === 'ready'" @click="tapReaction" class="bg-[#1B7C3D]/10 border-2 border-[#1B7C3D] rounded-xl p-3 text-center cursor-pointer hover:bg-[#1B7C3D]/20 transition-colors">
+                        <div v-else-if="reactionPhase === 'ready'" @click="tapReaction" class="bg-[#1B7C3D]/10 border-2 border-[#1B7C3D] rounded-xl p-5 text-center cursor-pointer hover:bg-[#1B7C3D]/20 transition-colors">
                           <p class="text-xs font-semibold text-[#1A1A1A] mb-2">Tap now</p>
                           <div class="w-10 h-10 rounded-full bg-[#1B7C3D] mx-auto animate-pulse"/>
                         </div>
-                        <div v-else-if="reactionPhase === 'result'" class="bg-[#F5F8FF] rounded-xl p-3 text-center">
+                        <div v-else-if="reactionPhase === 'result'" class="bg-[#F5F8FF] rounded-xl p-5 text-center">
                           <p class="text-base font-black text-[#1A4FAB]">{{ reactionResult }}ms</p>
                           <p class="text-xs font-semibold mb-2" :style="{ color: getReactionLabel(reactionResult).color }">{{ getReactionLabel(reactionResult).label }}</p>
-                          <button @click="resetReaction" class="text-xs text-[#5A7A9B] hover:underline">Test again</button>
+                          <button @click="resetReaction" class="text-sm text-[#5A7A9B] hover:underline">Test again</button>
                         </div>
                       </div>
 
-                      <!-- Preview note for interactive activities -->
+                      <!-- Preview note for interactive items on non-current days -->
                       <div v-if="a.interactive && !isViewingToday" class="mt-2">
-                        <span class="text-xs text-[#5A7A9B] italic">Available on Day {{ viewingDay }} when you reach it</span>
+                        <span class="text-sm text-[#5A7A9B] italic">Available on Day {{ viewingDay }} when you reach it</span>
                       </div>
                     </div>
                   </div>
@@ -1408,21 +1189,21 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
               </div>
             </div>
 
-            <!-- Restricted activities -->
+            <!-- Restricted -->
             <div class="mb-6">
               <div class="flex items-center gap-2 text-[#C62828] font-bold mb-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 Not Today
               </div>
               <div class="space-y-2">
-                <div v-for="r in viewingDayData.restricted" :key="r" class="flex items-start gap-3 bg-[#FFF5F5] border border-[#C62828]/20 rounded-xl p-3">
+                <div v-for="r in viewingDayData.restricted" :key="r" class="flex items-start gap-3 bg-[#FFF5F5] border border-[#C62828]/20 rounded-xl p-5">
                   <span class="text-[#C62828] font-bold flex-shrink-0 text-sm">✗</span>
                   <span class="text-[#1A1A1A] text-sm">{{ r }}</span>
                 </div>
               </div>
             </div>
 
-            <div class="bg-[#E65100]/10 border border-[#E65100] rounded-xl p-4 flex gap-3">
+            <div class="bg-[#E65100]/10 border border-[#E65100] rounded-xl p-6 flex gap-3">
               <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               <p class="text-sm text-[#1A1A1A] font-semibold">If any symptoms return — stop immediately and go back to Stage 1</p>
             </div>
@@ -1431,396 +1212,255 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
       </div>
     </section>
 
-    <!-- ══ SLEEP CHECK-IN ════════════════════════════════════════════════════ -->
+    <!-- ══ DAILY CHECK-IN BUTTON ══════════════════════════════════════════════ -->
+    <!--
+      Only shown when user is viewing their actual current day.
+      Opens the modal for the 4-step check-in flow.
+    -->
     <section v-if="daysSinceInjury && isViewingToday" class="bg-white py-16">
-      <div class="max-w-[1200px] mx-auto px-6">
-        <div class="max-w-2xl mx-auto">
-          <div class="mb-3">
-            <span class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase">Daily Check-In</span>
+      <div class="max-w-[1200px] mx-auto px-10 text-center">
+        <div class="bg-[#F5F8FF] border border-[#1A4FAB]/20 rounded-2xl p-8 max-w-xl mx-auto">
+          <h2 class="text-xl font-bold text-[#1A1A1A] mb-2">Complete today's check-in</h2>
+          <p class="text-[#5A7A9B] text-sm mb-6">
+            Takes about 3 minutes. Track your sleep, symptoms{{ currentStage && currentStage >= 2 ? ', exercises' : '' }}, and how you feel today.
+          </p>
+          <!-- Step dots preview -->
+          <div class="flex gap-2 justify-center mb-6">
+            <div v-for="i in totalCheckInSteps" :key="i" class="w-2 h-2 rounded-full bg-[#EBEBEB]" />
           </div>
-          <h2 class="text-2xl font-bold text-[#1A1A1A] mb-2">How did you sleep last night?</h2>
-          <p class="text-[#5A7A9B] text-sm mb-6">Sleep quality is one of the strongest predictors of concussion recovery speed.</p>
-
-          <div v-if="!sleepSubmitted" class="flex gap-3">
-            <button @click="submitSleep('well')" class="flex-1 py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#1B7C3D] text-[#1B7C3D] hover:bg-[#1B7C3D] hover:text-white">Well</button>
-            <button @click="submitSleep('okay')" class="flex-1 py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#E65100] text-[#E65100] hover:bg-[#E65100] hover:text-white">Okay</button>
-            <button @click="submitSleep('poorly')" class="flex-1 py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#C62828] text-[#C62828] hover:bg-[#C62828] hover:text-white">Poorly</button>
-          </div>
-
-          <div v-else class="bg-[#F7F9FC] border border-[#EBEBEB] rounded-xl p-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-3 h-3 rounded-full" :style="{ background: sleepQuality === 'well' ? '#1B7C3D' : sleepQuality === 'okay' ? '#E65100' : '#C62828' }"/>
-              <span class="text-sm font-semibold text-[#1A1A1A] capitalize">Slept {{ sleepQuality }} last night</span>
-            </div>
-            <button @click="sleepSubmitted = false; sleepQuality = null" class="text-xs text-[#5A7A9B] hover:underline">Change</button>
-          </div>
-
-          <div v-if="consecutivePoorSleep" class="mt-4 bg-[#C62828]/10 border border-[#C62828] rounded-xl p-4 flex gap-3">
-            <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <div>
-              <p class="text-sm font-bold text-[#C62828] mb-1">Three consecutive nights of poor sleep</p>
-              <p class="text-xs text-[#1A1A1A]">Sleep disruption significantly slows concussion recovery. Mention this to your GP at your next appointment.</p>
-            </div>
-          </div>
+          <button
+            @click="openCheckIn"
+            class="bg-[#1A4FAB] text-white px-10 py-5 rounded-full font-semibold text-base hover:bg-[#1440A0] transition-colors flex items-center gap-3 mx-auto"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Start today's check-in
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- ══ DAILY SYMPTOM CHECK ════════════════════════════════════════════════ -->
-    <section v-if="daysSinceInjury && isViewingToday" class="bg-[#F7F9FC] py-20">
-      <div class="max-w-[1200px] mx-auto px-6">
-        <div class="text-center mb-10">
-          <h2 class="text-3xl font-bold text-[#1A1A1A] mb-3">How are you feeling today?</h2>
-          <p class="text-[#5A7A9B]">Answer honestly — this affects your recovery timeline</p>
-        </div>
+    <!-- ══ DAILY CHECK-IN MODAL ════════════════════════════════════════════════
+      STEP 1: Sleep quality (3 buttons)
+      STEP 2: Symptom check (conversational yes/no questions)
+      STEP 3: Neck exercises — shows preview list + "Start exercises" button
+              which navigates to /exercises (ExercisePage.vue)
+              When user returns, onMounted reopens modal at Step 4 automatically
+      STEP 4: Recovery journal (free text, saves locally)
+    ════════════════════════════════════════════════════════════════════════ -->
+    <Transition name="modal">
+      <div
+        v-if="showCheckInModal"
+        class="fixed inset-0 z-50 flex items-center justify-center"
+        style="background: rgba(10,22,40,0.85); backdrop-filter: blur(4px);"
+      >
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
 
-        <div v-if="!showSymptomSection" class="text-center">
-          <button @click="startSymptomCheck" class="bg-[#1A4FAB] text-white px-10 py-4 rounded-full font-semibold text-base hover:bg-[#1440A0] transition-colors">Start daily check-in</button>
-        </div>
-
-        <div v-else-if="symptomStep >= 1 && symptomStep <= 3" class="max-w-lg mx-auto text-center">
-          <div class="text-xs font-semibold text-[#5A7A9B] uppercase tracking-widest mb-4">Question {{ symptomStep }} of 3</div>
-          <Transition name="slide-up" mode="out-in">
-            <div :key="symptomStep">
-              <div class="bg-white border-2 border-[#EBEBEB] rounded-2xl p-10 shadow-sm mb-6">
-                <h3 class="text-2xl font-bold text-[#1A1A1A] mb-8">{{ symptomQuestions[symptomStep - 1] }}</h3>
-                <div class="flex gap-4 justify-center">
-                  <button @click="answerSymptom(false)" class="flex-1 max-w-[140px] py-4 rounded-full font-bold text-lg border-2 border-[#1B7C3D] text-[#1B7C3D] hover:bg-[#1B7C3D] hover:text-white transition-all">No</button>
-                  <button @click="answerSymptom(true)" class="flex-1 max-w-[140px] py-4 rounded-full font-bold text-lg border-2 border-[#C62828] text-[#C62828] hover:bg-[#C62828] hover:text-white transition-all">Yes</button>
-                </div>
-              </div>
-              <div class="flex justify-center gap-2">
-                <div v-for="i in 3" :key="i" class="w-2 h-2 rounded-full transition-all" :class="i <= symptomStep ? 'bg-[#1A4FAB]' : 'bg-[#EBEBEB]'" />
-              </div>
+          <!-- Modal header: step counter + progress bar + close button -->
+          <div class="px-10 pt-10 pb-8 border-b border-[#EBEBEB]">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm font-semibold text-[#5A7A9B] uppercase tracking-widest">
+                Step {{ checkInStep }} of {{ totalCheckInSteps }}
+              </span>
+              <button @click="closeCheckIn" class="w-8 h-8 rounded-full bg-[#F7F9FC] flex items-center justify-center hover:bg-[#EBEBEB] transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5A7A9B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
             </div>
-          </Transition>
-        </div>
-
-        <div v-else-if="symptomStep === 4" class="max-w-2xl mx-auto">
-          <Transition name="fade-scale">
-            <div v-if="!hasSymptoms" class="bg-[#1B7C3D]/10 border-2 border-[#1B7C3D] rounded-2xl p-10 text-center">
-              <svg class="mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1B7C3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              <p class="text-2xl font-bold text-[#1A1A1A] mb-2">You are clear for today.</p>
-              <p class="text-[#5A7A9B] mb-6">Continue with Stage {{ currentStage }} activities as planned.</p>
-              <button @click="resetSymptoms" class="text-sm text-[#5A7A9B] underline">Check again</button>
-            </div>
-            <div v-else class="bg-[#C62828]/10 border-2 border-[#C62828] rounded-2xl p-10 text-center">
-              <svg class="mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <p class="text-2xl font-bold text-[#1A1A1A] mb-3">Stop all activity today.</p>
-              <p class="text-[#5A7A9B] mb-6">See a GP or sports doctor before continuing your recovery.</p>
-              <router-link to="/locatesupport">
-                <button class="bg-[#C62828] text-white px-8 py-4 rounded-full font-semibold mb-4 hover:bg-[#B71C1C] transition-colors flex items-center gap-2 mx-auto">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Find a clinic near me
-                </button>
-              </router-link>
-              <button @click="resetSymptoms" class="text-sm text-[#5A7A9B] underline">Check again</button>
-            </div>
-          </Transition>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ NECK EXERCISES + CAMERA ════════════════════════════════════════════ -->
-    <section v-if="daysSinceInjury && currentStage && currentStage >= 2 && isViewingToday" class="bg-white py-20">
-      <div class="max-w-[1200px] mx-auto px-6">
-
-        <div class="text-center mb-10">
-          <span class="inline-block bg-[#1A4FAB]/10 text-[#1A4FAB] text-xs font-semibold px-4 py-1.5 rounded-full mb-4">Stage 2 onwards — Neck Strengthening</span>
-          <h2 class="text-3xl font-bold text-[#1A1A1A] mb-3">Guided neck exercises</h2>
-          <p class="text-[#5A7A9B] text-sm mb-1">Reduces future concussion severity. Uses your front camera to check your position in real time.</p>
-          <p class="text-xs text-[#5A7A9B] italic">Referenced from SCHN clinical guidance.</p>
-        </div>
-
-        <!-- Streak + weekly grid -->
-        <div class="max-w-lg mx-auto mb-10">
-          <div class="bg-[#F7F9FC] border border-[#EBEBEB] rounded-2xl p-5 flex items-center justify-between">
-            <div>
-              <p class="text-sm font-bold text-[#1A1A1A]">{{ exerciseStreak > 0 ? `${exerciseStreak} day streak` : 'Start your streak today' }}</p>
-              <p class="text-xs text-[#5A7A9B] mt-0.5">Complete all 3 exercises daily to maintain your streak</p>
-            </div>
-            <div class="flex gap-1.5">
+            <div class="h-1.5 bg-[#EBEBEB] rounded-full overflow-hidden">
               <div
-                v-for="(done, i) in weeklyCompletion" :key="i"
-                class="w-6 h-6 rounded-md transition-colors"
-                :class="done ? 'bg-[#1B7C3D]' : 'bg-[#EBEBEB]'"
-                :title="done ? 'Completed' : 'Not completed'"
+                class="h-full bg-[#1A4FAB] rounded-full transition-all duration-500"
+                :style="{ width: `${(checkInStep / totalCheckInSteps) * 100}%` }"
               />
             </div>
           </div>
-        </div>
 
-        <!-- All done banner -->
-        <Transition name="fade-scale">
-          <div v-if="allExercisesDone" class="bg-[#1B7C3D]/10 border-2 border-[#1B7C3D] rounded-2xl p-8 text-center mb-8">
-            <svg class="mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1B7C3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <p class="text-xl font-bold text-[#1A1A1A]">All 3 exercises complete for today</p>
-            <p class="text-[#5A7A9B] text-sm mt-2">Come back tomorrow to continue your streak.</p>
-          </div>
-        </Transition>
+          <!-- Modal body: one step at a time -->
+          <div class="px-10 py-10 min-h-[440px]">
+            <Transition name="slide-up" mode="out-in">
 
-        <!-- Exercise cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div
-            v-for="(def, idx) in exerciseDefinitions" :key="idx"
-            class="bg-white rounded-2xl border shadow-sm transition-all duration-300"
-            :class="exerciseState[idx].phase === 'complete' ? 'border-[#1B7C3D]' : 'border-[#EBEBEB]'"
-          >
-            <!-- Card header -->
-            <div class="p-6 border-b border-[#EBEBEB]">
-              <div class="flex items-start justify-between mb-3">
-                <div>
-                  <h3 class="text-lg font-bold text-[#1A1A1A] mb-1">{{ def.name }}</h3>
-                  <span class="text-xs font-semibold bg-[#1A4FAB]/10 text-[#1A4FAB] px-3 py-1 rounded-full">{{ def.sets }} sets × {{ def.reps }} reps</span>
+              <!-- ── STEP 1: SLEEP ─────────────────────────────────────── -->
+              <div v-if="checkInStep === 1" key="sleep">
+                <div class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase mb-2">Sleep</div>
+                <h3 class="text-3xl font-bold text-[#1A1A1A] mb-3">How did you sleep last night?</h3>
+                <p class="text-[#5A7A9B] text-base mb-10">Sleep quality is one of the strongest predictors of concussion recovery speed.</p>
+
+                <!-- If not yet submitted today — show 3 options -->
+                <div v-if="!sleepSubmitted" class="flex flex-col gap-3">
+                  <button @click="submitSleep('well'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#1B7C3D] text-[#1B7C3D] hover:bg-[#1B7C3D] hover:text-white">Well — slept through the night</button>
+                  <button @click="submitSleep('okay'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#E65100] text-[#E65100] hover:bg-[#E65100] hover:text-white">Okay — some disruptions</button>
+                  <button @click="submitSleep('poorly'); nextCheckInStep()" class="w-full py-4 rounded-xl border-2 font-semibold text-sm transition-all border-[#C62828] text-[#C62828] hover:bg-[#C62828] hover:text-white">Poorly — struggled to sleep</button>
                 </div>
-                <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" :class="exerciseState[idx].phase === 'complete' ? 'bg-[#1B7C3D]' : 'bg-[#F7F9FC] border border-[#EBEBEB]'">
-                  <svg v-if="exerciseState[idx].phase === 'complete'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                  <span v-else class="text-xs font-bold text-[#5A7A9B]">{{ idx + 1 }}</span>
-                </div>
-              </div>
-              <p class="text-sm text-[#1A1A1A] leading-relaxed">{{ def.instructions }}</p>
-            </div>
 
-            <!-- Exercise diagram -->
-            <div class="px-6 pt-5 pb-3">
-              <p class="text-xs font-semibold text-[#5A7A9B] uppercase tracking-wider mb-3">Correct position</p>
-
-              <!-- Chin tuck diagram -->
-              <svg v-if="def.diagram === 'chin-tuck'" viewBox="0 0 200 120" class="w-full h-24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="80" cy="45" rx="28" ry="32" stroke="#1A1A1A" stroke-width="2" fill="#F7F9FC"/>
-                <rect x="65" y="74" width="22" height="30" rx="4" fill="#F7F9FC" stroke="#1A1A1A" stroke-width="2"/>
-                <circle cx="68" cy="40" r="3" fill="#1A1A1A"/>
-                <path d="M 90 68 L 130 68" stroke="#1A4FAB" stroke-width="2.5" stroke-dasharray="4 2"/>
-                <path d="M 90 68 L 98 63 M 90 68 L 98 73" stroke="#1A4FAB" stroke-width="2.5" stroke-linecap="round"/>
-                <text x="132" y="72" font-size="11" fill="#1A4FAB" font-family="sans-serif">Pull back</text>
-                <text x="60" y="115" font-size="10" fill="#1B7C3D" font-family="sans-serif" font-weight="600">Not down — straight back</text>
-              </svg>
-
-              <!-- Neck rotation diagram -->
-              <svg v-else-if="def.diagram === 'neck-rotation'" viewBox="0 0 200 120" class="w-full h-24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="100" cy="55" rx="35" ry="40" stroke="#1A1A1A" stroke-width="2" fill="#F7F9FC"/>
-                <path d="M100 25 L100 35" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round"/>
-                <path d="M65 55 Q50 30 75 20" stroke="#1A4FAB" stroke-width="2.5" stroke-dasharray="4 2"/>
-                <path d="M 75 20 L 68 28 M 75 20 L 83 22" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round"/>
-                <path d="M135 55 Q150 30 125 20" stroke="#1A4FAB" stroke-width="2.5" stroke-dasharray="4 2"/>
-                <path d="M 125 20 L 132 28 M 125 20 L 117 22" stroke="#1A4FAB" stroke-width="2" stroke-linecap="round"/>
-                <text x="55" y="100" font-size="10" fill="#1B7C3D" font-family="sans-serif" font-weight="600">Slow — stop before pain</text>
-              </svg>
-
-              <!-- Isometric diagram -->
-              <svg v-else-if="def.diagram === 'isometric'" viewBox="0 0 200 120" class="w-full h-24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="100" cy="45" rx="30" ry="35" stroke="#1A1A1A" stroke-width="2" fill="#F7F9FC"/>
-                <circle cx="88" cy="40" r="3" fill="#1A1A1A"/>
-                <circle cx="112" cy="40" r="3" fill="#1A1A1A"/>
-                <rect x="88" y="77" width="24" height="25" rx="4" fill="#F7F9FC" stroke="#1A1A1A" stroke-width="2"/>
-                <rect x="55" y="20" width="32" height="18" rx="6" fill="#E65100" fill-opacity="0.15" stroke="#E65100" stroke-width="2"/>
-                <text x="58" y="32" font-size="9" fill="#E65100" font-family="sans-serif" font-weight="600">Palm</text>
-                <path d="M 87 29 L 73 29" stroke="#E65100" stroke-width="2.5"/>
-                <path d="M 87 29 L 80 24 M 87 29 L 80 34" stroke="#E65100" stroke-width="2" stroke-linecap="round"/>
-                <text x="53" y="110" font-size="10" fill="#1B7C3D" font-family="sans-serif" font-weight="600">Head must not move at all</text>
-              </svg>
-            </div>
-
-            <!-- Position tip -->
-            <div class="px-6 pb-4">
-              <div class="bg-[#F7F9FC] rounded-lg px-3 py-2 flex gap-2">
-                <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5A7A9B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <span class="text-xs text-[#5A7A9B] italic">{{ def.cue }}</span>
-              </div>
-            </div>
-
-            <!-- Camera feed -->
-            <div class="px-6">
-              <div class="bg-[#0A1628] rounded-xl overflow-hidden relative" style="aspect-ratio:4/3;">
-                <video
-                  :ref="(el) => { videoRefs[idx] = el as HTMLVideoElement }"
-                  autoplay playsinline muted
-                  class="w-full h-full object-cover"
-                  :class="cameraActive[idx] ? 'opacity-100' : 'opacity-0'"
-                />
-                <div v-if="!cameraActive[idx]" class="absolute inset-0 flex flex-col items-center justify-center text-white/40">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                  <p class="text-xs">Camera inactive</p>
-                </div>
-                <div v-if="cameraActive[idx] && positionFeedback[idx]" class="absolute bottom-0 left-0 right-0 bg-black/70 px-3 py-2 text-center">
-                  <p class="text-white text-xs font-semibold">{{ positionFeedback[idx] }}</p>
-                </div>
-                <div v-if="cameraActive[idx]" class="absolute inset-0 pointer-events-none flex items-center justify-center">
-                  <svg viewBox="0 0 120 160" class="w-20 opacity-25" fill="none">
-                    <ellipse cx="60" cy="45" rx="30" ry="36" stroke="#1A4FAB" stroke-width="2" stroke-dasharray="4 2"/>
-                    <line x1="60" y1="81" x2="60" y2="130" stroke="#1A4FAB" stroke-width="2" stroke-dasharray="4 2"/>
-                    <line x1="30" y1="100" x2="90" y2="100" stroke="#1A4FAB" stroke-width="2" stroke-dasharray="4 2"/>
-                  </svg>
+                <!-- Already submitted today — show summary + continue -->
+                <div v-else>
+                  <div class="bg-[#F7F9FC] border border-[#EBEBEB] rounded-xl p-6 flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                      <div class="w-3 h-3 rounded-full" :style="{ background: sleepQuality === 'well' ? '#1B7C3D' : sleepQuality === 'okay' ? '#E65100' : '#C62828' }"/>
+                      <span class="text-base font-semibold text-[#1A1A1A] capitalize">Slept {{ sleepQuality }} last night</span>
+                    </div>
+                    <button @click="sleepSubmitted = false; sleepQuality = null" class="text-sm text-[#5A7A9B] hover:underline">Change</button>
+                  </div>
+                  <!-- 3 consecutive poor nights warning -->
+                  <div v-if="consecutivePoorSleep" class="bg-[#C62828]/10 border border-[#C62828] rounded-xl p-6 flex gap-3 mb-6">
+                    <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <p class="text-sm text-[#1A1A1A] font-semibold">Three consecutive nights of poor sleep — mention this to your GP.</p>
+                  </div>
+                  <button @click="nextCheckInStep" class="w-full bg-[#1A4FAB] text-white py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Continue</button>
                 </div>
               </div>
-              <p class="text-xs text-[#5A7A9B] text-center mt-2 mb-4">Live feed only — nothing recorded or stored</p>
-            </div>
 
-            <!-- Set and rep tracker -->
-            <div class="px-6 pb-4">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex gap-1.5">
+              <!-- ── STEP 2: SYMPTOMS ──────────────────────────────────── -->
+              <div v-else-if="checkInStep === 2" key="symptoms">
+                <div class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase mb-2">Symptoms</div>
+                <h3 class="text-3xl font-bold text-[#1A1A1A] mb-3">How are you feeling today?</h3>
+                <p class="text-[#5A7A9B] text-base mb-10">Answer honestly — this affects your recovery timeline.</p>
+
+                <!-- Not started yet -->
+                <div v-if="symptomStep === 0" class="text-center">
+                  <button @click="startSymptomCheck" class="w-full bg-[#1A4FAB] text-white py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Start symptom check</button>
+                </div>
+
+                <!-- Active question -->
+                <div v-else-if="symptomStep >= 1 && symptomStep <= 3">
+                  <div class="text-sm font-semibold text-[#5A7A9B] uppercase tracking-widest mb-4 text-center">Question {{ symptomStep }} of 3</div>
+                  <Transition name="slide-up" mode="out-in">
+                    <div :key="symptomStep" class="text-center">
+                      <div class="bg-[#F7F9FC] border-2 border-[#EBEBEB] rounded-2xl p-8 mb-6">
+                        <h3 class="text-xl font-bold text-[#1A1A1A] mb-6">{{ symptomQuestions[symptomStep - 1] }}</h3>
+                        <div class="flex gap-4 justify-center">
+                          <button @click="answerSymptom(false)" class="flex-1 max-w-[130px] py-4 rounded-full font-bold border-2 border-[#1B7C3D] text-[#1B7C3D] hover:bg-[#1B7C3D] hover:text-white transition-all">No</button>
+                          <button @click="answerSymptom(true)" class="flex-1 max-w-[130px] py-4 rounded-full font-bold border-2 border-[#C62828] text-[#C62828] hover:bg-[#C62828] hover:text-white transition-all">Yes</button>
+                        </div>
+                      </div>
+                      <div class="flex justify-center gap-2">
+                        <div v-for="i in 3" :key="i" class="w-2 h-2 rounded-full transition-all" :class="i <= symptomStep ? 'bg-[#1A4FAB]' : 'bg-[#EBEBEB]'" />
+                      </div>
+                    </div>
+                  </Transition>
+                </div>
+
+                <!-- Result -->
+                <div v-else-if="symptomStep === 4">
+                  <!-- Symptom free -->
+                  <div v-if="!hasSymptoms" class="bg-[#1B7C3D]/10 border-2 border-[#1B7C3D] rounded-2xl p-8 text-center mb-6">
+                    <svg class="mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1B7C3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <p class="text-lg font-bold text-[#1A1A1A] mb-1">You are clear for today.</p>
+                    <p class="text-[#5A7A9B] text-sm">Continue with Stage {{ currentStage }} activities.</p>
+                  </div>
+                  <!-- Symptoms present -->
+                  <div v-else class="bg-[#C62828]/10 border-2 border-[#C62828] rounded-2xl p-8 text-center mb-6">
+                    <svg class="mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <p class="text-lg font-bold text-[#1A1A1A] mb-1">Stop all activity today.</p>
+                    <p class="text-[#5A7A9B] text-sm mb-4">See a GP or sports doctor before continuing.</p>
+                    <router-link to="/locatesupport" @click="closeCheckIn">
+                      <button class="bg-[#C62828] text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-[#B71C1C] transition-colors flex items-center gap-2 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Find a clinic near me
+                      </button>
+                    </router-link>
+                  </div>
+                  <button @click="nextCheckInStep" class="w-full bg-[#1A4FAB] text-white py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors">Continue</button>
+                </div>
+              </div>
+
+              <!-- ── STEP 3: NECK EXERCISES (Stage 2+ only) ───────────────
+                Shows a preview list of the 3 exercises.
+                "Start neck exercises" navigates to /exercises (ExercisePage.vue).
+                ExercisePage saves a localStorage flag on completion/skip.
+                When user returns, onMounted reads that flag and reopens
+                this modal automatically at the journal step.
+              ─────────────────────────────────────────────────────────── -->
+              <div v-else-if="checkInStep === 3 && currentStage && currentStage >= 2" key="exercises">
+                <div class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase mb-2">Neck Exercises</div>
+                <h3 class="text-3xl font-bold text-[#1A1A1A] mb-3">Time for your neck exercises</h3>
+                <p class="text-[#5A7A9B] text-sm mb-6">
+                  You will be taken to a guided exercise page with camera support.
+                  When you are done, you will return here automatically to complete the journal.
+                </p>
+
+                <!-- Exercise preview list -->
+                <div class="space-y-3 mb-6">
                   <div
-                    v-for="s in def.sets" :key="s"
-                    class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all"
-                    :class="s < exerciseState[idx].currentSet ? 'bg-[#1B7C3D] text-white' : s === exerciseState[idx].currentSet ? 'bg-[#1A4FAB] text-white' : 'bg-[#EBEBEB] text-[#5A7A9B]'"
-                  >{{ s }}</div>
-                </div>
-                <span class="text-xs text-[#5A7A9B]">
-                  <span v-if="exerciseState[idx].phase !== 'complete'">Set {{ exerciseState[idx].currentSet }} of {{ def.sets }} — Rep {{ exerciseState[idx].currentRep }} of {{ def.reps }}</span>
-                  <span v-else class="text-[#1B7C3D] font-semibold">All sets complete</span>
-                </span>
-              </div>
-
-              <div v-if="exerciseState[idx].phase !== 'complete'" class="mb-4">
-                <div class="flex justify-between text-xs text-[#5A7A9B] mb-1">
-                  <span>Reps this set</span>
-                  <span>{{ exerciseState[idx].currentRep }} / {{ def.reps }}</span>
-                </div>
-                <div class="h-2 bg-[#EBEBEB] rounded-full overflow-hidden">
-                  <div class="h-full rounded-full bg-[#1A4FAB] transition-all duration-300" :style="{ width: `${(exerciseState[idx].currentRep / def.reps) * 100}%` }" />
-                </div>
-              </div>
-
-              <!-- Hold / rest timer ring -->
-              <div v-if="exerciseState[idx].phase === 'holding' || exerciseState[idx].phase === 'resting'" class="flex flex-col items-center mb-4">
-                <div class="relative w-20 h-20 mb-2">
-                  <svg class="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-                    <circle cx="40" cy="40" r="34" stroke="#EBEBEB" stroke-width="6" fill="none"/>
-                    <circle cx="40" cy="40" r="34" :stroke="getRepRingColor(idx)" stroke-width="6" fill="none" :stroke-dasharray="getRepRingDasharray(idx)" class="transition-all duration-1000"/>
-                  </svg>
-                  <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span class="text-xs font-semibold uppercase" :style="{ color: getRepRingColor(idx) }">{{ exerciseState[idx].phase === 'resting' ? 'Rest' : 'Hold' }}</span>
-                    <span class="text-xl font-black text-[#1A1A1A]">{{ exerciseState[idx].timer }}</span>
+                    v-for="(def, idx) in exerciseDefinitions" :key="idx"
+                    class="border rounded-xl p-6 flex items-center justify-between"
+                    :class="'border-[#EBEBEB] bg-white'"
+                  >
+                    <div class="flex items-center gap-3">
+                      <div class="w-8 h-8 rounded-full bg-[#1A4FAB]/10 flex items-center justify-center flex-shrink-0">
+                        <span class="text-sm font-bold text-[#1A4FAB]">{{ idx + 1 }}</span>
+                      </div>
+                      <div>
+                        <p class="text-sm font-bold text-[#1A1A1A]">{{ def.name }}</p>
+                        <p class="text-sm text-[#5A7A9B]">{{ def.sets }} sets × {{ def.reps }} reps</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <!-- Action buttons -->
-            <div class="px-6 pb-6 space-y-2">
-              <!-- Step 1: Enable camera -->
-              <button
-                v-if="!cameraActive[idx]"
-                @click="startCamera(idx)"
-                class="w-full py-3 rounded-full font-bold text-sm bg-[#F7F9FC] text-[#1A4FAB] border-2 border-[#1A4FAB] hover:bg-[#1A4FAB] hover:text-white transition-all"
-              >Enable camera</button>
-
-              <!-- Step 2: Start / continue rep -->
-              <button
-                v-else-if="exerciseState[idx].phase === 'idle'"
-                @click="startRep(idx)"
-                class="w-full py-3 rounded-full font-bold text-sm bg-[#1A4FAB] text-white hover:bg-[#1440A0] transition-colors"
-              >{{ exerciseState[idx].currentRep === 0 && exerciseState[idx].currentSet === 1 ? 'Start exercise' : 'Start rep' }}</button>
-
-              <!-- Holding state display -->
-              <div v-else-if="exerciseState[idx].phase === 'holding'" class="w-full py-3 rounded-full font-bold text-sm bg-[#E65100] text-white text-center">
-                Hold — {{ exerciseState[idx].timer }}s remaining
-              </div>
-
-              <!-- Resting state display -->
-              <div v-else-if="exerciseState[idx].phase === 'resting'" class="w-full py-3 rounded-full font-bold text-sm bg-[#F7F9FC] text-[#E65100] border-2 border-[#E65100] text-center">
-                Rest — next set in {{ exerciseState[idx].timer }}s
-              </div>
-
-              <!-- Complete state -->
-              <div v-else-if="exerciseState[idx].phase === 'complete'" class="w-full py-3 rounded-full font-bold text-sm bg-[#1B7C3D] text-white text-center">
-                Done for today
-              </div>
-
-              <!-- Secondary buttons -->
-              <div v-if="cameraActive[idx]" class="flex gap-2">
-                <button @click="stopCamera(idx)" class="flex-1 py-2 text-xs text-[#5A7A9B] hover:text-[#C62828] transition-colors">Stop camera</button>
+                <!-- Navigate to ExercisePage — this closes the modal and pushes /exercises -->
                 <button
-                  v-if="exerciseState[idx].phase !== 'idle' && exerciseState[idx].phase !== 'complete'"
-                  @click="resetExercise(idx)"
-                  class="flex-1 py-2 text-xs text-[#5A7A9B] hover:text-[#1A4FAB] transition-colors"
-                >Reset</button>
+                  @click="goToExercises"
+                  class="w-full bg-[#1A4FAB] text-white py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors flex items-center justify-center gap-2 mb-3"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                  Start neck exercises
+                </button>
+
+                <!-- Allow user to skip exercises and go to journal -->
+                <button
+                  @click="nextCheckInStep"
+                  class="w-full py-3 rounded-full text-base font-semibold text-[#5A7A9B] hover:text-[#1A1A1A] transition-colors"
+                >Skip for now</button>
               </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="text-center mt-6 space-y-1">
-          <p class="text-[#5A7A9B] text-sm">Complete all 3 exercises daily from Stage 2 onwards</p>
-          <p class="text-xs text-[#5A7A9B]">Camera feed is live only. Nothing is recorded or uploaded.</p>
-        </div>
-      </div>
-    </section>
+              <!-- ── STEP 4 (or Step 3 on Stage 1): JOURNAL ────────────── -->
+              <div v-else key="journal">
+                <div class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase mb-2">Recovery Journal</div>
+                <h3 class="text-3xl font-bold text-[#1A1A1A] mb-3">Write about your day</h3>
+                <p class="text-[#5A7A9B] text-sm mb-6">One sentence is enough. Saves privately to this device only.</p>
 
-    <!-- Stage 1 explanation — neck exercises not yet available -->
-    <section v-if="daysSinceInjury && currentStage && currentStage < 2 && isViewingToday" class="bg-white py-12">
-      <div class="max-w-[1200px] mx-auto px-6">
-        <div class="bg-[#F7F9FC] border border-[#EBEBEB] rounded-2xl p-6 flex items-start gap-4">
-          <svg class="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A7A9B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <div>
-            <p class="font-semibold text-[#1A1A1A] text-sm mb-1">Neck exercises begin on Day 4</p>
-            <p class="text-xs text-[#5A7A9B] leading-relaxed">Your brain needs complete rest right now. Neck strengthening exercises are introduced at Stage 2 (Day 4) when your brain is stable enough to support light physical activity.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ RECOVERY JOURNAL ════════════════════════════════════════════════════ -->
-    <section v-if="daysSinceInjury && isViewingToday" class="bg-[#F7F9FC] py-20">
-      <div class="max-w-[1200px] mx-auto px-6">
-        <div class="max-w-2xl mx-auto">
-          <div class="mb-3">
-            <span class="text-[#1A4FAB] text-xs font-semibold tracking-widest uppercase">Recovery Journal</span>
-          </div>
-          <h2 class="text-2xl font-bold text-[#1A1A1A] mb-2">Write about your day</h2>
-          <p class="text-[#5A7A9B] text-sm mb-6">Your entries are saved privately on this device. Share them with your GP at your clearance appointment.</p>
-
-          <div class="bg-white rounded-2xl border border-[#EBEBEB] shadow-sm p-6 mb-4">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-semibold text-[#1A4FAB]">Day {{ daysSinceInjury }}</span>
-              <span class="text-xs text-[#5A7A9B]">{{ new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' }) }}</span>
-            </div>
-            <textarea
-              v-model="journalEntry"
-              :placeholder="todayJournalEntry ? todayJournalEntry.text : 'How are you feeling today? What did you manage to do? Any symptoms?'"
-              rows="3"
-              class="w-full text-sm text-[#1A1A1A] resize-none focus:outline-none leading-relaxed"
-            />
-            <div class="flex items-center justify-between mt-3 pt-3 border-t border-[#EBEBEB]">
-              <span class="text-xs text-[#5A7A9B]">Saved privately on this device only</span>
-              <button
-                @click="saveJournalEntry"
-                :disabled="!journalEntry.trim()"
-                class="bg-[#1A4FAB] text-white px-5 py-2 rounded-full text-xs font-semibold hover:bg-[#1440A0] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                <svg v-if="journalSaved" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                {{ journalSaved ? 'Saved' : 'Save entry' }}
-              </button>
-            </div>
-          </div>
-
-          <div v-if="journalEntries.length > 0">
-            <button @click="showJournalHistory = !showJournalHistory" class="flex items-center gap-2 text-sm text-[#5A7A9B] hover:text-[#1A4FAB] transition-colors mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="showJournalHistory ? 'rotate-180' : ''" class="transition-transform"><path d="m6 9 6 6 6-6"/></svg>
-              {{ showJournalHistory ? 'Hide' : 'Show' }} past entries ({{ journalEntries.length }})
-            </button>
-            <Transition name="slide-up">
-              <div v-if="showJournalHistory" class="space-y-3">
-                <div v-for="entry in [...journalEntries].reverse()" :key="entry.date" class="bg-white rounded-xl border border-[#EBEBEB] p-4">
+                <div class="bg-[#F7F9FC] border border-[#EBEBEB] rounded-xl p-6 mb-4">
                   <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-[#1A4FAB]">Day {{ entry.day }}</span>
-                    <span class="text-xs text-[#5A7A9B]">{{ entry.date }}</span>
+                    <span class="text-base font-semibold text-[#1A4FAB]">Day {{ daysSinceInjury }}</span>
+                    <span class="text-sm text-[#5A7A9B]">{{ new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long' }) }}</span>
                   </div>
-                  <p class="text-sm text-[#1A1A1A] leading-relaxed">{{ entry.text }}</p>
+                  <textarea
+                    v-model="journalEntry"
+                    placeholder="How are you feeling? Any symptoms? What did you manage to do today?"
+                    rows="3"
+                    class="w-full text-sm text-[#1A1A1A] bg-transparent resize-none focus:outline-none leading-relaxed"
+                  />
+                </div>
+
+                <div class="flex gap-3">
+                  <button
+                    @click="saveJournalEntry(); closeCheckIn()"
+                    :disabled="!journalEntry.trim()"
+                    class="flex-1 bg-[#1A4FAB] text-white py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >{{ journalSaved ? 'Saved!' : 'Save and finish' }}</button>
+                  <button @click="closeCheckIn" class="px-6 py-4 rounded-full text-base font-semibold text-[#5A7A9B] hover:text-[#1A1A1A] transition-colors">Skip</button>
                 </div>
               </div>
+
             </Transition>
           </div>
+
+          <!-- Modal footer: back button (hidden on step 1) -->
+          <div v-if="checkInStep > 1" class="px-8 pb-8">
+            <button @click="prevCheckInStep" class="text-sm text-[#5A7A9B] hover:text-[#1A1A1A] transition-colors flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              Back
+            </button>
+          </div>
+
         </div>
       </div>
-    </section>
+    </Transition>
 
     <!-- ══ 6 STAGE TIMELINE — EXPANDABLE ══════════════════════════════════════ -->
-    <section v-if="daysSinceInjury && currentStage" class="bg-white py-20">
-      <div class="max-w-[1200px] mx-auto px-6">
+    <section v-if="daysSinceInjury && currentStage" class="bg-white py-28">
+      <div class="max-w-[1200px] mx-auto px-10">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-[#1A1A1A] mb-3">Your full recovery journey</h2>
+          <h2 class="text-4xl font-bold text-[#1A1A1A] mb-4">Your full recovery journey</h2>
           <p class="text-[#5A7A9B]">Australian Institute of Sport 2024 mandatory protocol — select any stage to explore</p>
         </div>
 
@@ -1832,25 +1472,25 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
           >
             <button
               @click="toggleStage(stage.id)"
-              class="w-full flex items-center justify-between p-5 transition-colors text-left"
+              class="w-full flex items-center justify-between p-7 transition-colors text-left"
               :class="{ 'bg-[#1A4FAB] text-white': getStageStatus(stage.id) === 'current', 'bg-[#1B7C3D]/10 text-[#1B7C3D]': getStageStatus(stage.id) === 'complete', 'bg-[#F7F9FC] text-[#5A7A9B]': getStageStatus(stage.id) === 'upcoming' }"
             >
               <div class="flex items-center gap-4">
                 <div
-                  class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                  class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
                   :class="{ 'bg-white/20': getStageStatus(stage.id) === 'current', 'bg-[#1B7C3D]': getStageStatus(stage.id) === 'complete', 'bg-[#EBEBEB]': getStageStatus(stage.id) === 'upcoming' }"
                 >
                   <svg v-if="getStageStatus(stage.id) === 'complete'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                   <span v-else class="text-sm font-black" :class="{ 'text-white': getStageStatus(stage.id) === 'current', 'text-[#5A7A9B]': getStageStatus(stage.id) === 'upcoming' }">{{ stage.id }}</span>
                 </div>
                 <div>
-                  <div class="font-bold text-sm">{{ stage.name }}</div>
-                  <div class="text-xs opacity-70 mt-0.5">Days {{ stage.days }}</div>
+                  <div class="font-bold text-base">{{ stage.name }}</div>
+                  <div class="text-sm opacity-70 mt-1">Days {{ stage.days }}</div>
                 </div>
               </div>
               <div class="flex items-center gap-3">
                 <span
-                  class="text-xs font-bold px-3 py-1 rounded-full"
+                  class="text-sm font-bold px-3 py-1 rounded-full"
                   :class="{ 'bg-white/20 text-white': getStageStatus(stage.id) === 'current', 'bg-[#1B7C3D] text-white': getStageStatus(stage.id) === 'complete', 'bg-[#5A7A9B]/20 text-[#5A7A9B]': getStageStatus(stage.id) === 'upcoming' }"
                 >{{ getStageStatus(stage.id).toUpperCase() }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200" :class="expandedStage === stage.id ? 'rotate-180' : ''"><path d="m6 9 6 6 6-6"/></svg>
@@ -1863,13 +1503,13 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                   <button
                     v-for="dayEntry in getDaysForStage(stage.id)" :key="dayEntry.day"
                     @click="jumpToDay(dayEntry.day)"
-                    class="text-left bg-white border rounded-xl p-4 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
+                    class="text-left bg-white border rounded-xl p-6 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
                     :class="dayEntry.day === daysSinceInjury ? 'border-[#1A4FAB] bg-[#F5F8FF]' : 'border-[#EBEBEB]'"
                   >
                     <div class="flex items-center justify-between mb-2">
-                      <span class="text-xs font-bold text-[#1A4FAB]">Day {{ dayEntry.day }}</span>
+                      <span class="text-sm font-bold text-[#1A4FAB]">Day {{ dayEntry.day }}</span>
                       <span
-                        class="text-xs font-bold px-2 py-0.5 rounded-full"
+                        class="text-sm font-bold px-2 py-0.5 rounded-full"
                         :class="dayEntry.day < (daysSinceInjury || 0) ? 'bg-[#1B7C3D]/10 text-[#1B7C3D]' : dayEntry.day === daysSinceInjury ? 'bg-[#1A4FAB] text-white' : 'bg-[#EBEBEB] text-[#5A7A9B]'"
                       >{{ dayEntry.day < (daysSinceInjury || 0) ? 'Done' : dayEntry.day === daysSinceInjury ? 'Today' : 'Upcoming' }}</span>
                     </div>
@@ -1877,9 +1517,9 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
                       <div class="h-1.5 flex-1 bg-[#EBEBEB] rounded-full overflow-hidden">
                         <div class="h-full rounded-full" :style="{ width: `${dayEntry.brainRecoveryPct}%`, background: dayEntry.brainRecoveryPct < 40 ? '#C62828' : dayEntry.brainRecoveryPct < 70 ? '#E65100' : '#1B7C3D' }"/>
                       </div>
-                      <span class="text-xs font-bold text-[#5A7A9B]">{{ dayEntry.brainRecoveryPct }}%</span>
+                      <span class="text-sm font-bold text-[#5A7A9B]">{{ dayEntry.brainRecoveryPct }}%</span>
                     </div>
-                    <p class="text-xs text-[#5A7A9B] leading-relaxed line-clamp-2">{{ dayEntry.dailyGoal }}</p>
+                    <p class="text-sm text-[#5A7A9B] leading-relaxed line-clamp-2">{{ dayEntry.dailyGoal }}</p>
                     <p class="text-xs text-[#1A4FAB] font-semibold mt-2">View this day</p>
                   </button>
                 </div>
@@ -1892,11 +1532,11 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
 
     <!-- ══ FIND SUPPORT CTA ════════════════════════════════════════════════════ -->
     <section style="background:#0A1628;" class="py-20 text-center">
-      <div class="max-w-[1200px] mx-auto px-6">
+      <div class="max-w-[1200px] mx-auto px-10">
         <h2 class="text-3xl font-bold text-white mb-4">Not sure if you are ready?</h2>
         <p class="text-white/60 mb-8 max-w-lg mx-auto leading-relaxed">Find the nearest GP, sports medicine clinic, or hospital for a professional assessment.</p>
         <router-link to="/locatesupport">
-          <button class="bg-[#1A4FAB] text-white px-10 py-4 rounded-full font-semibold hover:bg-[#1440A0] transition-colors flex items-center gap-2 mx-auto mb-4">
+          <button class="bg-[#1A4FAB] text-white px-10 py-5 rounded-full font-semibold hover:bg-[#1440A0] transition-colors flex items-center gap-2 mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
             Find a clinic near me
           </button>
@@ -1915,4 +1555,6 @@ function getStageStatus(stageId: number): 'complete' | 'current' | 'upcoming' {
 .slide-up-enter-from { opacity: 0; transform: translateY(16px); }
 .slide-up-leave-to { opacity: 0; transform: translateY(-16px); }
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.modal-enter-active, .modal-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
+.modal-enter-from, .modal-leave-to { opacity: 0; transform: scale(0.96); }
 </style>
