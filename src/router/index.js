@@ -4,7 +4,7 @@ import ConcussionDataExplorer from "@/pages/ConcussionDataExplorer.vue";
 import CRTResources from "@/pages/CRTResources.vue";
 import LocateSupportPage from "@/pages/LocateSupportPage.vue";
 import RTPRule from "@/pages/RTPRule.vue";
-import StagedRecovery from "@/pages/StagedRecovery.vue";
+import StagedRecovery2 from "@/pages/StagedRecovery2.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -44,7 +44,7 @@ const router = createRouter({
     {
       path: "/iteration3/stagedrecovery",
       name: "Staged Recovery",
-      component: StagedRecovery,
+      component: StagedRecovery2,
       meta: {
         title: "Staged Recoverys",
       },

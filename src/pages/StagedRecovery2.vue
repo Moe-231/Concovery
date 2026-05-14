@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BlurReveal from '@/components/ui/blur-reveal/BlurReveal.vue'
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 
 interface Stage {
@@ -823,12 +824,14 @@ function getRingDasharray(progress: number) { return `${(progress / 100) * 251.2
         <div class="inline-flex items-center border border-white/20 rounded-full px-4 py-1.5 mb-6">
           <span class="text-white/50 text-xs font-medium tracking-widest uppercase">Your Recovery Journey</span>
         </div>
+        <BlurReveal :delay="0.2" :duration="0.75">
         <h1 class="font-black text-white leading-none mb-6" style="font-size:clamp(40px,8vw,96px);letter-spacing:-0.03em;">
           Let's find out<br>where you are.
         </h1>
         <p class="text-white/60 text-xl font-light max-w-lg leading-relaxed">
           Tell us when it happened and we will guide you through every day of your recovery.
         </p>
+        </BlurReveal>
       </div>
     </section>
 
