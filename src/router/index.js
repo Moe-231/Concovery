@@ -2,6 +2,7 @@ import BrainAwareness from "@/components/custom-components/brainAwareness.vue";
 import ConcussionVisulization from "@/components/custom-components/ConcussionVisulization.vue";
 import ConcussionDataExplorer from "@/pages/ConcussionDataExplorer.vue";
 import CRTResources from "@/pages/CRTResources.vue";
+import KnowYourRisk from "@/pages/KnowYourRisk.vue";
 import LocateSupportPage from "@/pages/LocateSupportPage.vue";
 import RTPRule from "@/pages/RTPRule.vue";
 import StagedRecovery2 from "@/pages/StagedRecovery2.vue";
@@ -14,7 +15,7 @@ const router = createRouter({
     {
       path: "/exploredata",
       name: "Explore Data",
-      component: ConcussionDataExplorer,
+      component: KnowYourRisk,
       meta: { title: "Explore Data" },
     },
     {
